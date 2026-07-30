@@ -1,0 +1,71 @@
+{
+  "pdfname": "owFVvaLFdw",
+  "content": {
+    "summary": {
+      "value": "The paper \"AGENTHARD: HARDENING LLM-AGENT EVALUATION WITH A TAXONOMY OF ARTIFACTS AND AUTOMATED CLEANING\" proposes a component-wise taxonomy of common benchmark pitfalls for evaluating LLM-based agents. The taxonomy spans user, environment, evaluation, and ground truth elements of agent tasks, exposing issues such as incorrect ground-truth action sequences and ambiguous tool APIs. The authors develop AgentBenchCleaner, an automated pipeline that filters out flawed tasks using rule-based detectors and LLM-as-a-judge evaluations. The pipeline yields an issue-cleaned benchmark and a harder derivative, AgentHardBench, with standardized evaluation protocols. Evaluations on AgentHard-Bench deliver more stable model rankings, clearer performance separations, and improved benchmark diversity. The authors will release AgentHard-Bench, the taxonomy, and the pipeline upon acceptance. The paper provides a significant contribution to the field by addressing the challenge of reliable evaluation of LLM-based agents. The proposed taxonomy and pipeline aim to support robust and reproducible agent evaluation."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "The strengths of the paper \"AGENTHARD: HARDENING LLM-AGENT EVALUATION WITH A TAXONOMY OF ARTIFACTS AND AUTOMATED CLEANING\" are:\n\n1. **Significant contribution to LLM-based agent evaluation**: The paper addresses a crucial challenge in LLM-based agent evaluation, which is the presence of benchmark artifacts that confound measured capability. The proposed taxonomy and automated cleaning pipeline, AgentBenchCleaner, provide a foundation for more trustworthy comparisons and future benchmark development.\n\n2. **Originality of ideas and execution**: The paper proposes a component-wise taxonomy of common benchmark pitfalls, which is a creative combination of existing ideas. The taxonomy spans user, environment, evaluation, and ground truth elements of agent tasks, exposing issues such as incorrect ground-truth action sequences and ambiguous tool APIs.\n\n3. **High-quality and clarity of writing**: The paper is well-written, and the writing style is clear and concise. The authors provide a clear explanation of the problem, the proposed solution, and the experimental results.\n\n4. **Importance and value of the results**: The results are valuable to share with the broader NeurIPS community, as they provide a foundation for more trustworthy comparisons and future benchmark development, enabling the development of more effective LLM agent benchmarks and capable LLM agents.\n\n5. **Comprehensive evaluation and analysis**: The paper presents a comprehensive evaluation of the proposed pipeline, including a detailed analysis of the benchmark quality metrics, such as separability, diversity, and compression ratio. The authors also provide a qualitative analysis of subtask-level retention and capability coverage across all benchmarks."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\nThe paper \"AGENTHARD: HARDENING LLM-AGENT EVALUATION WITH A TAXONOMY OF ARTIFACTS AND AUTOMATED CLEANING\" presents a significant contribution to the field of LLM-based agent evaluation. However, there are a few areas that could be improved:\n\n1. **Limited Scope of Benchmarks**: The paper primarily focuses on six widely used LLM-agent benchmarks (BFCL V3, ACEBench, DrafterBench, τ-Bench, τ2-Bench, and CFB). While these benchmarks are representative, the evaluation could be more comprehensive by including a broader range of benchmarks, especially those that are less well-known or newly proposed.\n\n2. **Dependence on Reference Models**: The difficulty-based curation step in AgentBenchCleaner relies on a set of reference models to stratify tasks. This approach may introduce bias towards the specific models used. It would be beneficial to explore the use of a more diverse set of reference models or alternative methods for task stratification that are less model-dependent.\n\n3. **Potential for False Negatives**: The LLM-as-a-judge filtering stage may miss some flawed tasks, especially if the prompts provided to the LLM do not adequately cover all possible issue categories or if the LLM fails to identify subtle flaws. Enhancing the prompting framework to include more comprehensive issue categories and improving the LLM's ability to detect nuanced problems could mitigate this issue.\n\n4. **Lack of Human Evaluation for All Tasks**: While the paper reports high accuracy for the LLM-as-a-judge filtering stage through post-hoc validation on the full benchmarks, it would be ideal to have human experts evaluate all tasks to ensure the pipeline's effectiveness. This could be particularly important for tasks where the LLM-as-a-judge makes incorrect judgments.\n\n5. **Generalizability to New Agentic Task Types**: The paper focuses on existing benchmarks and may not fully address the challenges posed by emerging agentic task types and interaction modalities. Future work could explore how the taxonomy and pipeline generalize to new and unforeseen benchmark designs.\n\n6. **Repair Mechanisms for Flawed Tasks**: The paper primarily focuses on filtering out flawed tasks rather than repairing them. Developing automated or semi-automated repair mechanisms for identified issues could enhance the practical utility of the AgentBenchCleaner pipeline for benchmark maintainers.\n\n## Conclusion\n\nThe paper \"AGENTHARD: HARDENING LLM-AGENT EVALUATION WITH A TAXONOMY OF ARTIFACTS AND AUTOMATED CLEANING\" makes a significant contribution to the field of LLM-based agent evaluation. Addressing the identified weaknesses could further enhance the robustness, generalizability, and practical impact of the proposed taxonomy and pipeline."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\nThe paper \"AGENTHARD: HARDENING LLM-AGENT EVALUATION WITH A TAXONOMY OF ARTIFACTS AND AUTOMATED CLEANING\" presents a significant contribution to the field of LLM-based agent evaluation. However, there are a few questions and suggestions that could help clarify certain aspects or address potential limitations:\n\n1. **Benchmark Representation**: The paper focuses on six widely used LLM-agent benchmarks. How do the authors plan to ensure that the taxonomy and pipeline generalize to newer or less well-known benchmarks that may introduce different types of issues?\n\n2. **Reference Models for Stratification**: The difficulty-based curation step relies on a set of reference models. Could the authors discuss the potential biases introduced by using a specific set of reference models and how these biases might be mitigated?\n\n3. **False Negatives in LLM-as-a-Judge**: The LLM-as-a-judge filtering stage might miss some flawed tasks. What strategies could be employed to enhance the prompting framework to ensure that the LLM identifies a broader range of issues, especially subtle or context-dependent flaws?\n\n4. **Human Evaluation**: While post-hoc validation on full benchmarks is conducted, would it be feasible to have human experts evaluate a larger subset of tasks to further validate the effectiveness of the LLM-as-a-judge filtering stage?\n\n5. **Generalizability to Emerging Tasks**: How do the authors envision the taxonomy and pipeline adapting to emerging agentic task types and interaction modalities that may introduce novel issues not captured by the current taxonomy?\n\n6. **Repair Mechanisms**: The paper focuses on filtering out flawed tasks. Are there plans to develop automated or semi-automated repair mechanisms for identified issues, enhancing the practical utility of the AgentBenchCleaner pipeline?\n\n7. **Quantifying Impact on Model Rankings**: The paper mentions that model rankings change after applying the pipeline. Could the authors provide more detailed statistics on how the changes in rankings quantitatively affect the evaluation outcomes and the conclusions drawn from them?\n\n8. **Taxonomy Expansion**: How do the authors plan to keep the taxonomy updated and relevant as the field of LLM-based agents evolves and new types of benchmarks and tasks are developed?\n\n## Conclusion\n\nAddressing these questions and suggestions could further enhance the clarity, robustness, and generalizability of the proposed taxonomy and pipeline, ensuring that the AgentBenchCleaner pipeline remains a valuable tool for the community in evaluating LLM-based agents."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "AGENTHARD: HARDENING LLM-AGENT EVALUATION WITH A TAXONOMY OF ARTIFACTS AND AUTOMATED CLEANING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORKS",
+    "3 SYSTEMATIC ANALYSIS OF AGENT BENCHMARK ISSUES",
+    "3.1 OVERVIEW OF AGENT BENCHMARKS",
+    "3.2 COMPONENT-ALIGNED ISSUE TAXONOMY",
+    "4 FROM TAXONOMY TO AUTOMATED FILTERING",
+    "4.1 OVERVIEW",
+    "4.2 THE AGENTBENCHCLEANER PIPELINE",
+    "5.2.1 HUMAN ALIGNMENT OF AGENTBENCHCLEANER",
+    "5.2.2 BENCHMARK QUALITY IMPROVEMENTS",
+    "5.2.3 PRACTICAL IMPACT: LEADERBOARD SHIFTS",
+    "5.3 AGENTHARD-BENCH STATISTICS",
+    "5.4 ABLATION STUDIES",
+    "5.4.1 ROBUSTNESS OF JUDGE MODELS",
+    "5.4.2 STAGE-WISE ABLATIONS OF AGENTBENCHCLEANER",
+    "5.5 CASE STUDIES",
+    "6 LIMITATIONS",
+    "7 CONCLUSIONS",
+    "A.3 REPAIRABLE CASES ENABLED BY THE PIPELINE",
+    "A.3.1 BFCL: GROUND-TRUTH FILENAME ERROR (GROUND-TRUTH ISSUE).",
+    "Subtask Retention Ratios Across Benchmarks (After Issue Filtering)",
+    "A.7 CAPABILITY RETENTION ANALYSIS",
+    "Subtask Retention Ratios Across Benchmarks (After Quality Filtering)"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

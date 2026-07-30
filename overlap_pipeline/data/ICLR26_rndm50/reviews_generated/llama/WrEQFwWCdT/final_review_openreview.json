@@ -1,0 +1,82 @@
+{
+  "pdfname": "WrEQFwWCdT",
+  "content": {
+    "summary": {
+      "value": "The paper proposes Mixture of Experts for Dynamic Gaussian Splatting (MoE-GS), a unified framework integrating multiple specialized experts for dynamic scene reconstruction. MoE-GS uses a novel Volume-aware Pixel Router to adaptively blend expert outputs, ensuring spatially and temporally coherent results. The framework combines heterogeneous deformation priors to improve dynamic novel view synthesis quality. \n\nThe contributions include: \n- MoE-GS, the first dynamic Gaussian splatting framework employing a Mixture-of-Experts architecture \n- A novel Volume-aware Pixel Router that integrates expert outputs through differentiable weight splatting \n- Efficiency improvements through single-pass multi-expert rendering, gate-aware Gaussian pruning, and knowledge distillation.\n\nThe approach achieves state-of-the-art results on the N3V and Technicolor datasets, consistently outperforming existing methods. Extensive experiments and ablations demonstrate the effectiveness of MoE-GS. Video demonstrations are available at https://huggingface.co/spaces/moegs/MoE-GS."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Originality of the Approach**: The paper introduces a novel framework, Mixture of Experts for Dynamic Gaussian Splatting (MoE-GS), which combines multiple specialized experts for dynamic scene reconstruction. This approach is the first to integrate a Mixture-of-Experts architecture into dynamic Gaussian splatting.\n\n2. **Volume-aware Pixel Router**: The proposed Volume-aware Pixel Router is a significant innovation. It adaptively blends expert outputs by projecting volumetric Gaussian-level weights into pixel space through differentiable weight splatting, ensuring spatially and temporally coherent results.\n\n3. **Comprehensive Evaluation**: The paper provides an extensive evaluation of MoE-GS on two standard benchmarks (N3V and Technicolor datasets). The results demonstrate that MoE-GS consistently outperforms state-of-the-art methods across various scenes and metrics.\n\n4. **Efficiency Improvements**: The paper explores efficiency improvements through single-pass multi-expert rendering, gate-aware Gaussian pruning, and knowledge distillation. These techniques enable efficient deployment of MoE-GS without sacrificing performance.\n\n5. **Clarity and Quality of Writing**: The paper is well-written and easy to follow. The authors provide a clear description of the proposed framework, its components, and the experimental methodology. The use of visual aids, figures, and tables supports the explanations and makes the paper more accessible.\n\n6. **Significance and Impact**: The paper addresses a fundamental challenge in computer vision, dynamic scene reconstruction. The proposed MoE-GS framework has the potential to improve various applications, such as real-time rendering, immersive content creation, and embodied agents.\n\n7. **Ablation Studies**: The paper includes thorough ablation studies to validate the effectiveness of the MoE architecture, the Volume-aware Pixel Router, and the efficiency improvements. These studies provide valuable insights into the contributions of each component to the overall performance of MoE-GS.\n\n8. **State-of-the-Art Performance**: MoE-GS achieves state-of-the-art performance on multiple datasets, demonstrating its strong ability to generalize across diverse scenarios by selectively leveraging different experts.\n\n## Conclusion\n\nThe paper's strengths lie in its original approach, comprehensive evaluation, and significant contributions to dynamic scene reconstruction. The proposed MoE-GS framework, along with the Volume-aware Pixel Router and efficiency improvements, represents a substantial advancement in the field. The paper's clarity, quality of writing, and impact on the research community further enhance its value."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Computational Cost and Efficiency**: Although the paper explores efficiency improvements through single-pass multi-expert rendering, gate-aware Gaussian pruning, and knowledge distillation, it could provide a more detailed analysis of the computational cost and efficiency of the approach. For example, a comparison of the computational cost of MoE-GS with existing methods would help to better understand the trade-offs between performance and efficiency.\n\n2. **Limitations and Future Directions**: The paper could discuss potential limitations and future directions for the research. For instance, the authors could address the following questions:\n\t* How does MoE-GS handle complex scenes with multiple dynamic objects?\n\t* Can MoE-GS be extended to handle other types of scene representations, such as mesh-based or point cloud-based representations?\n\t* What are the potential applications of MoE-GS in other fields, such as robotics or computer-aided design?\n\n3. **Ablation Study on Expert Selection**: The paper could provide a more detailed ablation study on the expert selection process. For example, the authors could analyze the importance of each expert in the MoE-GS framework and how they contribute to the overall performance.\n\n4. **Comparison to Other MoE Architectures**: The paper could compare MoE-GS with other MoE architectures, such as those used in large language models or computer vision applications. This would help to better understand the advantages and disadvantages of the proposed approach.\n\n5. **Real-World Applications**: The paper could provide more discussion on the potential real-world applications of MoE-GS. For example, the authors could explain how MoE-GS could be used in practice, such as in augmented reality or virtual reality applications.\n\n## Conclusion\n\nThe paper's weaknesses lie in its limited discussion of computational cost and efficiency, potential limitations and future directions, and real-world applications. Additionally, more detailed ablation studies on expert selection and comparisons to other MoE architectures could further strengthen the paper. By addressing these weaknesses, the authors could provide a more comprehensive and convincing evaluation of the MoE-GS framework."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Detailed Analysis of Computational Cost**: The authors could provide a more detailed analysis of the computational cost and efficiency of MoE-GS. This could include a comparison of the computational cost of MoE-GS with existing methods, such as HyperReel, K-Planes, and 4DGaussians, to better understand the trade-offs between performance and efficiency.\n\n2. **Limitations and Future Directions**: The authors could discuss potential limitations and future directions for the research. For instance:\n\t* How does MoE-GS handle complex scenes with multiple dynamic objects?\n\t* Can MoE-GS be extended to handle other types of scene representations, such as mesh-based or point cloud-based representations?\n\t* What are the potential applications of MoE-GS in other fields, such as robotics or computer-aided design?\n\n3. **Ablation Study on Expert Selection**: The authors could provide a more detailed ablation study on the expert selection process. For example, they could analyze the importance of each expert in the MoE-GS framework and how they contribute to the overall performance.\n\n4. **Comparison to Other MoE Architectures**: The authors could compare MoE-GS with other MoE architectures, such as those used in large language models or computer vision applications. This would help to better understand the advantages and disadvantages of the proposed approach.\n\n5. **Real-World Applications**: The authors could provide more discussion on the potential real-world applications of MoE-GS. For example, they could explain how MoE-GS could be used in practice, such as in augmented reality or virtual reality applications.\n\n6. **Handling Temporal Fluctuations**: The authors could provide more insights into how MoE-GS handles temporal fluctuations in dynamic scenes. For example, they could explain how the Volume-aware Pixel Router adapts to changes in the scene over time.\n\n7. **Scalability of MoE-GS**: The authors could discuss the scalability of MoE-GS to larger scenes or more complex deformations. For example, they could explain how the approach could be extended to handle larger numbers of experts or more complex scene representations.\n\n## Conclusion\n\nThe authors could address these questions and suggestions to provide a more comprehensive and convincing evaluation of the MoE-GS framework. By doing so, they could further strengthen their paper and provide a more detailed understanding of the approach and its potential applications."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "8"
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "MOE-GS: MIXTURE OF EXPERTS FOR DYNAMIC GAUSSIAN SPLATTING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORKS",
+    "2.1 DYNAMIC NOVEL VIEW SYNTHESIS",
+    "2.2 MIXTURE OF EXPERTS",
+    "3 METHOD",
+    "3.1 PRELIMINARY",
+    "Pixel Router",
+    "Volume-aware Pixel Router",
+    "3.2 MIXTURE OF EXPERTS FOR DYNAMIC GAUSSIAN SPLATTING",
+    "3.3 RENDERING AND PRUNING FOR EFFICIENCY",
+    "3.4 DISTILLATION-BASED EXPERT TRAINING",
+    "4 EXPERIMENTS",
+    "4.1 EXPERIMENTAL SETUP",
+    "4.2 RESULTS ON MOE-GS",
+    "4.3 DISTILLATION-BASED EXPERT TRAINING",
+    "5 CONCLUSION",
+    "648 A APPENDIX",
+    "650 651 B OVERVIEW",
+    "C.2 STAGE 1: EXPERT TRAINING",
+    "B.1 REFERENCED IN THE MAIN PAPER",
+    "C IMPLEMENTATION DETAILS",
+    "C.1 TWO-STAGE TRAINING STRATEGY",
+    "C.3 STAGE 2: ROUTER TRAINING",
+    "C.4 SINGLE-PASS MULTI-EXPERT RENDERING",
+    "D ADDITIONAL QUANTITATIVE AND QUALITATIVE RESULTS",
+    "D.1 QUANTITATIVE RESULTS",
+    "D.2 QUALITATIVE RESULTS",
+    "E GAUSSIAN-LEVEL INTERPRETATION AND GEOMETRY EVALUATION",
+    "E.1 PER-GAUSSIAN CONTRIBUTIONS AND RESPONSIBILITIES",
+    "E.2 POST-HOC GAUSSIAN FUSION USING LIFTING WEIGHTS",
+    "1071 E.3 MULTI-VIEW DEPTH CONSISTENCY EVALUATION",
+    "F ANALYSIS OF EXPERT-SPECIFIC MOTION BEHAVIOR",
+    "G BEST-OF-N RETRAINING VS. MOE-GS: STRUCTURAL, NOT STATISTICAL, GAINS",
+    "H ABLATION ON DISTILLATION WEIGHTING STRATEGIES"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

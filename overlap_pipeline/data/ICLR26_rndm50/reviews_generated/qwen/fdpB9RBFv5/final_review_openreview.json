@@ -1,0 +1,65 @@
+{
+  "pdfname": "fdpB9RBFv5",
+  "content": {
+    "summary": {
+      "value": "This paper establishes that the Probabilistic Bisection Algorithm (PBA) converges at an exponential rate when applied to root-finding problems with noisy responses, resolving a long-standing theoretical question about its convergence behavior. The authors prove that PBA achieves geometric convergence for fixed ground truth, with a rate that matches the optimal performance of classical binary search under noiseless conditions. A key contribution is the direct characterization of PBA's query dynamics, showing that queries oscillate around the truth while steadily drawing closer, which enables the posterior distribution to concentrate sharply at the ground truth. The authors develop novel analytical techniques to study the query process, overcoming limitations of prior approaches that either discretized the problem or adopted Bayesian frameworks with random ground truth. The paper also extends the analysis to high-dimensional settings, demonstrating nearly minimax optimal rates for Hölder-smooth decision boundaries and exponential convergence for linear boundaries. Experimental results confirm the theoretical findings, showing exponential decay of estimation error with respect to query count across different noise levels. This work provides rigorous theoretical justification for PBA's empirical efficiency while introducing analytical tools that may be useful for studying other adaptive algorithms."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. The paper resolves a specific and long-standing theoretical gap by establishing exponential convergence for the *original* Probabilistic Bisection Algorithm (PBA) with fixed ground truth, overcoming a critical limitation in prior work. While Burnashev & Zigangirov (1974) required a discretized version that couldn't be practically implemented with a fixed grid, and Waeber et al. (2013) required modeling the truth as a random variable, this work proves convergence for the actual PBA used in practice where the ground truth is a fixed but unknown constant (Section 1, lines 71-76).\n\n2. The authors introduce a novel analytical framework centered on the ratio $M_i = a^{(3)}_i/a^{(2)}_i$ that enables precise characterization of PBA's dynamics. This ratio-based approach (rather than tracking individual posterior probabilities) creates a quantity that is guaranteed to be monotone on average across rounds, solving the key challenge that \"the evolution of $a^{(j)}_n$ depends intricately on the query locations, making them difficult to control directly\" (Section 2.3, Remark 3).\n\n3. The paper establishes that PBA queries \"oscillate around the ground truth but steadily draw closer,\" providing the first direct analysis of this behavior (Section 1). This insight explains why PBA works effectively despite the location-dependent nature of its query improvements, which had previously prevented rigorous analysis of the original algorithm.\n\n4. The analysis reveals a precise relationship between noise level and convergence rate that is both theoretically proven and experimentally verified. The figures show how \"a larger noise level $p$ results in a significantly smaller constant in the exponent of the convergence rate, leading to a slower convergence\" (Section D), providing practical guidance for applications.\n\n5. The extension to high-dimensional settings is particularly valuable as it shows how PBA can be adapted for Hölder-smooth decision boundaries while maintaining near-optimal convergence rates (Theorem 2), and demonstrates that for linear boundaries (Theorem 3) exponential convergence is preserved. This bridges a gap between classic one-dimensional root-finding and modern high-dimensional classification problems."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Limited scope of exponential convergence claim**: While the paper establishes exponential convergence for 1D root-finding, the high-dimensional extension (Theorem 2) reveals only polynomial convergence O((log n/n)^(α/(d-1))) for general Hölder-smooth boundaries. This creates a significant disconnect between the main contribution (\"PBA converges at a geometric rate\") and more practical higher-dimensional settings. The paper should better articulate why the 1D case permits exponential convergence while higher dimensions do not, beyond technical proof differences, and clarify whether exponential convergence is truly a general property of PBA or specific to the 1D setting.\n\n2. **Lack of explicit constants in convergence rate**: The theoretical analysis proves E|θ̂_n - θ*| ≤ 3e^(-Cn) but fails to quantify how the constant C depends on noise level p. The experiments (Figure 1) demonstrate that higher p values lead to slower convergence, but the theory doesn't formalize this relationship. For practical implementation, practitioners need to know how many queries are required for specific noise levels and accuracy targets. The authors should derive explicit bounds showing C = f(p) to make their result actionable.\n\n3. **Insufficient experimental validation**: The experiments only go up to 100 queries due to \"numerical issues\" (Section D), which is inadequate to fully validate the exponential convergence claim. The paper should include:\n   - More numerically stable implementations allowing larger query counts (e.g., 1000+ queries) to better demonstrate the asymptotic behavior\n   - Direct comparisons with alternative root-finding algorithms for noisy settings (e.g., stochastic approximation methods)\n   - Tests with varying ground truth positions beyond θ* = 1/3 to verify the analysis isn't position-dependent\n   - Quantitative validation of the theoretical rate by fitting the experimental curves to determine empirical values of C for different p\n\n4. **Missing computational complexity analysis**: While focusing on query complexity, the paper neglects the computational cost of maintaining and updating the posterior distribution, which could be substantial in practice. For the 1D case, each update requires O(1) operations with a continuous representation, but the high-dimensional extension (Section C) involves partitioning and interpolation that likely has significant computational overhead. The authors should analyze and report the computational complexity alongside query complexity to provide a complete picture of PBA's efficiency.\n\n5. **No practical implementation guidance**: The paper lacks discussion of practical considerations that would help practitioners implement PBA effectively, such as:\n   - Recommended stopping criteria based on desired accuracy and noise level\n   - Sensitivity to prior distribution choice (beyond the assumed uniform prior)\n   - How to handle cases where the monotonicity assumption might be violated\n   - Computational trade-offs between continuous representation and discretized implementations\n\nThese improvements would strengthen the paper's practical relevance while maintaining its strong theoretical foundation."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **High-dimensional convergence distinction**: The paper establishes exponential convergence for 1D root-finding (Theorem 1) but only polynomial convergence for general high-dimensional cases (Theorem 2), with exponential recovery limited to linear boundaries (Theorem 3). Could you elaborate on the fundamental difference between linear and non-linear boundaries that creates this distinction? Specifically, what aspect of the query dynamics analysis fails to extend to non-linear boundaries, and are there other high-dimensional problem classes beyond linear boundaries where exponential convergence might still hold? This would help contextualize the practical relevance of your main contribution.\n\n2. **Explicit noise dependence**: The constant $C$ in your exponential bound $E|\\hat{\\theta}_n - \\theta^*| \\leq 3e^{-Cn}$ depends on $p$, but the exact relationship isn't quantified. Could you provide more details on how $C$ scales with $p$, particularly as $p$ approaches $0.5$ (the theoretical limit)? The experimental results (Figure 1) suggest the convergence rate degrades significantly as $p$ increases, but without theoretical quantification, it's hard to assess whether the algorithm remains practical for moderately noisy settings.\n\n3. **Empirical validation of constants**: While Figure 1 demonstrates the exponential decay trend, it would strengthen the paper to quantify how the empirical convergence constants compare to your theoretical bounds. Could you provide additional experiments measuring the empirical $C$ values for different noise levels and comparing them to your theoretical predictions? This would help validate whether your analysis captures the true convergence behavior or if there's room for tighter bounds.\n\n4. **Practical comparison to alternatives**: The paper focuses on establishing PBA's theoretical properties but doesn't compare it to alternative adaptive algorithms for noisy root-finding. Could you briefly discuss how PBA compares to other methods (e.g., stochastic approximation, discretized approaches) in terms of practical performance, computational complexity, or implementation simplicity? This would help readers understand where PBA offers the most value in real applications.\n\n5. **Generalization to non-uniform priors**: The analysis assumes a uniform prior, but in practice, domain knowledge might justify non-uniform priors. Could you comment on whether your analysis extends to non-uniform priors, and if so, how the convergence rate might be affected? This would address a common practical consideration that could significantly impact the algorithm's applicability.\n\n6. **Beyond the noise limit**: The paper states results apply to general responses with noise level up to $p$, but focuses on the worst-case scenario. Could you elaborate on how the convergence rate improves when the actual noise level is strictly less than $p$? Understanding this relationship would help practitioners calibrate expectations for real-world applications where noise characteristics might be better understood."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "Probabilistic Bisection Algorithm Provably Achieves Exponential Convergence",
+    "Anonymous authors",
+    "Abstract",
+    "1 Introduction",
+    "2 Convergence Rate of PBA",
+    "2.1 Setup",
+    "2.2 Exponential Convergence Rate",
+    "2.3 Analysis of Query Behaviors",
+    "260",
+    "Proof of Proposition 1.",
+    "Proof of Proposition 2.",
+    "A Missing Proofs.",
+    "Proof of Theorem 1",
+    "B Discussion on the Noise Level",
+    "C Extension to High Dimensional Data",
+    "Proof of Theorem 2.",
+    "Proof. Estimator: constructing ̂ g n ( · ) by grid-lines-interpolate.",
+    "Proof of Theorem 3",
+    "D Experiments",
+    "E The Use of Large Language Models Statement"
+  ],
+  "images_used": 4,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

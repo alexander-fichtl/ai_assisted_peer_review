@@ -1,0 +1,99 @@
+{
+  "pdfname": "7y11BdJIOp",
+  "content": {
+    "summary": {
+      "value": "This paper introduces LLM-CARe, a stage-wise cyclic refinement framework for generating high-quality synthetic Electronic Medical Records (EMRs) using large language models. The method employs a multi-agent system with Critic, Adviser, and Reviser components that collaboratively refine EMRs across three granularities: corpus-level (ensuring demographic typicality and knowledge coverage), section-level (enforcing content completeness), and document-level (verifying medical correctness and context consistency). Unlike existing approaches that merely imitate real EMRs without ensuring clinical quality, LLM-CARe systematically enforces clinical quality principles throughout the generation process. The framework demonstrates significant improvements over baselines in both EMR quality metrics and downstream clinical task performance across diagnosis prediction, examination recommendation, and treatment recommendation. Importantly, LLM-CARe achieves these results without requiring access to real EMR text for training or prompting, fully preserving patient privacy while generating clinically meaningful synthetic data. The paper validates the approach through comprehensive evaluations including clinician assessments, showing strong alignment between LLM-based and human quality judgments. The method's effectiveness is further confirmed through ablation studies that demonstrate the complementary roles of each agent and the benefits of the stage-wise refinement process."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Innovative multi-granularity refinement framework**: The paper introduces a stage-wise cyclic refinement approach that targets different quality dimensions at appropriate levels of granularity (corpus → section → document), with compelling evidence that this staged progression is more effective than single-stage refinement. The methodology demonstrates that corpus-level refinement (which addresses distributional alignment) benefits examination/treatment tasks most, while section/document refinement improves diagnosis prediction, showing the framework's structural validity.\n\n2. **Explicit, multi-dimensional EMR quality formulation**: The authors provide a concrete, operationalizable definition of EMR quality across five dimensions (demographic typicality, knowledge coverage, content completeness, medical correctness, context consistency) with 28 specific, measurable criteria (detailed in Tables 6-9). This goes beyond prior work that simply measures similarity to real data, establishing a clinical quality standard that synthetic EMRs should satisfy.\n\n3. **Clinician-validated LLM evaluation framework**: The human evaluation study with licensed clinicians demonstrates strong agreement (Cohen's Kappa = 0.833) between LLM-based quality assessment and professional medical judgment. This validation is critical as it establishes that the automated evaluation metrics align with clinical standards, addressing a key concern in automated medical text evaluation.\n\n4. **Privacy-preserving quality without real EMR exposure**: The paper demonstrates that high-quality synthetic EMRs can be generated without accessing real EMR text during generation (unlike MedSyn), while still outperforming methods that do use real records. The membership inference attack results (Table 11) confirm no additional privacy risk, showing that quality can be achieved without compromising privacy—a significant advancement over prior approaches.\n\n5. **Comprehensive component ablation**: The ablation study (Figure 8) provides evidence that all three agents (Critic, Adviser, Reviser) are essential, with removal of any component causing significant performance degradation. This demonstrates that the framework's effectiveness comes from the structured interaction rather than any single component, validating the necessity of the full multi-agent architecture.\n\n6. **Robustness across LLM architectures**: The framework maintains consistent quality improvements across diverse LLM backbones (general-purpose, medical-specific, reasoning-oriented), as shown in Table 3. This demonstrates that the approach's value comes from the framework structure rather than specific model capabilities, making it broadly applicable regardless of the underlying LLM choice."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Limited clinician validation scope and diversity**: While the paper includes clinician evaluation (Section 5.7), the study involves only 4 clinicians assessing 200 synthetic EMRs across 5 methods. For a medical application, this evaluation lacks specialty diversity—clinicians from different medical fields (e.g., cardiology, neurology, pediatrics) would provide more comprehensive validation of documentation quality across specialties. The authors could strengthen their validation by expanding to clinicians from multiple specialties and increasing the sample size to cover rarer disease categories. Without this, the generalizability of quality assessments across different medical domains remains uncertain.\n\n2. **Inadequate comparison with state-of-the-art medical LLMs**: The baselines omit recent medical-specific LLMs like Med-PaLM 2 (Singhal et al., 2023) and Meditron-70B (Chen et al., 2023), which represent the current frontier in medical language understanding. The paper does include Meditron-8B in Section 5.5, but comparing only with the smaller variant fails to establish whether LLM-CARe provides meaningful advantages over the most capable medical LLMs. The authors should either implement comparisons with these larger models or explicitly discuss why their framework offers unique value beyond what these specialized medical LLMs can achieve.\n\n3. **Insufficient analysis of failure cases and limitations**: While Table 5 shows illustrative quality issues, the paper lacks systematic categorization of failure modes. For instance, Figure 14 shows that LLM-CARe still scores below 90% on certain criteria (e.g., \"HC Examination\" at 87.9%), but there's no investigation into why these failures occur or which clinical domains are most challenging. A failure mode analysis would reveal specific limitations (e.g., whether certain disease categories or demographic groups present particular challenges) and guide targeted improvements to the framework.\n\n4. **Lack of exploration of refinement process parameters**: The paper states that \"the Critic, Adviser, and Reviser agents are iterated for two cycles before proceeding to the next stage\" (Section E.3), but provides no analysis justifying this choice. Without exploring the trade-offs between refinement cycles and quality gains (e.g., comparing 1 vs 2 vs 3 cycles), readers cannot assess whether the computational overhead is justified or if fewer cycles might be sufficient for certain quality dimensions. The authors should include ablation studies showing how quality metrics change with additional refinement cycles.\n\n5. **No discussion of practical implementation barriers**: The paper focuses exclusively on technical performance without addressing real-world adoption challenges. For clinical deployment, critical considerations like integration with existing EHR systems (e.g., Epic, Cerner), regulatory compliance (HIPAA, GDPR), clinician workflow integration, and institutional review board requirements are notably absent. Including these practical considerations would strengthen the paper's relevance to healthcare AI practitioners and demonstrate awareness of the translational gap between research and clinical implementation."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions for Clarification\n\n1. **Real-world quality benchmark**: While the paper demonstrates LLM-CARe's superiority over synthetic baselines, how does its quality compare to *real human-generated EMRs* across your five quality dimensions? Including this comparison would help readers understand how close your method gets to human-level documentation quality. For instance, what are the typical scores for real EMRs on your medical correctness and content completeness metrics? This would provide crucial context for evaluating the practical utility of your synthetic data.\n\n2. **Failure mode analysis**: The paper shows overall improvements but lacks detailed analysis of persistent failure cases. Could you identify and categorize the most common error types that remain even after LLM-CARe refinement? Specifically, what kinds of medical errors (e.g., drug-disease contraindications, implausible symptom combinations) still occur, and how clinically significant are they? Understanding these limitations is essential for assessing real-world applicability.\n\n3. **Rare disease handling**: Your dataset construction excludes diseases with fewer than 500 records (Section B.1). How would LLM-CARe perform on rare diseases where reference distributions are sparse or non-existent? Would the framework require modification for such cases, and if so, what adaptations would you recommend? This is critical for healthcare applications where rare conditions still require attention.\n\n4. **Specialty-specific validation**: The clinician evaluation (Section 5.7) involved only 4 clinicians assessing 200 samples. Given that medical documentation standards vary across specialties, have you considered or planned specialty-specific validation (e.g., cardiology vs. neurology)? Would you expect different performance characteristics across medical specialties, and how might the framework need to be adapted?\n\n## Constructive Suggestions\n\n1. **Longitudinal EMR extension**: The current framework focuses on single-episode records. Could you discuss how LLM-CARe might be adapted to generate longitudinal patient histories across multiple encounters? This would significantly increase clinical utility, as real-world medical decision-making often depends on temporal patterns across visits.\n\n2. **Integration with medical ontologies**: Your knowledge coverage evaluation uses string matching (Section D). How might the framework benefit from integration with structured medical ontologies (e.g., SNOMED CT, UMLS) to better capture semantic relationships between clinical concepts? This could enhance both knowledge coverage measurement and the refinement process itself.\n\n3. **Clinical safety analysis**: Given the potential risks of synthetic medical data, could you provide more detailed analysis of how your framework prevents generation of clinically dangerous content (e.g., contraindicated treatments)? A dedicated safety analysis would strengthen the practical viability argument, particularly if you could demonstrate how your multi-stage refinement catches errors that single-pass generation would miss.\n\n4. **Computational optimization pathways**: While Section M discusses computational cost, could you elaborate on potential optimization strategies for production deployment? Specifically, what components of the cyclic refinement process are most amenable to acceleration (e.g., parallelization, caching), and what would be the trade-offs in quality? This would help healthcare organizations assess implementation feasibility.\n\nThese questions and suggestions focus on areas where author responses could significantly strengthen the paper's impact, address practical deployment concerns, and provide deeper insights into the method's limitations and potential. They avoid generic weaknesses and target specific aspects where clarification would most benefit the research community."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "CRITIC-ADVISER-REVISER CYCLIC REFINEMENT: TOWARDS HIGH-QUALITY EMR CORPUS GENERATION WITH LLMS",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 METHOD",
+    "3.1 INITIAL DRAFT GENERATION",
+    "3.2 CORPUS-LEVEL CARE",
+    "3.3 SECTION-LEVEL CARE",
+    "3.4 DOCUMENT-LEVEL CARE",
+    "3.5 STAGE-WISE ORDERING",
+    "4 EXPERIMENTAL SETUP",
+    "5 EXPERIMENTAL RESULTS AND DISCUSSION",
+    "5.1 COMPARISON OF EMR QUALITY",
+    "5.2 COMPARISON OF DOWNSTREAM TASK PERFORMANCE",
+    "5.3 ANALYSIS OF PERFORMANCE ACROSS STAGES",
+    "5.4 ABLATION STUDY OF MULTI-AGENT COMPONENTS",
+    "5.5 ANALYSIS OF ROBUSTNESS ACROSS LLM BACKBONE",
+    "5.6 EFFECT ON INCORPORATING REAL EMR TEXT",
+    "5.7 CLINICIAN EVALUATION",
+    "5.8 CASE STUDY",
+    "6 CONCLUSION",
+    "A DETAILS OF EMR QUALITY PRINCIPLES",
+    "A.1 CONTENT COMPLETENESS",
+    "A.2 MEDICAL CORRECTNESS",
+    "A.3 CONTEXT CONSISTENCY",
+    "A.4 DEMOGRAPHIC TYPICALITY",
+    "A.5 KNOWLEDGE COVERAGE",
+    "B DETAILS OF DATASET",
+    "B.1 DATASET CONSTRUCTION",
+    "B.2 CONSTRUCTION OF DOWNSTREAM TASKS",
+    "C BASELINE IMPLEMENTATION DETAILS",
+    "D EVALUATION DETAILS",
+    "1134 E.3 HYPERPARAMETERS",
+    "1146 E.4 SOFTWARE",
+    "E.5 COMPUTATIONAL RESOURCES",
+    "F ROBUSTNESS OF LLM-AS-JUDGE EVALUATION",
+    "G SUBGROUP ANALYSIS ACROSS DEMOGRAPHIC AND DISEASE FREQUENCY",
+    "H FULL RESULTS OF EMR QUALITY",
+    "I PRIVACY EVALUATION VIA MEMBERSHIP INFERENCE ATTACK",
+    "J ADDITIONAL VALIDATION OF DOWNSTREAM TASK RELIABILITY",
+    "K ROBUSTNESS TO PROMPTING STYLES AND INITIAL DRAFT QUALITY",
+    "L DETAILS OF CLINICIAN EVALUATION",
+    "L.1 RELIABILITY OF CLINICIAN EVALUATION",
+    "L.2 EXAMPLES OF DISAGREEMENT BETWEEN LLM AND CLINICIANS",
+    "LLM-Clinician Disagreement",
+    "Inter-Clinician Disagreement",
+    "1404 L.3 EVALUATION SCHEMA",
+    "1424",
+    "Completeness",
+    "Consistency",
+    "Correctness",
+    "M COMPUTATIONAL COST",
+    "1454 N USE OF LLMS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

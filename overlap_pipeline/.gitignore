@@ -1,0 +1,16 @@
+# Extracted paper text (large; regenerate with extract_processed_pdfs.py)
+data/processed_pdfs/
+
+# Pipeline outputs (regenerate by re-running the stages)
+outputs/
+
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+# hunkwise
+.vscode/hunkwise/

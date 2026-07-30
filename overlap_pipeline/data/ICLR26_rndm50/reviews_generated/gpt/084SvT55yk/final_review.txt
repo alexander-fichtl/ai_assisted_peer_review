@@ -1,0 +1,166 @@
+Summary:
+The paper proposes NEXCO, a diffusion-based neural solver that makes Adaptive Expansion native to the generative process for combinatorial optimization. It introduces a CO-specific masked corruption that only drops active entries (1 → 0), a time-agnostic GNN denoiser trained with a time-agnostic optimization consistency objective, and a Native Adaptive Expansion (NAE) decoder that iteratively selects high-confidence variables and enforces constraints via a feasibility projector Γ (Sec. 3.1–3.4; Fig. 1; Eq. 5–8). This design turns diffusion intermediate states into meaningful, feasible partial solutions and yields O(Ts) inference with finite-time convergence under mild assumptions (Prop. 1 in Sec. 3.4). Across TSP, MIS, and CVRP, NEXCO improves solution quality and runtime over strong diffusion and AE baselines—for example, matching or surpassing Fast T2T at 2–4× lower latency on TSP and reducing drops by roughly 50% at similar or lower time (Table 2), with consistent gains on MIS (Table 5) and CVRP (Table 6). The method is robust to imperfect supervision and generalizes across scales and distributions (Sec. 4.1–4.3; Tables 3–4, B.1). Overall, NEXCO unifies feasibility, global awareness, and adaptivity within a single masked diffusion framework for CO.
+
+Strengths:
+1. Clear conceptual advance: makes Adaptive Expansion intrinsic to the generative process rather than a wrapper (Table 1; Sec. 1). This resolves both dependence on a GP backbone and the O(Ds·Ts) cost of prior AE (COExpander), yielding O(Ts) complexity while retaining feasibility and global awareness.
+
+2. CO-specific one-way mask corruption (Eq. 5; Sec. 3.1) that unifies [MASK] and 0 into a single background state. This directly addresses the severe 0/1 imbalance and “conservative 0-prediction” failure mode of three-state MDMs on MIS, and turns intermediate states into valid partial solutions. The empirical divergence shown in Fig. 2 convincingly supports this design choice.
+
+3. Time-agnostic denoiser with time-agnostic optimization consistency (Sec. 3.2–3.3; Eq. 6). Removing timestep conditioning exploits the fact that the mask pattern encodes corruption level and eliminates schedule sensitivity. The TOC loss enforces instance-level optimality consistency across corruption levels, aligning training with the optimization objective.
+
+4. Native Adaptive Expansion (NAE) decoding with feasibility projection (Algorithm 1; Eq. 8; Sec. 3.4). The confidence-thresholded candidate selection plus a lightweight, task-specific feasibility predicate produces a monotone trajectory of feasible partial solutions. The abstraction of Γ(·) as a uniform three-stage template clarifies portability across TSP/MIS/CVRP.
+
+5. Formal convergence guarantee under mild assumptions (A1–A3) with a finite-time bound (Proposition 1; Sec. 3.4). This provides a rare bit of theoretical reassurance for a constructive neural decoder and cleanly relates decoding steps to problem structure (e.g., Nmax edges/nodes).
+
+6. Strong and broad empirical gains across diverse CO families with rigorous baselines. Examples:
+   - TSP: matches or improves gaps while being 2–4× faster than Fast T2T (Table 2), e.g., 0.03% gap in 0.08s vs 0.31s on TSP-100.
+   - MIS: reduces drop from 2.54% (Fast T2T) to 1.66% with 2.8× speedup on RB-[200–300] (Table 5).
+   - CVRP: achieves 0.85–2.45% drops where prior diffusion GP systems are absent (Table 6), highlighting practical significance for constrained routing.
+
+7. Extensive and targeted ablations that isolate where improvements come from:
+   - Corruption scheme: mask vs uniform (Table 10) shows systematic gap reductions.
+   - Decoder mechanism: global non-adaptive schedule vs NAE (Table 11) and greedy full reconstruction vs feasibility projection (Table 12), attributing quality gains to native, confidence-aware expansion rather than extra compute.
+   - Hyperparameters: step budget vs runtime/quality (Fig. 3) and confidence threshold α (Fig. 4), exposing an interpretable efficiency–quality trade-off and robust α ranges.
+
+8. Generalization and scalability evidence beyond in-distribution metrics:
+   - Cross-scale transfer on TSP with notably small gaps (e.g., training on 500 → testing on 1000: 0.37% with NEXCO; Table 4).
+   - Cross-distribution and cross-scale MIS transfer improvements over diffusion baselines (Table 7).
+   - Large-scale TSP-10K with competitive 1.53% gap in 52s (Table 8) and strong TSPLIB performance from a TSP-100-trained model (Table 9).
+
+9. Practical robustness to imperfect supervision (Sec. 4.1; Table 3). Even when trained on 2-Opt–perturbed references (1.65–3.35% gaps), the model attains 0.25–0.31% final gaps, supporting the claim that TOC with feasible partial states reduces reliance on exact labels.
+
+10. Transparent efficiency accounting: runtime breakdown across denoiser and projection costs (Table 13) shows Γ(·) overhead remains small and scales predictably, strengthening the practicality and reproducibility of the claimed O(Ts) behavior.
+
+11. Methodological synthesis grounded in recent discrete/masked diffusion progress (Sec. 2.3) but adapted to CO’s structural constraints. The paper convincingly argues why standard bit-flip diffusion fails to yield meaningful partial states for constructive decoding in CO and demonstrates how MDM-style ideas can be reshaped to respect feasibility (Sec. 3.1–3.4).
+
+12. Generally strong exposition of the pipeline with concrete equations and algorithmic detail (Fig. 1; Eq. 5–8; Algorithm 1) and comprehensive experimental setup and implementation notes (Sec. 4; App. C–D), aiding reproducibility.
+
+Weaknesses:
+1. Time-agnostic claim is contradicted by the architecture in the appendix.
+   - Evidence: Section 3.2 emphasizes “remove timestep embeddings” and a “time-agnostic denoiser fθ(xt, G)”. Yet Appendix C.1–C.2 include timestep features t and terms “ReLU(t0)” in Eqs. (20)–(21), which suggests denoiser layers use timestep information.
+   - Why it matters: This weakens the central claim that schedule dependence is removed and makes it unclear which variant produced the results.
+   - Actionable: Align the released model with Section 3.2 by removing all timestep conditioning in Appendix C or provide ablations comparing time-agnostic vs time-conditioned denoisers on TSP/MIS/CVRP to quantify the benefit. Explicitly state which variant is used in Tables 2, 5, 6.
+
+2. The “optimization consistency” objective does not enforce cross-level consistency and relies on a strong subset assumption.
+   - Evidence: Time-agnostic optimization consistency in Eq. (6) is just two terms d(fθ(xt′), x*) + d(fθ(xt), x*); there is no term encouraging fθ(xt) ≈ fθ(xt′). Section 3.3 argues “each corrupted state xt is thus a valid subset of x*,” which holds only if the forward process masks the same x* used as the target; the “Practical note” then allows heuristic labels, where the subset claim can be false.
+   - Why it matters: Theoretical justification is weakened, and the objective can degenerate to standard supervised prediction without consistency across masks.
+   - Actionable: Add a cross-level regularizer (e.g., KL or MSE between fθ(xt) and fθ(xt′) restricted to unmasked entries) and report an ablation. Clarify training pairs (is x0 ≡ x*?) and quantify performance when x* is heuristic (beyond Table 3) on MIS/CVRP too.
+
+3. Feasibility projection Γ(·) for TSP underspecified; “subtour-free constraints” are nontrivial.
+   - Evidence: Section 3.4 describes a “lightweight boolean feasibility predicate” that “maintain[s] degree-2 and subtour-free constraints,” but no algorithmic detail is given (e.g., union-find to prevent premature cycles; handling of connectivity and final cycle closure).
+   - Why it matters: Subtour handling can be the practical bottleneck and affects both correctness and time. The claim that Γ is a simple, uniform template hinges on this detail.
+   - Actionable: Specify the exact subtour check (data structures, complexity), and report (i) acceptance ratios per step, (ii) fraction of intermediate states remaining subtour-free, and (iii) time breakdown of subtour tests on TSP in Table 13-style profiling.
+
+4. Convergence guarantee is weak and hinges on a strong expandability assumption that may fail in practice.
+   - Evidence: Proposition 1 in Section 3.4 requires (A2) “Strict expandability” for any incomplete state; this is often violated in constructive TSP/MIS when local commitments create dead-ends.
+   - Why it matters: The result becomes almost tautological and does not inform failure modes or approximation.
+   - Actionable: Empirically report the frequency of getting stuck (no feasible additions) before completion and the recovery strategy (e.g., backtracking/resampling). If possible, provide conditions on Γ(·) (e.g., matroid/greedoid-like structures) under which expandability holds, or incorporate a certified backtrack step into NAE.
+
+5. Fairness gaps in CVRP comparisons; missing strong GP/diffusion baselines.
+   - Evidence: Section 4.3/Table 6 compare only to Sym-NCO (LC) and COExpander (AE), noting “GP-based diffusion solvers have not been extended to CVRP.” 
+   - Why it matters: Without a GP/diffusion baseline adapted with a capacity-aware Γ, advantages may reflect task coverage rather than the native AE design.
+   - Actionable: Implement a minimal Fast T2T + feasibility projection on a sparsified graph for CVRP-50/100/200, or report a negative result explaining why it fails (with metrics). Alternatively, include a competitive learned improvement heuristic (e.g., learning k-Opt for CVRP) as an additional baseline.
+
+6. Limited evaluation on real-world routing benchmarks; synthetic-only CVRP distributions.
+   - Evidence: CVRP uses uniform coordinates and demands (Section 4.3) and lacks CVRPLIB or variants with time windows/capacity heterogeneity; by contrast TSPLIB is included for TSP (Table 9).
+   - Why it matters: The paper argues NAE handles hard constraints natively; testing on real-world CVRPLIB and/or VRPTW would better validate Γ’s generality.
+   - Actionable: Add CVRPLIB results under the same setup and one additional constraint variant (e.g., VRPTW small instances) to demonstrate portability of Γ(·).
+
+7. Efficiency reporting could better isolate method-intrinsic gains from hardware and implementation.
+   - Evidence: Section D.1–D.2 mention GPU hardware, yet Section D.1 says “single-threaded setting” for evaluation; Table 13 reports wall-clock times but no FLOPs/NFEs/throughput. Baselines (e.g., Concorde/HGS) are C/C++ heuristics.
+   - Why it matters: Wall-clock times can be sensitive to framework and device. The O(Ts) vs O(Ds·Ts) claim (Table 1; Section 3.4) would be stronger with hardware-neutral metrics.
+   - Actionable: Report denoiser calls (NFEs), average candidates checked, and FLOPs per step for NEXCO vs baselines. Provide GPU vs CPU timings to show robustness of the speedups.
+
+8. Data/label efficiency not addressed despite heavy supervision.
+   - Evidence: Training uses up to 1.28M labeled instances for TSP-100 (Section 4.1) with Concorde supervision; similar scale for CVRP with HGS (Section 4.3). Only one label robustness ablation is shown for TSP (Table 3).
+   - Why it matters: Label generation is expensive; data efficiency is important for practical adoption.
+   - Actionable: Provide (i) training compute/label generation time, (ii) performance vs training set size curves, and (iii) results with weak/partial labels or self-training on MIS/CVRP (not just TSP).
+
+9. “Adaptive” expansion still relies on fixed hyperparameters α and ρt schedules.
+   - Evidence: Algorithm 1/Section 3.4 and Section 4.4 select a fixed threshold α and a pre-set ρt schedule; Figure 4 shows sensitivity.
+   - Why it matters: Fixed schedules may undercut the “instance-adaptive” decoding claim.
+   - Actionable: Learn α and ρt from the denoiser’s uncertainty (e.g., entropy/quantile thresholds) or via a small policy network; report gains and robustness across scales.
+
+10. Inconsistencies around step notation and complexity may confuse the native-vs-wrapper advantage.
+    - Evidence: Table 1 states NEXCO is O(Ts), while experiments vary D s (Table 2, Table 6), and Algorithm 1 uses “iterations Ts, threshold α, expansion schedule {ρt}”. This muddles whether Ts or Ds controls expansion.
+    - Why it matters: The core claim is complexity O(Ts) without the wrapper’s O(Ds·Ts).
+    - Actionable: Unify notation (use one symbol) and explicitly map “expansion rounds” to the complexity variable in Table 1. Add a plot of gap vs number of denoiser calls for NEXCO, Fast T2T, and COExpander to visualize the O(Ts) benefit.
+
+11. MIS coverage omits some baselines/scales; evidence could be strengthened.
+    - Evidence: Table 5 lacks entries for several GP baselines on RB-[800–1200] and ER; DIMES entries are partial. Figure 2 shows validation trends but no quantitative ablation across p for the corruption design.
+    - Why it matters: The case for CO-specific mask vs three-state MDM on MIS is strong qualitatively; fuller quantitative comparisons would solidify it.
+    - Actionable: Fill missing MIS baseline rows where feasible, or explain failures/timeouts. Add a controlled MIS study across ER p ∈ {0.1, 0.2, 0.3, 0.4} comparing three-state MDM vs CO-specific corruption with size/drop/time.
+
+12. Generality beyond binary decisions is not discussed.
+    - Evidence: The framework is built around binary x ∈ {0,1}^N (Section 2.1), with one-way 1→0 corruption (Eq. 5).
+    - Why it matters: Many CO problems require multi-way categorical choices (e.g., assignment, coloring).
+    - Actionable: Outline how NEXCO would extend to k-ary variables (e.g., mask-drop of active category, categorical Γ(·)), and include a small-scale k-ary benchmark or a proof-of-concept ablation.
+
+Suggestions/Questions:
+1) Time-agnostic denoiser vs appendix details
+- Clarify whether timestep embeddings are truly removed in the reported models. Section 3.2 states fθ(xt, G) is time-agnostic, but Appendix C.1–C.2 introduces t and terms “ReLU(t0)” in Eqs. (20)–(21). Which variant produced Tables 2, 5, 6? Please provide an ablation comparing time-agnostic vs time-conditioned denoisers across TSP/MIS/CVRP.
+
+2) Training objective and cross-level consistency
+- The TOC loss in Eq. (6) supervises each masked state to x*, but does not directly encourage fθ(xt) ≈ fθ(xt′). Did you try an explicit cross-level regularizer (e.g., KL/MSE on overlapping unmasked coordinates)? If so, please report its effect; if not, can you add a small ablation?
+
+3) Subset assumption with heuristic labels
+- Section 3.3 argues “each corrupted state xt is thus a valid subset of x*,” which holds only if the forward process masks the same x* used as target. With heuristic supervision (Sec. 3.3 Practical note), this can fail. Beyond Table 3 for TSP, can you show analogous results for MIS/CVRP trained from heuristics (KaMIS/HGS), and quantify any performance loss vs exact labels?
+
+4) Feasibility projection Γ(·) for TSP: subtour checks
+- Section 3.4 claims a “lightweight boolean predicate” maintaining degree-2 and being subtour-free (Eq. 8), but subtour detection is nontrivial. What exact data structure/algorithm do you use (e.g., union-find with path compression, dynamic connectivity)? What is its per-step complexity, and its share in Table 13’s TSP breakdown?
+
+5) What happens when expansion gets stuck?
+- Proposition 1 assumes strict expandability (A2). In practice, do you encounter steps where St = ∅ while the solution is incomplete? If yes, what is your fallback (lower α, change ρt, stochastic tie-breaks, backtracking)? Please report the frequency of such events and a sensitivity study.
+
+6) O(Ts) complexity and the role of Ds
+- Table 1 states NFEs O(Ts), yet experiments tune Ds (e.g., Table 2, Table 6) and Algorithm 1 lists “iterations Ts.” Please unify notation and explicitly map “expansion rounds” to the complexity variable in Table 1. A plot of gap vs number of denoiser calls for NEXCO/COExpander/Fast T2T would make the asymptotic advantage concrete.
+
+7) Adaptive control of α and ρt
+- Section 4.4 shows sensitivity to α and step budget (Figs. 3–4), yet α and ρt are fixed schedules. Have you tried instance-adaptive policies based on p-distribution statistics (e.g., quantile thresholds or entropy-calibrated α, and choosing ρt to match the mass above α)? Please provide results; this could further support the “native adaptive” claim.
+
+8) CVRP baselines and fairness
+- Table 6 omits GP/diffusion baselines, stating they have not been extended to CVRP. Could you include a minimal Fast T2T + Γ(·) baseline (on a sparsified graph) to isolate the benefit of native AE versus task coverage? If this fails, please document the failure mode quantitatively (drop/time) and why Γ(·) does not suffice.
+
+9) Details of Γ(·) for CVRP
+- The feasibility predicate for capacity-constrained routing is underspecified (Sec. 3.4). How do you maintain route feasibility (capacity, depot degree, route continuity) while edges are inserted? Do you allow temporary route fragments? Please provide the exact predicate and its complexity.
+
+10) Probability calibration and thresholding
+- Candidate selection hinges on a global α across steps (Algorithm 1). Are p-scores calibrated across different mask levels? Reliability plots/ECE per-step would justify the use of a single α. If they are not well calibrated, can you report whether temperature scaling or monotone calibration improves performance?
+
+11) Additional MIS quantitative evidence for mask corruption
+- Figure 2 shows the qualitative failure of three-state MDM on MIS. Could you add a quantitative MIS study (size/drop/time) comparing three-state MDM vs your CO-specific mask (Eq. 5) across several ER densities p ∈ {0.1, 0.2, 0.3, 0.4} to solidify the claim?
+
+12) Robustness to training data volume and label generation cost
+- Section 4 uses large supervised corpora (e.g., 1.28M TSP-100 with Concorde; 640K CVRP-100 with HGS). Please provide performance vs training set size curves, and report the wall-clock to generate labels. Any results with weak/partial labels or self-training on MIS/CVRP (analogous to Table 3) would strengthen practicality claims.
+
+13) Large-scale sparsification
+- For TSP-10K you use KNN sparsification (App. C.4). How sensitive are results to the K value? Please add an ablation (gap/time vs K), and clarify whether all baselines in Table 8 use the same K for fairness.
+
+14) Runtime reporting and hardware neutrality
+- Section D.1 says “single-threaded setting,” but GPU inference is used for learning methods. Please clarify the evaluation protocol, and add hardware-neutral metrics (e.g., NFEs, candidates checked, FLOPs/denoiser call) to complement wall-clock times in Tables 2, 5, 6, 8, 13.
+
+15) Reproducibility and minor inconsistencies
+- There are formatting/duplication glitches (e.g., Table 10 header/rows; repeated references around lines 702–707; ρk vs ρt in Algorithm 1). Please fix these and provide full training seeds, model sizes, and exact hyperparameters per table to ensure reproducibility.
+
+16) Extension beyond binary variables
+- Section 2.1 and Eq. (5) assume binary x. How would NEXCO extend to k-ary decisions (e.g., assignment/graph coloring)? A brief design (mask-drop of active category, categorical feasibility Γ) and a small proof-of-concept would broaden the paper’s scope.
+
+17) Proof and empirical diagnostics for Proposition 1
+- Please include the proof of Proposition 1 (Sec. 3.4) in the appendix. Additionally, report empirical diagnostics that relate to (A1)–(A3): average number of steps to completion vs Nmax, fraction of steps that expand strictly, and the distribution of St sizes.
+
+18) Acceptance dynamics and pruning statistics
+- To better understand NAE, could you report per-step acceptance ratios, number of candidates |Ct|, accepted |St|, and the cumulative fraction of the final solution fixed over time, for TSP/MIS/CVRP? This would help assess how early commitments and pruning shape final quality.
+
+Soundness: 3
+
+Presentation: 3
+
+Contribution: 3
+
+Overall: 7
+
+Confidence: 4
+
+Conduct: NO
+
+Ethics: No ethics review needed.

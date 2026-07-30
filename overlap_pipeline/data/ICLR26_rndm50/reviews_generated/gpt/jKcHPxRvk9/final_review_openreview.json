@@ -1,0 +1,118 @@
+{
+  "pdfname": "jKcHPxRvk9",
+  "content": {
+    "summary": {
+      "value": "The paper proposes LORO (LLM Offline, RL Online), a simple offline-to-online RL framework that warm-starts an RL agent using a small “offline” dataset collected by an LLM’s in-context decision-making, then fine-tunes the policy online with a standard off-policy learner (Algorithm 1; Figure 2). The key assumption (Assumption 1) is that the LLM-induced trajectories sufficiently cover state-action pairs visited by some optimal policy, connecting to coverage-based guarantees from offline-to-online RL; the paper introduces an empirical surrogate for the transfer coefficient (Eq. (1)) and shows improved coverage for LLM-collected data (Section 5.2; Table 2–3; Figures 1 and 4). Across six Gym-style environments, LORO improves sample efficiency and often final performance relative to pure LLM control, pure online RL (DDQN/SAC), and naive data mixing (Figure 3; Table 1; Table 4). Ablations show that pre-training on the LLM data is crucial (Section 5.3; Figure 5) and that gains depend on the higher quality of LLM-collected data versus random or early online data (Section 5.4; Figure 6). The approach is largely algorithm-agnostic, also yielding benefits with AWAC (Section 5.5; Figure 7), and the authors systematically probe the roles of LLM model size, CoT/SFT/Long-CoT, data amount, and pre-training steps (Sections 5.6–5.7; Appendix E), along with reporting wall-clock costs (Appendix F). The work positions LLMs as data providers to reduce unnecessary exploration while retaining the asymptotic strengths of classical RL."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 2
+    },
+    "contribution": {
+      "value": 3
+    },
+    "strengths": {
+      "value": "1. Clear, simple, and original framing: using an LLM purely as a data generator to warm-start an off-policy learner, followed by standard online fine-tuning. The pipeline is easy to adopt in existing RL stacks and remains black-box and algorithm-agnostic (Algorithm 1; Figure 2; Section 4).\n\n2. Strong empirical evidence of sample-efficiency gains across diverse tasks and action spaces. LORO consistently outperforms pure online RL and pure LLM control in 4/6 environments and is competitive in the rest, often reaching optimal policies faster (Figure 3; Table 1; Table 4).\n\n3. Convincing ablation isolating why it works: pre-training on LLM data is necessary, while naive data mixing underperforms. The “pre-train then fine-tune” choice is supported across tasks (Section 5.3; Figure 5), and pre-training on online/random early data provides little benefit (Section 5.4; Figure 6).\n\n4. Useful theoretical lens via coverage: Assumption 1 is tied to offline-to-online coverage guarantees, and the paper contributes a practical surrogate transfer coefficient (Eq. (1)) with supporting visualizations and counts. The LLM data better overlaps optimal trajectories than alternatives (Figures 1 and 4; Table 2–3; Appendix C Figure 8).\n\n5. Algorithm-agnostic validation: benefits hold when swapping the base learner (AWAC), highlighting that the gain is from the data-collection/warm-start idea rather than a particular RL algorithm (Section 5.5; Figure 7; Appendix E.1).\n\n6. Reproducibility and engineering transparency: detailed environment choices, RL hyperparameters, and LLM setup are provided, along with prompts and CoT examples (Appendix B, G, H). Reporting wall-clock times for both phases makes the practicality and costs explicit (Appendix F, Tables 5–6). A code link is included (Abstract).\n\n7. Careful control of confounders: the main experiments explicitly remove offline data after pretraining (while recommending aggregation) to cleanly attribute gains to pretraining quality rather than buffer mixing (Appendix B.2), strengthening the causal interpretation of ablations.\n\n8. Informative negative results that guide practice: larger LLMs, SFT, Long CoT, or test-time scaling without CoT do not systematically improve decision quality in these MDPs (Sections 5.6–5.7; Appendix E.2–E.5). This helps practitioners avoid unnecessary complexity.\n\n9. Robustness observations: even when the coverage assumption is imperfect, warm-starting with LLM data typically retains an advantage or remains competitive, with online exploration compensating where needed (Section 5.2, last paragraph).\n\n10. Intuitive diagnostics: trajectory-trace visualizations make the notion of “good coverage” concrete and easy to verify qualitatively, complementing the surrogate metric (Figure 1; Figure 4; Appendix C Figure 8)."
+    },
+    "weaknesses": {
+      "value": "Weaknesses (with actionable suggestions)\n\n1. Coverage assumption and metric are underspecified and partly self-referential.\n- Evidence: The coverage definition in Assumption 1 is garbled and hard to parse (Section 3, lines 135–151), and the surrogate metric drops the step index and uses the learned final policy as a proxy for the optimal one (Section 5.2; Eq. (1)). The surrogate often becomes infinite in FrozenLake (Table 3) and yields unintuitive comparisons (e.g., “# missing good state-action” = 0 for “Online collected” despite being suboptimal; Table 2 and footnotes).\n- Impact: Limits the rigor of the main hypothesis linking LLM data to coverage and sample-efficiency benefits.\n- Suggestions:\n  a) Provide a clean, step-indexed definition of Dπ and Cπ with consistent notation, and estimate coverage with smoothing (e.g., Laplace counts) to avoid ∞ values.  \n  b) In tabular tasks, compute overlap against a known optimal policy (via DP) instead of the learned final policy; report coverage for τ equal to the actual training setting (τ=10 rather than 30 in Table 2–3).  \n  c) Complement sup-ratio with additional overlap metrics (e.g., per-step support coverage, fraction of optimal actions/states covered) and learning-curve AUC vs. coverage.\n\n2. Deviation from Algorithm 1 obscures the offline-to-online claim.\n- Evidence: The main experiments remove the offline data from the buffer after pretraining (Appendix B.2), while Algorithm 1 aggregates data across phases (Section 4; Algorithm 1; Figure 2). The “Mix” baseline without pretraining underperforms (Figure 5), but the ablation does not disentangle whether aggregation plus pretraining would be better.\n- Impact: Weakens conclusions about the mechanism (pretraining vs. aggregation) and comparability to prior offline-to-online methods.\n- Suggestions:\n  a) Add a condition that strictly follows Algorithm 1 (keep LLM data in the buffer) and compare to the current “remove-after-pretrain” variant.  \n  b) Include at least one stronger offline-to-online baseline beyond “Mix,” e.g., a tuned AWAC fine-tuning-with-aggregation setting (Section 5.5) and a conservative variant or balanced sampling recipe (cf. Extended Related Work, Section A).\n\n3. Information asymmetries favor the LLM during data collection.\n- Evidence: The LLM receives extra state summaries or engineered features that the online learner does not, e.g., environment history in FrozenLake/CliffWalking and derived angle/rotation in Pendulum (“to help the LLM, but do not use them in the online phase”; Section B.1). RepresentedPong also includes additional engineered signals (Section B.1; Figure 3 caption).\n- Impact: The “higher-quality” LLM dataset may be attributable to privileged information, not just better decision-making; baselines are disadvantaged.\n- Suggestions:\n  a) Equalize observation spaces: either restrict the LLM to the same observations as the RL learner or provide the same augmented features to the RL learner and re-run baselines.  \n  b) Add an ablation “LLM without history/derived features” (cf. Figure 32 shows sensitivity to history summarization) to quantify their contribution to coverage and returns.\n\n4. Costs and scalability are not reconciled with the “sample efficiency” narrative.\n- Evidence: LLM data collection is very expensive in wall-clock and compute (e.g., Qwen‑32B: 54.0 h for CliffWalking, 69.4 h for RepresentedPong; Appendix F, Table 5), on top of the RL fine-tuning time (Table 6). Tasks are small-scale Gym environments.\n- Impact: It is unclear when LLM warm-start is preferable to simply collecting more online experience or using small, cheaper heuristics.\n- Suggestions:\n  a) Report token counts/compute costs and a break-even analysis comparing “τ LLM episodes + pretrain + online” vs. “more online RL interaction” for equal wall-clock/compute budgets.  \n  b) Include at least one more challenging benchmark (e.g., pixel-based Atari or larger control) or a sparse-reward domain to demonstrate scalability where LLM guidance is most beneficial.\n\n5. Limited statistical strength for sample-efficiency claims.\n- Evidence: Results use five seeds with standard errors (Figure 3; Table 4), but there are no statistical tests, AUC/time-to-threshold metrics, or sensitivity to τ beyond final-return plots (Appendix E.4).\n- Impact: It is hard to assess robustness of improvements in learning speed, not just final returns.\n- Suggestions:\n  a) Report area-under-learning-curve (AUC) and time-to-X metrics with confidence intervals and tests.  \n  b) Provide sensitivity curves for τ focused on sample-efficiency (not just final returns), and an adaptive switch criterion to avoid drops like the one at episode 10 in RepresentedPong (Figure 3).\n\n6. Scope and baseline coverage leave open questions.\n- Evidence: AWAC experiments (Section 5.5; Figure 7) show exceptions where “Pretrain with Online/Random” can compete or win, but the paper offers limited diagnosis. No imitation-style warm-start baseline is included.\n- Impact: The generality of “pretrain on small LLM data helps” is less clear across learners and pretraining methods.\n- Suggestions:\n  a) Add a behavior cloning warm-start baseline (supervised imitation from LLM data) followed by online RL, to isolate whether the benefit is primarily from policy initialization vs. value pretraining.  \n  b) Analyze cases where AWAC variants surpass LORO (Figure 7): Q-function drift, conservatism, or mismatch with small datasets.\n\n7. Fragility of prompting and action extraction is acknowledged but not quantified.\n- Evidence: Appendix G reports extraction failures and that Majority Voting/Best-of-N without CoT perform poorly.\n- Impact: Dataset quality may depend heavily on brittle prompting/decoding choices.\n- Suggestions:\n  a) Quantify extraction failure rates, their effect on return/coverage, and adopt robust parsing/validation (constrained decoding or self-checks).  \n  b) Report the effect of small prompt changes and seed variation on LLM coverage to assess stability.\n\n8. Continuous-control underperformance is under-explained.\n- Evidence: LORO ranks below Online RL on Pendulum (Table 1; Table 4), and model-size/capability variations do not help (Sections 5.6–5.7; Appendix E.2–E.3).\n- Impact: Limits confidence that the approach extends to harder continuous domains.\n- Suggestions:\n  a) Diagnose whether action discretization, torque scaling, or reward shaping interacts badly with LLM data; try modest action discretization for LLM control with de-discretized training targets for SAC.  \n  b) Include coverage/overlap analyses for continuous actions (e.g., kernelized occupancy) to see if poor action coverage explains the drop."
+    },
+    "questions": {
+      "value": "1. Assumption 1 and coverage notation. The statement and notation around Dπ and “coverage upper bound” in Section 3 (lines 135–151) are hard to parse. Could you restate Assumption 1 cleanly with step-indexed visitation dπh(s,a) and the precise relationship to the transfer coefficient of Song et al. (2022)? Suggestion: include the exact definitions, the inequality Cπ ≤ Dπ you rely on, and a short proof sketch or citation trail that matches your notation.\n\n2. Surrogate transfer coefficient details and infinities. In Section 5.2/Eq. (1), you drop the step index and estimate ˜Cπ by sample ratios, which often become ∞ in FrozenLake (Table 3). Can you: (a) explain why this happens beyond “dataset too small,” (b) report smoothed estimates (e.g., Laplace counts) to avoid ∞, and (c) add additional overlap metrics (fraction of optimal states/actions covered per step) to corroborate the conclusion? Also, please reconcile the “# missing good state-action = 0” for “Online collected” in Table 2 with its suboptimal final return.\n\n3. Ground-truth optimal policy for coverage evaluation. In the tabular environments (CliffWalking, FrozenLake), can you compute an optimal policy by DP and compute per-step coverage relative to that, instead of using the “final policy” as a proxy (Section 5.2)? This would remove self-referentiality and likely strengthen Figure 1/Figure 4/Table 2–3.\n\n4. τ inconsistency in coverage tables. Table 2–3 use 30-episode “offline” datasets, whereas the main setting uses τ = 10 (Section 5). Please provide the same coverage analysis at τ = 10 to align with the regime where LORO operates.\n\n5. Aggregation vs. removal of offline data. Algorithm 1 and Figure 2 aggregate data, but Appendix B.2 states you “remove the data collected in the ‘offline’ phase after pretraining.” Please (a) add a condition that follows Algorithm 1 exactly (keep the LLM data in the buffer), (b) compare that to the current “remove-after-pretrain” variant, and (c) include a stronger offline-to-online baseline that uses aggregation plus balanced sampling (as discussed in Section A) to clarify the mechanism behind Figure 5.\n\n6. Information asymmetry between LLM and RL learner. Section B.1 notes extra state summaries/derived features are provided to the LLM (e.g., environment history for FrozenLake/CliffWalking and angle/rotation for Pendulum) but not to the online learner. Could you provide an ablation equalizing observations in both directions: (a) LLM without the extra summaries/features, and (b) RL learner with the same augmented features? The comparison in Figure 6 would then isolate whether “data quality” stems from privileged information.\n\n7. Pendulum underperformance diagnosis. LORO is worse than Online RL on Pendulum (Table 1/Table 4). Can you analyze whether the issue is action coverage in continuous space (e.g., narrow torque distributions) or value-function overfitting to small datasets? Suggestion: report kernelized occupancy coverage for continuous actions and try modest action discretization for the LLM control while keeping SAC continuous during training.\n\n8. AWAC exceptions in Figure 7. In Section 5.5, “Pretrain with Online/Random” sometimes matches/surpasses LORO. What failure mode explains this (e.g., critic drift, conservatism, sensitivity to small datasets)? A brief diagnosis and hyperparameter sensitivity (e.g., advantage-weight temperature) would clarify the algorithm-agnostic claim.\n\n9. Behavior cloning warm-start baseline. To separate “policy initialization” from “value pretraining,” could you add a BC warm-start (supervised imitation from LLM data) followed by the same online RL as in LORO, and compare to your pretraining approach (Figures 5–6)?\n\n10. Adaptive switching from LLM to RL. You note in Section 5.1 that RepresentedPong drops at episode 10 due to an “improper choice of τ.” Can you propose and evaluate an adaptive switch (e.g., stop when online policy reaches the LLM’s running average return or a coverage threshold), avoiding hard-coded τ?\n\n11. Sample-efficiency statistics. Currently, results use five seeds with mean ± s.e. (Figure 3; Table 4). For the efficiency claim, could you add (a) AUC of learning curves and time-to-threshold metrics with confidence intervals, and (b) sensitivity to τ focused on sample efficiency (Appendix E.4 mostly reports final returns)?\n\n12. Compute and cost break-even analysis. LLM data collection is very expensive (Appendix F, Table 5; e.g., 54–69 h for Qwen‑32B on small tasks). Can you report token counts and provide a break-even analysis: when is “τ LLM episodes + pretrain” preferable to “more online interaction” under equal wall-clock or compute budgets? A simple model (cost per env-step vs. per LLM-token) would contextualize LORO’s practicality.\n\n13. Prompting/extraction robustness. Appendix G mentions action extraction failures and that Majority Voting/Best-of-N without CoT perform poorly. Please quantify extraction failure rates, their impact on returns/coverage, and whether constrained decoding or self-check heuristics reduce errors. Reporting sensitivity to small prompt changes would help assess stability.\n\n14. Clarify pretraining procedure and buffer usage. In Figures 5–6, “Pretrain,” “Mix,” and the main LORO differ in buffer handling (Appendix B.2). Could you explicitly state, per condition: (a) whether pretraining updates the policy and/or value networks; (b) whether the pretraining data remain in the buffer during online updates; and (c) whether target networks are reset after pretraining? This will improve interpretability of the ablations.\n\n15. Editorial/formatting fixes for clarity. Several passages have rendering issues (e.g., Section 2 around lines 101–111; duplicated Algorithm 1 blocks; incomplete sentences in Assumption 1). A clean rewrite of Assumption 1, Eq. (1), and Algorithm 1 (single version) would materially improve readability and reduce ambiguity."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 6
+    },
+    "confidence": {
+      "value": 3
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "SAMPLE-EFFICIENT REINFORCEMENT LEARNING BY WARMSTARTING WITH LLMS",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "5 EXPERIMENTS",
+    "5.1 SAMPLE EFFICIENCY",
+    "of episodes",
+    "of episodes",
+    "of episodes",
+    "of episodes",
+    "of episodes",
+    "5.2 JUSTIFYING THE COVERAGE ASSUMPTION 1",
+    "5.3 EFFECT OF PRE-TRAINING",
+    "5.4 EFFECT OF LLM'S DATA",
+    "5.5 VERIFYING LORO'S AGNOSTICITY TO BASE RL LEARNER CHOICES",
+    "5.6 EFFECTS OF THE LLM'S CAPABILITY",
+    "5.7 OTHER FINDINGS",
+    "6 CONCLUSION AND FUTURE WORK",
+    "A EXTENED RELATED WORK",
+    "B THE ENVIRONMENTS AND IMPLEMENTATION DETAILS",
+    "B.1 THE ENVIRONMENTS",
+    "B.2 IMPLEMENTATION DETAILS",
+    "C JUSTIFYING THE COVERAGE ASSUMPTION 1",
+    "D CUMULATIVE REWARDS TABLE",
+    "E ABLATION STUDY",
+    "E.1 ALGORITHM AGNOSTIC VERIFICATION",
+    "E.2 EFFECTS OF LLM'S MODEL SIZE",
+    "E.3 EFFECTS OF THE NUMBER OF PRE-TRAINING STEPS",
+    "E.4 EFFECTS OF THE AMOUNT OF LLM DATA",
+    "E.5 EFFECTS OF SFT AND LONG COT",
+    "E.6 EFFECTS OF THE HISTORY SUMMARY",
+    "F WALL CLOCK TIME",
+    "G LLM SETUP",
+    "H PROMPTS",
+    "H.1 CHAIN-OF-THOUGH PROMPTS",
+    "H.1.1 TASK 1: CLIFF WALKING",
+    "A Sample of Cliff Walking",
+    "▶ System:",
+    "1710 ▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "H.1.2 TASK 2: CARTPOLE",
+    "A Sample of CartPole",
+    "▶ System:",
+    "1728 ▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "Action: 1 (Push the cart to the left)",
+    "H.1.3 TASK 3: MOUNTAIN CAR",
+    "A Sample of Mauntain Car",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "H.1.4 TASK 4: FROZENLAKE",
+    "A Sample of FrozenLake (CoT)",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "A Sample of FrozenLake (Long CoT)",
+    "▶ System:",
+    "▶ User:",
+    "▶ DeepSeek-R1-Distill-Qwen-7B:",
+    "Let me think about each action:",
+    "H.1.5 TASK 5: PONG",
+    "A Sample of Pong",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "Step-by-step reasoning:",
+    "Action Plan:",
+    "H.1.6 TASK 6: PENDULUM",
+    "A Sample of Pendulum",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:"
+  ],
+  "images_used": 5,
+  "model": "gpt-5"
+}

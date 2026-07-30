@@ -1,0 +1,118 @@
+{
+  "pdfname": "jKcHPxRvk9",
+  "content": {
+    "summary": {
+      "value": "This paper introduces LORO (LLM Offline, RL Online), an algorithm that leverages Large Language Models to collect high-quality \"offline\" data for warm-starting reinforcement learning. The authors demonstrate that LLMs can generate state-action trajectories with superior coverage of optimal policy regions compared to random or vanilla online RL approaches. By pre-training an RL policy on this LLM-collected data before online fine-tuning, LORO achieves significant sample efficiency improvements across multiple OpenAI Gym environments. The work establishes a theoretical connection between LLM-generated data coverage and the transfer coefficient from offline-to-online RL literature. Empirical results show LORO outperforms pure RL, pure LLM policies, and naive combinations in four of six tested environments, with up to four times higher cumulative rewards. The authors verify that pre-training (not just mixing data) is essential for the performance gains, and demonstrate the approach's robustness across different RL algorithms. This research provides a novel framework for reducing sample complexity in RL problems where environment interactions are costly or safety-constrained."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 3
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. **Novel integration of LLMs with offline-to-online RL framework**: The paper introduces LORO, which uniquely leverages LLMs not as direct policy generators but as data collectors for warm-starting RL. This approach bridges two active research areas in a way not previously explored, specifically using LLMs to generate \"offline\" datasets with superior state-action coverage of optimal policy regions (Figure 1 and Figure 4), as quantified by the surrogate transfer coefficient in Table 2 where LLM data shows 0 missing state-actions compared to random/online data.\n\n2. **Empirical validation of theoretical coverage assumption**: The paper provides concrete evidence for Assumption 1 through the surrogate transfer coefficient metric (Table 2), demonstrating that LLM-collected data has significantly better coverage (69.10 vs 25.65 for Qwen-7B vs online data in CliffWalking) of optimal policy regions than conventional approaches, directly supporting the paper's core hypothesis.\n\n3. **Critical distinction between pre-training and data mixing**: The ablation study in Figure 5 clearly demonstrates that pre-training on LLM-collected data is fundamentally different from and more effective than simply mixing offline and online data (as in prior offline-to-online work), providing important insights into why LORO works while previous approaches failed to leverage offline data effectively.\n\n4. **Algorithm-agnostic performance validation**: The paper rigorously verifies LORO's effectiveness across different RL algorithms (SAC and AWAC in Section 5.5), showing consistent improvement regardless of the base RL learner, which significantly strengthens the contribution's generality beyond being a specific algorithmic tweak.\n\n5. **Comprehensive ablation studies isolating data quality effects**: Figure 6 provides compelling evidence that the quality of LLM-collected data (not just the act of pre-training) is crucial to LORO's success, showing that pre-training on LLM data substantially outperforms pre-training on random or online-collected data, even when using the same pre-training procedure."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Insufficient theoretical development**: While the paper claims LORO \"enjoys both small Cumulative regret suboptimality and Sample complexity\" under Assumption 1, it provides no formal proof or even detailed theoretical arguments connecting their LLM-based data collection to the transfer coefficient framework from Song et al. (2022). The paper merely states this connection without demonstrating how LLM-generated data specifically satisfies the mathematical requirements of the transfer coefficient analysis. A rigorous theoretical treatment should either adapt Song et al.'s analysis to the LLM context or provide new bounds that account for the unique properties of LLM-collected data.\n\n2. **Inconsistent experimental methodology regarding data handling**: The paper presents Algorithm 1 and Figure 2 showing that LORO aggregates both offline and online data during training, but Section 5.3 explicitly states \"we remove the data collected in the 'offline' phase after pretraining to have a clear ablation study.\" This methodological inconsistency makes it difficult to determine whether the performance gains come from pre-training alone, data mixing, or their combination. The paper should clarify whether the primary contribution is the pre-training step or the data aggregation, and provide results using the consistent methodology described in the algorithm.\n\n3. **Lack of principled analysis of the LLM query budget τ**: The paper sets τ=10 episodes for all experiments without justification or analysis of how performance varies with different τ values. While the authors mention investigating \"how to choose the LLM query budget τ in a principled manner\" as future work, this parameter is critical for practical application since it directly impacts the trade-off between LLM computational cost and RL sample efficiency. The paper should include ablation studies showing performance sensitivity to τ to guide practitioners.\n\n4. **Unaddressed computational cost of LLM data collection**: The paper focuses exclusively on sample efficiency (environment interactions) while ignoring the substantial computational cost of LLM data collection. Table 5 shows that LLM data collection can take 54+ hours for Qwen-32B on CliffWalking, which may offset the sample efficiency gains in practical applications. The paper should analyze the total cost (LLM computation + environment interactions) compared to pure online RL to demonstrate true efficiency improvements.\n\n5. **Limited evaluation on environments where LLM knowledge would be most beneficial**: The paper tests only on standard OpenAI Gym environments where the LLM receives explicit state descriptions. The approach would likely show greater value in environments where LLMs can leverage world knowledge (e.g., navigation tasks with natural language descriptions, or environments with sparse rewards where LLMs could provide useful sub-goals). The paper should include experiments in such environments to better demonstrate the unique value proposition of using LLMs rather than just another data collection method."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **Theoretical foundation clarification**: The paper claims LORO \"enjoys both small Cumulative regret suboptimality and Sample complexity\" under Assumption 1 but provides no formal proof. Could you elaborate on how LLM-generated data specifically satisfies the mathematical requirements of Song et al. (2022)'s transfer coefficient framework? A more detailed theoretical connection would strengthen the paper's foundation beyond the current assertion that \"we are the first to suggest\" this connection.\n\n2. **Pre-training mechanism**: Figure 5 demonstrates that pre-training is crucial for LORO's performance, yet Figure 6 shows it only works with LLM-collected data. Could you explain the specific mechanism by which pre-training on LLM data provides advantages that simple data mixing cannot achieve? What properties of LLM data make it amenable to this pre-training approach while random/online data is not?\n\n3. **Model size inconsistency**: Section 5.6 states \"we observe no clear advantage of using a larger model,\" but Figure 9 shows Qwen-32B significantly outperforms Qwen-7B in Pendulum with AWAC. Could you reconcile this apparent contradiction? Is there a threshold effect where larger models become beneficial only with certain RL algorithms or in specific environments?\n\n4. **Principled τ selection**: The paper uses a fixed τ=10 episodes for LLM data collection across all environments. Could you provide guidance on how to select τ in a principled manner? For instance, is there a relationship between τ, environment complexity, and LLM capabilities that would help practitioners determine optimal warm-start duration?\n\n5. **Failure cases of Assumption 1**: The paper notes Assumption 1 \"may not hold for some RL tasks\" but doesn't specify when or why. Could you characterize environments where LLM data would likely fail to provide good coverage (e.g., sparse-reward tasks, continuous high-dimensional spaces)? Understanding these limitations would help contextualize the approach's applicability.\n\n6. **LLM reasoning disentanglement**: Section 5.6 suggests Chain-of-Thought is essential, but doesn't compare to other prompting techniques. Could you quantify how much of the performance gain comes from CoT versus the LLM's world knowledge? For example, would a randomly initialized model with CoT perform similarly to a pre-trained LLM without CoT?\n\n7. **Data efficiency comparison**: The paper demonstrates LORO's sample efficiency but doesn't quantify how much environment interaction is saved compared to pure online RL. Could you provide concrete numbers on the percentage reduction in samples needed to reach comparable performance? This would strengthen the practical value proposition for real-world applications where interaction cost is critical."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 7
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "SAMPLE-EFFICIENT REINFORCEMENT LEARNING BY WARMSTARTING WITH LLMS",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "5 EXPERIMENTS",
+    "5.1 SAMPLE EFFICIENCY",
+    "of episodes",
+    "of episodes",
+    "of episodes",
+    "of episodes",
+    "of episodes",
+    "5.2 JUSTIFYING THE COVERAGE ASSUMPTION 1",
+    "5.3 EFFECT OF PRE-TRAINING",
+    "5.4 EFFECT OF LLM'S DATA",
+    "5.5 VERIFYING LORO'S AGNOSTICITY TO BASE RL LEARNER CHOICES",
+    "5.6 EFFECTS OF THE LLM'S CAPABILITY",
+    "5.7 OTHER FINDINGS",
+    "6 CONCLUSION AND FUTURE WORK",
+    "A EXTENED RELATED WORK",
+    "B THE ENVIRONMENTS AND IMPLEMENTATION DETAILS",
+    "B.1 THE ENVIRONMENTS",
+    "B.2 IMPLEMENTATION DETAILS",
+    "C JUSTIFYING THE COVERAGE ASSUMPTION 1",
+    "D CUMULATIVE REWARDS TABLE",
+    "E ABLATION STUDY",
+    "E.1 ALGORITHM AGNOSTIC VERIFICATION",
+    "E.2 EFFECTS OF LLM'S MODEL SIZE",
+    "E.3 EFFECTS OF THE NUMBER OF PRE-TRAINING STEPS",
+    "E.4 EFFECTS OF THE AMOUNT OF LLM DATA",
+    "E.5 EFFECTS OF SFT AND LONG COT",
+    "E.6 EFFECTS OF THE HISTORY SUMMARY",
+    "F WALL CLOCK TIME",
+    "G LLM SETUP",
+    "H PROMPTS",
+    "H.1 CHAIN-OF-THOUGH PROMPTS",
+    "H.1.1 TASK 1: CLIFF WALKING",
+    "A Sample of Cliff Walking",
+    "▶ System:",
+    "1710 ▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "H.1.2 TASK 2: CARTPOLE",
+    "A Sample of CartPole",
+    "▶ System:",
+    "1728 ▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "Action: 1 (Push the cart to the left)",
+    "H.1.3 TASK 3: MOUNTAIN CAR",
+    "A Sample of Mauntain Car",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "H.1.4 TASK 4: FROZENLAKE",
+    "A Sample of FrozenLake (CoT)",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "A Sample of FrozenLake (Long CoT)",
+    "▶ System:",
+    "▶ User:",
+    "▶ DeepSeek-R1-Distill-Qwen-7B:",
+    "Let me think about each action:",
+    "H.1.5 TASK 5: PONG",
+    "A Sample of Pong",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "Step-by-step reasoning:",
+    "Action Plan:",
+    "H.1.6 TASK 6: PENDULUM",
+    "A Sample of Pendulum",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

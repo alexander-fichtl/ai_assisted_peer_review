@@ -1,0 +1,71 @@
+{
+  "pdfname": "owFVvaLFdw",
+  "content": {
+    "summary": {
+      "value": "This paper addresses the problem of unreliable evaluation of LLM-based agents caused by benchmark artifacts that conflate model errors with benchmark flaws. The authors present a component-wise taxonomy of agent benchmark issues spanning four key elements: User, Environment, Evaluation System, and Ground Truth, which reveals common failure modes like ambiguous instructions, misleading tool designs, and incorrect ground-truth trajectories. They develop AgentBenchCleaner, an automated three-stage filtering pipeline that first removes tasks with deterministic errors through rule-based checks, then identifies nuanced issues using LLM-as-a-judge evaluation, and finally applies difficulty-based curation. Applying this pipeline creates AgentHard-Bench, a cleaned benchmark that removes pervasive artifacts while maintaining capability diversity. The cleaned benchmark demonstrates improved model separability, more stable rankings, and clearer performance gaps across diverse LLM agents compared to original benchmarks. The authors validate their approach through human alignment studies showing F1 scores of 0.759-0.880 and demonstrate meaningful leaderboard shifts that resolve ties and clarify model capabilities. The work provides both the taxonomy framework and automated pipeline to support more trustworthy agent evaluation, with the cleaned benchmark and pipeline to be released upon acceptance."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Novel Component-Wise Taxonomy with Actionable Categories**: The paper introduces a highly specific and practical taxonomy of agent benchmark issues organized by the four core components (User, Environment, Evaluation System, Ground Truth). Unlike generic quality assessments, this taxonomy provides concrete, operationalizable categories like \"User role confusion\" (where user simulators produce assistant-like responses) and \"Misleading tool design\" (where tool descriptions contradict actual behavior). Table 3 exemplifies this strength by mapping each issue type to specific benchmarks and providing precise descriptions, transforming scattered anecdotes into a structured framework for diagnosis.\n\n2. **Effective Operationalization of Taxonomy into Automated Pipeline**: The authors successfully translate their taxonomy into the AgentBenchCleaner pipeline, where each stage directly corresponds to taxonomy categories. Stage 1 implements rule-based detectors for issues like \"Malformed tool calls\" (e.g., catching schema violations), while Stage 2 uses LLM-as-judge to identify nuanced issues like \"Ambiguous instructions.\" This direct mapping between taxonomy and implementation demonstrates a rare theoretical-to-practical coherence.\n\n3. **Demonstrated Impact on Model Rankings**: The paper provides concrete evidence of how benchmark artifacts distort evaluations, showing that 75% of models changed rankings on τ-Bench after filtering (Table 5). Crucially, it demonstrates specific improvements like the widening performance gap between top models (from 0.018 to 0.045) and the resolution of previously tied scores, proving the practical significance of their approach for meaningful agent comparison.\n\n4. **Comprehensive Failure Mode Analysis**: Rather than just presenting successes, the authors provide detailed analysis of the LLM-as-judge's limitations in Appendix A.2, categorizing false positives (e.g., \"Logical inference failure\" at 11.3%) and false negatives (e.g., \"Malformed/incorrect tool-calls overlooked\" at 46.8%). This transparent examination of limitations strengthens the paper's credibility and provides actionable insights for future improvements.\n\n5. **Capability-Preserving Filtering Strategy**: The subtask retention analysis (Figures 7-8) demonstrates that the pipeline removes flawed tasks while maintaining capability diversity. The 10% per-subtask safeguard ensures no capability domain is eliminated, and the analysis shows that filtering primarily targets structurally invalid tasks rather than specific skills—a critical distinction that addresses a common concern with benchmark curation."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Limited benchmark coverage with insufficient validation of taxonomy generalizability**: While the paper analyzes six benchmarks, this sample may not capture the full spectrum of agent evaluation approaches. The taxonomy is derived from these specific benchmarks (Table 1), but the paper doesn't demonstrate how well it would apply to newer or fundamentally different benchmark types (e.g., those with multimodal inputs or more complex environment dynamics). The authors acknowledge this limitation in Section 6 but don't provide concrete evidence that the taxonomy would effectively categorize issues in unseen benchmarks. To strengthen this, the authors should test the taxonomy on at least 2-3 additional benchmarks not used in development, particularly those with different structural characteristics (e.g., WebArena or OSWorld which involve browser/OS navigation rather than tool-calling).\n\n2. **Inadequate analysis of failure modes in the LLM-as-judge component**: While Section 5.4.1 shows judge model robustness (Table 6), the paper lacks a systematic analysis of *why* certain issues are missed. Appendix A.2 identifies failure modes (e.g., \"Logical inference failure\" at 11.3%), but doesn't correlate these with specific benchmark characteristics or provide actionable guidance for improvement. For instance, the paper notes that \"Malformed/incorrect tool-calls overlooked\" constitute 46.8% of false negatives (Table 8), but doesn't analyze whether this stems from specific API schema complexities or prompt design flaws. The authors should provide targeted recommendations for improving the judge prompts for these high-frequency failure modes, perhaps through template variations tested on the failure cases.\n\n3. **Lack of evidence connecting improved metrics to real-world evaluation reliability**: The paper demonstrates improved separability (Table 4) and more stable rankings (Table 5), but doesn't establish that these improvements translate to more accurate assessments of agent capabilities in practical settings. For example, there's no analysis showing whether models ranked higher on AgentHard-Bench actually perform better in real-world agent deployments. The authors should conduct a small-scale human evaluation where experts assess model outputs on a subset of tasks from both original and cleaned benchmarks to verify that the improved metrics correlate with human-perceived capability differences.\n\n4. **Unclear justification for meaningful difficulty in AgentHard-Bench**: The paper claims AgentHard-Bench is \"a harder derivative\" (Section 5.3), but doesn't demonstrate that the retained tasks measure more sophisticated capabilities rather than simply removing easier tasks. The retention analysis in Figure 5 shows varying subtask retention (e.g., CFB's \"Flights\" subtask drops from ~300 to ~150), but doesn't explain whether the removed tasks were genuinely uninformative or simply easier. The authors should provide evidence that the retained tasks require distinct capabilities by analyzing performance patterns across model generations or conducting a capability mapping of the retained tasks.\n\n5. **No assessment of pipeline scalability for large benchmarks**: While the pipeline is validated on benchmarks ranging from 165 to 1920 tasks (Table 15), the paper doesn't address computational costs, particularly for the LLM-as-judge stage. For benchmarks with thousands of tasks, the cost of running an LLM judge on each task could be prohibitive. The authors should report timing metrics for the pipeline stages and explore cost-reduction strategies, such as active learning to prioritize likely problematic tasks for LLM evaluation rather than processing all tasks."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## 1. Taxonomy Generalizability to Emerging Benchmark Types\nThe taxonomy was developed from six specific benchmarks, but the field of agent evaluation is rapidly evolving. Could you elaborate on how your component-wise taxonomy would apply to newer or fundamentally different benchmark types not covered in the paper, such as:\n- Multimodal agent benchmarks that incorporate visual or audio inputs\n- Benchmarks with complex environment dynamics (e.g., physics-based simulations)\n- Agent benchmarks designed for collaborative human-agent interactions\n\nSpecifically, could you provide examples of how your four-component framework (User, Environment, Evaluation, Ground Truth) would categorize issues in these emerging contexts? This would help readers understand whether the taxonomy requires fundamental adaptation or can naturally extend to future benchmark paradigms.\n\n## 2. Addressing LLM-as-Judge Limitations in Critical Categories\nTable 8 shows that \"Malformed/incorrect tool-calls overlooked\" accounts for 46.8% of false negatives in the LLM-as-judge evaluation. This represents a substantial gap in the pipeline's effectiveness for a critical issue category. Could you:\n- Explain why this particular category proves challenging for the LLM-as-judge approach (beyond what's mentioned in Section A.2)\n- Propose specific prompt engineering strategies or architectural modifications that might improve detection in this category\n- Discuss whether certain tool-call issues might be better handled through specialized rule-based detectors rather than general LLM judgment\n\nUnderstanding how to address this significant limitation would strengthen the practical utility of the pipeline.\n\n## 3. Practical Guidance for Benchmark Selection\nThe paper states that AgentHard-Bench is designed specifically for frontier-model evaluation, while the issue-filtered benchmark is recommended for broader use. Could you provide concrete guidance for practitioners on:\n- How to determine whether their evaluation scenario warrants AgentHard-Bench versus the issue-filtered benchmark\n- Specific metrics or model characteristics that would indicate when each benchmark variant is most appropriate\n- How the choice between these variants might affect comparative evaluations when testing models across different capability levels\n\nThis clarification would help practitioners make informed decisions about which benchmark variant to use for their specific evaluation needs.\n\n## 4. Repair vs. Filter Implementation Strategy\nAppendix A.3 demonstrates that the pipeline can identify minimal edits for repairing flawed tasks, yet the primary approach focuses on filtering. Could you elaborate on:\n- The cost-benefit analysis that led to prioritizing filtering over repair as the main pipeline output\n- Specific scenarios where repair would be preferable to filtering (e.g., when benchmark maintainers have resources to fix issues)\n- How the pipeline's reasoning traces could be structured to directly support automated repair rather than just identification\n\nUnderstanding the strategic rationale behind this design choice would help the community better leverage the pipeline for different use cases.\n\n## 5. Human Effort Quantification\nWhile the paper mentions human validation protocols, it doesn't quantify the human effort required. Could you:\n- Estimate the time investment needed per benchmark for human validation (e.g., hours per 100 tasks)\n- Compare this to the time saved by having a cleaner benchmark during model evaluation\n- Discuss how the pipeline might be adapted for resource-constrained settings where minimal human oversight is available\n\nThis information would help potential users assess the practical feasibility of implementing the pipeline in different organizational contexts."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "AGENTHARD: HARDENING LLM-AGENT EVALUATION WITH A TAXONOMY OF ARTIFACTS AND AUTOMATED CLEANING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORKS",
+    "3 SYSTEMATIC ANALYSIS OF AGENT BENCHMARK ISSUES",
+    "3.1 OVERVIEW OF AGENT BENCHMARKS",
+    "3.2 COMPONENT-ALIGNED ISSUE TAXONOMY",
+    "4 FROM TAXONOMY TO AUTOMATED FILTERING",
+    "4.1 OVERVIEW",
+    "4.2 THE AGENTBENCHCLEANER PIPELINE",
+    "5.2.1 HUMAN ALIGNMENT OF AGENTBENCHCLEANER",
+    "5.2.2 BENCHMARK QUALITY IMPROVEMENTS",
+    "5.2.3 PRACTICAL IMPACT: LEADERBOARD SHIFTS",
+    "5.3 AGENTHARD-BENCH STATISTICS",
+    "5.4 ABLATION STUDIES",
+    "5.4.1 ROBUSTNESS OF JUDGE MODELS",
+    "5.4.2 STAGE-WISE ABLATIONS OF AGENTBENCHCLEANER",
+    "5.5 CASE STUDIES",
+    "6 LIMITATIONS",
+    "7 CONCLUSIONS",
+    "A.3 REPAIRABLE CASES ENABLED BY THE PIPELINE",
+    "A.3.1 BFCL: GROUND-TRUTH FILENAME ERROR (GROUND-TRUTH ISSUE).",
+    "Subtask Retention Ratios Across Benchmarks (After Issue Filtering)",
+    "A.7 CAPABILITY RETENTION ANALYSIS",
+    "Subtask Retention Ratios Across Benchmarks (After Quality Filtering)"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

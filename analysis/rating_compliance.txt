@@ -1,0 +1,36 @@
+
+=== gpt ICLR ===
+  papers: 50
+  rating: integer-dist = {3=2, 5=1, 6=9, 7=30, 8=8}  | non-integer = 0
+  soundness: integer-dist = {1=1, 2=2, 3=42, 4=5}  | non-integer = 0
+  presentation: integer-dist = {1=1, 2=12, 3=36, 4=1}  | non-integer = 0
+  contribution: integer-dist = {2=2, 3=42, 4=6}  | non-integer = 0
+
+=== qwen ICLR ===
+  papers: 50
+  rating: integer-dist = {5=1, 6=1, 7=3, 8=42, 9=1}  | non-integer = 2
+    - 1RrwTXSU4c: "I need to provide an overall score for this paper based on the ICLR scoring criteria. Let me review the paper's strength"
+    - gL2plIZ4Sf: 'The paper presents a novel hybrid framework that addresses'
+  soundness: integer-dist = {3=6, 4=44}  | non-integer = 0
+  presentation: integer-dist = {3=18, 4=32}  | non-integer = 0
+  contribution: integer-dist = {3=3, 4=47}  | non-integer = 0
+
+=== llama ICLR ===
+  papers: 50
+  rating: integer-dist = {8=28, 9=1}  | non-integer = 21
+    - 1RrwTXSU4c: '8'
+    - 7y11BdJIOp: '8'
+    - aQia5HdgBY: 'The paper proposes a Persistent Shared Memory (PSM) mechanism for zero-shot object navigation (ZSON), enabling single or'
+    ... and 18 more
+  soundness: integer-dist = {3=7, 4=41}  | non-integer = 2
+    - 5IqvMNQaUg: 'The paper presents a well-structured and well-written approach to addressing the challenges of large-scale multi-agent r'
+    - WNHNfkulYA: 'The paper presents a well-structured and comprehensive approach to evaluating the conceptual knowledge of Large Language'
+  presentation: integer-dist = {3=14, 4=36}  | non-integer = 0
+  contribution: integer-dist = {3=1, 4=49}  | non-integer = 0
+
+=== human ICLR ===
+  reviews: 192
+  rating: integer-dist = {0=7, 2=36, 4=86, 6=48, 8=13, 10=2}
+  soundness: integer-dist = {1=10, 2=68, 3=99, 4=15}
+  presentation: integer-dist = {1=8, 2=64, 3=97, 4=23}
+  contribution: integer-dist = {1=19, 2=98, 3=66, 4=9}

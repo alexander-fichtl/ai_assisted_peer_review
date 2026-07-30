@@ -1,0 +1,21 @@
+1. Go to https://console.runpod.io/pods and login.
+
+2. Pod Setup
+    Click on "Pods" (left side)  ->  "Deploy"  
+    ->  Select "H100 SXM"  
+    ->  Set "GPU count" to 8
+    ->  Choose "Runpod Pytorch 2.8.0" as Pod template  
+        - Container Image: runpod/pytorch:1.0.2-cu1281-torch280-ubuntu2404
+    ->  Click "Edit" 
+    ->  Set "Container Disk" and "Volume Disk" each to 500 GB  ->  Click "Set Overrides"
+    ->  Choose "On-Demand"
+    ->  Enable "SSH terminal access"
+    ->  Click "Deploy On-Demand"
+
+3. Run a scripts  
+    ->  Copy SSH line   e.g.: ssh 565798798-678687009@ssh.runpod.io -i ~/.ssh/id_ed27688
+    ->  Click "Enable web terminal" -> Click "Open web terminal"
+    ->  Run test commands: 
+        - nvidia-smi
+        - ls
+        - cd workspace (Stuff in workspace persists if we stop the pod. Everything else gets terminated.)

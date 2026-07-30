@@ -1,0 +1,86 @@
+{
+  "pdfname": "zZNYUkBS77",
+  "content": {
+    "summary": {
+      "value": "This paper presents a general interpretable debugging framework for Concept Bottleneck Models (CBMs) that enables domain experts to globally edit a model's reliance on undesired concepts. The framework consists of a two-step process: Removal and Retraining. In the Removal step, experts identify and remove undesired concepts using concept explanations. The Retraining step introduces CBDebug, a novel method that leverages the interpretability of CBMs to convert concept-level user feedback into sample-level auxiliary labels. These labels are then used to apply supervised bias mitigation and targeted augmentation, reducing the model's reliance on undesired concepts. The authors evaluate their framework with both real and automated expert feedback, finding that CBDebug significantly outperforms prior retraining methods across multiple CBM architectures and benchmarks with known spurious correlations. The framework is general, applicable to various CBM architectures, and provides a transparent mechanism for experts to steer the model. CBDebug effectively removes dependence on spurious attributes and replaces them with task-relevant concepts."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "The paper has several strengths:\n\n1. **Originality of the proposed framework**: The authors introduce a general interpretable debugging framework for Concept Bottleneck Models (CBMs) that enables domain experts to globally edit a model's reliance on undesired concepts. This framework is novel and addresses a critical issue in the field.\n\n2. **Effective removal of spurious concepts**: The Retraining step, specifically CBDebug, effectively removes dependence on spurious attributes and replaces them with task-relevant concepts. This is demonstrated through extensive experiments and visualizations.\n\n3. **Applicability to multiple CBM architectures**: The framework is general and applicable to various CBM architectures, including PIP-Net and Post-hoc CBM. This makes it a valuable contribution to the research area.\n\n4. **Transparency and interpretability**: The framework provides a transparent mechanism for experts to steer the model, giving them fine-grained control over what should be removed. This is a significant advantage over existing methods.\n\n5. **Comprehensive evaluations**: The authors evaluate their framework with both real and automated expert feedback, providing a comprehensive assessment of CBDebug's performance across multiple benchmarks with known spurious correlations.\n\n6. **Significant improvements over prior work**: CBDebug significantly outperforms prior retraining methods, demonstrating substantial improvements in worst-group accuracy and overall performance.\n\n7. **Well-written and clear presentation**: The paper is well-written, with a clear and concise presentation of the proposed framework and its contributions. The authors provide a comprehensive overview of their approach, making the paper easy to follow."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Assumes Task-Level Spurious Concepts**: The current framework assumes spuriosity is defined at the task level, which might not directly account for class-specific spurious correlations. This limitation could be addressed by extending the framework to handle class-specific spurious concepts.\n\n2. **Variance in Performance Metrics**: The paper observes substantial variance in performance metrics, particularly when using Post-hoc CBM as the backbone. This variability could be reduced by exploring additional training stabilization techniques or ensembling methods.\n\n3. **Dependence on Quality and Consistency of Concept Feedback**: The effectiveness of CBDebug depends on the quality and consistency of concept feedback. Inaccurate or adversarial feedback can undermine performance gains. Developing methods to detect and mitigate the impact of poor-quality feedback could enhance the framework's robustness.\n\n4. **Limited Applicability to Settings with Class-Specific Spuriosity**: The framework currently assumes task-level spurious concepts and does not directly mitigate class-specific spurious correlations. Extending the framework to address class-specific spuriosity could broaden its applicability.\n\n5. **Potential for Over-Augmentation**: The augmentation strategy may lead to over-augmentation if not carefully calibrated, potentially altering the distribution of the training data in unintended ways. Further analysis on the optimal calibration of augmentation probabilities could help mitigate this risk.\n\n## Constructive Insights for Improvement\n\n- **Incorporating Class-Specific Spuriosity**: Future work could focus on extending the framework to handle class-specific spurious correlations, enhancing its applicability to a broader range of scenarios.\n\n- **Improving Feedback Quality and Robustness**: Developing methods to assess and improve the quality of concept feedback could make the framework more robust and reliable.\n\n- **Calibrating Augmentation Strategies**: Further research on optimizing the augmentation strategy, including the calibration of hyperparameters like $\\gamma$, could help in achieving more consistent and improved performance across different settings.\n\n- **Ensembling and Stability**: Exploring ensembling techniques or other methods to reduce performance variance, especially with Post-hoc CBM, could enhance the framework's overall stability and reliability.\n\nAddressing these weaknesses and incorporating constructive insights could further strengthen the paper's contributions and enhance the applicability and robustness of the proposed framework."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Class-Specific Spurious Correlations**: The authors assume task-level spurious concepts, which might not account for class-specific spurious correlations. How do the authors plan to extend their framework to handle class-specific spurious correlations, and what benefits can be expected from this extension?\n\n2. **Addressing Performance Variance**: The paper observes substantial variance in performance metrics, particularly with Post-hoc CBM. What steps can be taken to reduce this variability, and have the authors explored techniques like ensembling or additional training stabilization methods?\n\n3. **Feedback Quality and Robustness**: The effectiveness of CBDebug depends on the quality and consistency of concept feedback. How can the authors ensure that the framework is robust to inaccurate or adversarial feedback, and what methods can be developed to detect and mitigate the impact of poor-quality feedback?\n\n4. **Calibration of Augmentation Probabilities**: The augmentation strategy's hyperparameter $\\gamma$ significantly impacts performance. Can the authors provide more insights into optimizing $\\gamma$ for different datasets and models, and how sensitive is the framework to the exact choice of $\\gamma$?\n\n5. **Comparisons to Unsupervised Bias Mitigation Approaches**: While CBDebug demonstrates strong performance, it would be valuable to compare it directly with unsupervised bias mitigation pipelines like Just Train Twice (JTT) and Learning from Failure (LfF) under similar conditions. Have the authors considered such comparisons, and what insights can be gained from them?\n\n6. **General Applicability and Scalability**: How can the authors ensure that their framework scales to more complex models and larger datasets? Are there any potential limitations or challenges in applying CBDebug to real-world scenarios with diverse and dynamic data distributions?\n\n7. **User Study and Automated Feedback Validation**: The user study provides valuable insights, but how do the authors validate the quality of automated feedback generated by LLMs like GPT-3.5-turbo? What measures can be taken to ensure that automated feedback is reliable and effective in guiding the debugging process?\n\n## Suggestions for Productive Rebuttal and Discussion\n\n- **Provide Detailed Responses**: Address each question and suggestion with clear, detailed responses that provide additional insights into the framework and its applications.\n\n- **Clarify Assumptions**: Clearly state the assumptions made in the paper, especially regarding task-level spurious concepts, and discuss potential extensions to handle class-specific spurious correlations.\n\n- **Highlight Practical Implications**: Emphasize the practical implications of the framework, including its potential to improve model robustness and interpretability in real-world applications.\n\n- **Discuss Future Directions**: Outline future research directions, including the development of methods to handle class-specific spurious correlations, improving feedback quality and robustness, and optimizing augmentation strategies.\n\nBy addressing these questions and suggestions, the authors can provide a more comprehensive understanding of their framework, clarify potential limitations, and highlight avenues for future research and improvement."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "8"
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "DEBUGGING CONCEPT BOTTLENECK MODELS THROUGH REMOVAL AND RETRAINING",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 CONCEPT BOTTLENECK DEBUGGING FRAMEWORK",
+    "3.1 CONCEPT BOTTLENECK",
+    "3.2 REMOVAL",
+    "3.3 RETRAINING",
+    "4 CBDEBUG: CONCEPT BOTTLENECK DEBUGGER",
+    "4.1 LABEL",
+    "4.2 REWEIGHT",
+    "4.3 AUGMENT",
+    "5 EXPERIMENTS",
+    "5.1 CAN CBDEBUG EFFECTIVELY RETRAIN BASED ON USER FEEDBACK?",
+    "5.2 CAN CBDEBUG EFFECTIVELY RETRAIN BASED ON AUTOMATED FEEDBACK?",
+    "5.3 DOES CBDEBUG EFFECTIVELY REMOVE DEPENDENCE ON UNDESIRED CONCEPTS?",
+    "6 CONCLUSIONS",
+    "7 LIMITATIONS",
+    "8 ACKNOWLEDGEMENTS",
+    "A EXPERIMENTAL DETAILS",
+    "A.1 INITIAL TRAINING",
+    "A.2 USER DEBUGGING SESSIONS",
+    "User Study Task Description",
+    "MODELS",
+    "DATASETS AND TASKS",
+    "TASK DETAILS",
+    "Automated User Study Task Description",
+    "Classification Task Descriptions",
+    "A.3 RETRAINING",
+    "A.4 DEFINITIONS",
+    "B FULL CONCEPT BANKS",
+    "Synthetic Concept Set",
+    "Curated Concept Set Prompt",
+    "Waterbirds Curated Concept Set",
+    "MetaShift Curated Concept Set",
+    "CelebA Curated Concept Set",
+    "ISIC Curated Concept Set",
+    "C ABLATIONS",
+    "C.1 PERMUTATION WEIGHTING",
+    "C.2 DOES CBDEBUG EFFECTIVELY REMOVE DEPENDENCE ON SPURIOUS ATTRIBUTES?",
+    "C.3 AUGMENTATION PROBABILITIES",
+    "C.4 COMPARISONS TO UNSUPERVISED BIAS MITIGATION APPROACHES"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

@@ -1,0 +1,72 @@
+{
+  "pdfname": "ooYtHcj6LI",
+  "content": {
+    "summary": {
+      "value": "The paper introduces EarthMind, a unified vision-language framework designed for Earth Observation that handles both single-sensor and cross-sensor inputs (optical and SAR) through a novel Hierarchical Cross-modal Attention (HCA) mechanism. The HCA design hierarchically captures visual relationships across sensors and aligns them with language queries, enabling adaptive fusion of complementary features while mitigating modality imbalance. To support cross-sensor learning, the authors created FusionEO, a 30K-pair instruction-tuning dataset, and established EarthMind-Bench, a 2,841-pair benchmark with expert annotations covering diverse perception and reasoning tasks. EarthMind achieves state-of-the-art results on EarthMind-Bench and surpasses existing MLLMs across multiple EO benchmarks, including image-level classification, region-level visual grounding, and pixel-level segmentation. The framework successfully leverages cross-sensor complementarity to enhance diverse EO understanding tasks with only 4B parameters, addressing the critical limitation of current EO MLLMs that rely exclusively on single-sensor inputs. By supporting both single- and multi-sensor inputs while handling tasks from high-level reasoning to pixel-level grounding, EarthMind represents a significant advancement in multimodal Earth Observation analysis. The work demonstrates that effective cross-sensor fusion requires learning modality complementarity rather than simply stacking inputs, as shown by EarthMind's consistent improvements over single-modality approaches."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths Assessment\n\n1. **Novel Hierarchical Cross-modal Attention (HCA) mechanism** that effectively addresses the critical modality imbalance problem in multi-sensor fusion. Unlike naive concatenation approaches that exhibit strong optical bias (as quantitatively demonstrated in Section 5.4), HCA hierarchically captures cross-sensor relationships while adapting to query relevance. The ablation in Table 4 shows HCA provides substantial gains (6.2% average improvement) over simpler fusion methods, with particularly strong benefits for fine-grained tasks like object counting (+2.6) and spatial relationship reasoning (+21.0).\n\n2. **EarthMind-Bench represents the first comprehensive multi-sensor evaluation framework** specifically designed for Earth Observation MLLMs. Unlike previous benchmarks that only assess single-modality performance, it evaluates both independent modality use and cross-sensor fusion across 10 diverse tasks spanning perception (e.g., hallucination detection) and reasoning (e.g., route planning), with appropriate metrics for each level of granularity.\n\n3. **Quantitative analysis of modality attention imbalance** through the Modality Attention Score (MAS) provides concrete evidence of the limitations in existing approaches. The paper demonstrates that standard MLLMs with concatenation fusion consistently allocate more attention to optical tokens across all layers (Figure 4, right), explaining why previous models fail to leverage SAR information effectively.\n\n4. **Task-adaptive fusion behavior** that dynamically adjusts modality weighting based on query type. As visualized in Figure 4(a-b), the model appropriately relies more on optical data for semantic tasks like scene classification while leveraging SAR's structural advantages for fine-grained tasks like road segmentation, demonstrating sophisticated understanding of each modality's strengths.\n\n5. **Innovative three-stage FusionEO curation pipeline** that systematically generates high-quality multi-sensor instruction data. The approach (Section 3.3) combines metadata preparation, RoI-based summarization, and self-instruct VQA generation to create 30K samples with both coarse-grained and fine-grained supervision, addressing the scarcity of paired cross-sensor data while maintaining semantic diversity."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses Assessment\n\n1. **Limited evaluation beyond optical-SAR fusion**: While the paper focuses on optical and SAR fusion, real-world Earth observation applications often require integrating more than two modalities (e.g., hyperspectral, infrared, thermal). The authors acknowledge this limitation in Section 749-755 but provide no experimental validation of how their HCA mechanism would scale to three or more modalities. EarthMind-Bench exclusively evaluates optical-SAR fusion (Table 1), missing an opportunity to establish a more comprehensive multi-sensor benchmark. To strengthen their contribution, the authors should extend experiments to at least one three-modal scenario (e.g., optical+SAR+hyperspectral) and demonstrate how their framework adapts to more complex fusion requirements.\n\n2. **Lack of computational efficiency metrics**: The paper mentions that training \"requires considerable computational resources\" (Section 749) but provides no concrete metrics on inference speed, memory requirements, or computational cost compared to alternatives. For practical deployment in Earth observation where large data volumes must be processed efficiently, these metrics are essential. The authors should include ablation studies on computational efficiency (e.g., inference time per image, memory footprint) and explore potential optimizations like the token reduction techniques they mention but don't implement.\n\n3. **No comparison with traditional multi-sensor fusion techniques**: The paper positions EarthMind against other MLLMs but fails to compare with established multi-sensor fusion techniques from remote sensing literature (e.g., Zhang et al., 2025a; Schmitt et al., 2017; Li et al., 2022) that are referenced in the introduction. This omission makes it difficult to assess whether the MLLM approach provides genuine advancement over existing domain-specific methods. Including comparisons with at least one representative traditional fusion method would better contextualize the contribution and demonstrate practical value beyond the MLLM community.\n\n4. **Insufficient geographical bias analysis**: While the authors acknowledge potential \"geographical biases toward certain regions\" (Section 749-755), they provide no quantitative analysis of performance differences across geographical regions. Earth observation applications must work globally across diverse environments, and understanding regional performance variations is critical. The authors should include a geographical breakdown of EarthMind-Bench results to identify specific regions where performance degrades and analyze whether this correlates with training data distribution."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions for Rebuttal\n\n1. **Geographic diversity of EarthMind-Bench**: The paper states that EarthMind-Bench is curated from multiple public datasets, but does not specify the geographic distribution of samples. Could you clarify if there are regional biases (e.g., overrepresentation of certain continents or climate zones) in the benchmark? Understanding this would help assess real-world applicability, especially for disaster forecasting where geographic context is critical.\n\n2. **Computational overhead of HCA**: While Table 4 demonstrates HCA's effectiveness, the paper doesn't quantify the computational cost. Could you provide inference time comparisons between EarthMind with HCA versus a single-modality baseline? This is crucial for practical deployment in time-sensitive applications like disaster response.\n\n3. **Out-of-distribution generalization**: For disaster forecasting and urban assessment tasks (where model errors could have real-world consequences), how does EarthMind perform on truly out-of-distribution scenarios not represented in training data? Could you share results from testing on recent disaster events (e.g., 2024 wildfires) not included in your training corpus?\n\n4. **Multi-modal scalability**: Section 749-755 mentions future work on incorporating additional modalities. Have you conducted preliminary experiments with three or more modalities (e.g., optical+SAR+hyperspectral) to understand how HCA scales? If so, what challenges emerged in extending the hierarchical attention mechanism?\n\n5. **Synthetic data bias analysis**: Since FusionEO relies heavily on GPT-4o for data generation, have you performed any analysis of potential biases in the synthetic instructions? For example, do certain object types or spatial relationships appear more frequently in GPT-4o-generated data versus human annotations?\n\n## Constructive Suggestions\n\n1. **Modality-specific failure analysis**: While Figure 4(b) shows attention weight statistics across tasks, a more detailed failure analysis would strengthen the paper. For instance, identifying specific scenarios where SAR modality fails to compensate for optical limitations (e.g., dense cloud cover over urban areas) would provide valuable insights for practical deployment.\n\n2. **Real-world deployment considerations**: The paper focuses on benchmark performance but doesn't address practical deployment challenges. A brief discussion of how EarthMind handles varying sensor resolutions, acquisition times, or geometric distortions between paired optical-SAR inputs would enhance the paper's practical relevance.\n\n3. **Ablation on HCA component importance**: The ablation in Table 4 compares HCA against simpler fusion methods, but doesn't isolate the contribution of each HCA component (cross-sensor attention vs. text-guided attention). A more granular ablation would help understand which aspects of HCA are most critical for performance gains."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "EARTHMIND: LEVERAGING CROSS-SENSOR DATA FOR ADVANCED EARTH OBSERVATION INTERPRETATION WITH A UNIFIED MULTIMODAL LLM",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 METHOD",
+    "3.1 EARTHMIND ARCHITECTURE",
+    "3.2 CROSS-SENSOR FUSION",
+    "3.3 TRAINING",
+    "4 EARTHMIND-BENCH",
+    "5 EXPERIMENTS",
+    "5.1 IMPLEMENTATION DETAILS",
+    "5.2 BENCHMARKS",
+    "5.3 RESULTS",
+    "5.4 ABLATIONS",
+    "6 CONCLUSION",
+    "A OVERVIEW OF APPENDIX",
+    "B THE USE OF LARGE LANGUAGE MODELS (LLMS)",
+    "C DISCUSSIONS AND BROADER IMPACT",
+    "D DETAILS OF EARTHMIND",
+    "E DETAILS OF EARTHMIND-BENCH",
+    "Evaluation Prompt For EarthMind -Bench open -ended Task",
+    "##INSTRUCTION:",
+    "F DETAILS OF EXPERIMENTAL SETTINGS",
+    "G TRAINING DATASET",
+    "H MORE ABLATION STUDIES",
+    "I MORE VISUALIZATION RESULTS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

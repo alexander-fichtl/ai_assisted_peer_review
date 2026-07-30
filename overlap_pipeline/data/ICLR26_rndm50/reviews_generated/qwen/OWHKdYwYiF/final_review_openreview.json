@@ -1,0 +1,83 @@
+{
+  "pdfname": "OWHKdYwYiF",
+  "content": {
+    "summary": {
+      "value": "This paper addresses the limitations of existing dataset distillation methods on long-tailed datasets, identifying two fundamental challenges: inadequate distribution alignment using heuristic metrics and uniform treatment of imbalanced classes. The authors propose Class-Aware Spectral Distribution Matching (CSDM), which introduces Spectral Distribution Distance (SDD) as a theoretically grounded metric derived from universal kernel theory and Bochner's theorem for comprehensive distribution alignment. CSDM decomposes the SDD into amplitude and phase components, linking amplitude to data diversity and phase to realism, then applies class-specific weighting to prioritize diversity for head classes and realism for tail classes. The method demonstrates significant improvements over state-of-the-art approaches, achieving 14.0% higher accuracy than previous methods on CIFAR-10-LT with 10 images per class while maintaining only a 5.7% performance drop when tail class sizes decrease from 500 to 25. The SDD metric offers linear computational complexity (O(LNd)) compared to quadratic complexity of traditional kernel methods, enabling efficient implementation. The paper provides theoretical justification for the metric design and demonstrates strong empirical results across multiple long-tailed benchmarks including CIFAR-10/100-LT and ImageNet subsets. The approach also shows excellent cross-architecture generalization and stability under varying imbalance factors. This work establishes a principled framework for dataset distillation that effectively addresses the challenges of long-tailed distributions through spectral analysis and class-aware adaptation."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Theoretically grounded metric design**: The paper provides a rigorous theoretical foundation for dataset distillation by establishing the connection between universal kernel theory and spectral domain analysis. It correctly identifies that linear MMD only matches first-order moments (Section 4.1), then develops Spectral Distribution Distance (SDD) as a metric that implicitly matches all orders of moments (Theorem 6 in Appendix), which is a significant advancement over heuristic metrics used in prior work.\n\n2. **Novel class-aware amplitude-phase decomposition**: The paper introduces a theoretically justified decomposition of the spectral discrepancy into amplitude (diversity) and phase (realism) components, then applies class-specific weighting to address long-tailed challenges. Proposition 1 proves this decomposition maintains discriminative power while allowing adaptive optimization, and Figure 4 empirically validates that emphasizing amplitude for head classes and phase for tail classes yields optimal performance.\n\n3. **Clear explanation of prior limitations**: The paper provides precise mathematical characterization of why existing \"higher-order\" methods (IID, DSDM) remain fundamentally limited. Theorem 7 demonstrates these approaches only match the first two derivatives of the log characteristic function at the origin, making them finite-order approximations rather than true distribution matching.\n\n4. **Computational efficiency with theoretical guarantees**: SDD achieves linear time complexity O(LNd) (Section 4.2.2) while maintaining the theoretical properties of universal kernel MMD, addressing the scalability limitations of traditional kernel methods. This is particularly valuable for dataset distillation where efficiency matters.\n\n5. **Demonstrated robustness to extreme class imbalance**: The results show exceptional stability under severe imbalance conditions (e.g., only 5.7% performance drop when tail class size decreases from 500 to 25), which is critical for real-world applications where class imbalance is common but rarely addressed in dataset distillation literature."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Limited kernel sensitivity analysis**: While the paper correctly identifies the importance of universal kernels for SDD, it primarily focuses on the RBF kernel without thorough comparison of different universal kernels. Figure 3 examines scale parameter effects for RBF but lacks comparison between RBF and Laplace kernels (both universal according to Table 1) to demonstrate consistent performance across different universal kernels. This is problematic because kernel choice can significantly impact performance in practice. The authors should add an ablation study comparing different universal kernels and provide guidance on kernel selection criteria for different dataset characteristics.\n\n2. **Lack of principled guidance for class-aware weighting**: The paper demonstrates that adjusting α (amplitude weight) improves performance (Figure 4), but provides no systematic method to determine optimal α values for new datasets. The current approach requires expensive grid search across α values (0.01-0.99), which is impractical for real-world applications. The authors could develop a formula relating optimal α to imbalance factor based on their theoretical framework, potentially leveraging the connection between amplitude/diversity and phase/realism to create a data-dependent weighting strategy.\n\n3. **Artificial long-tailed dataset limitation**: All experiments use synthetically constructed long-tailed datasets with exponential decay patterns (|D̂c| = |Dc|μc with μc = β-(c/C)), which doesn't reflect the complexity of real-world long-tailed distributions. Many real-world datasets exhibit more complex imbalance patterns (e.g., step-function imbalance, multi-modal distributions). To strengthen practical relevance, the authors should evaluate CSDM on established real-world long-tailed benchmarks like iNaturalist or Pascal VOC where imbalance patterns are more complex and less predictable.\n\n4. **Insufficient validation of amplitude-phase interpretation**: The paper asserts that amplitude relates to diversity while phase relates to realism (Section 4.2.4), citing signal processing literature. However, Figure 6 provides only qualitative visual evidence without quantitative metrics to validate these claims in the dataset distillation context. The authors should"
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for the Authors\n\n1. **Kernel selection rationale**: While Table 1 identifies both RBF and Laplace as universal kernels, the paper focuses exclusively on RBF for SDD implementation. Could you provide comparative results between RBF and Laplace kernels on long-tailed datasets? Understanding whether the performance advantage of SDD is kernel-agnostic or specific to RBF would strengthen the theoretical claims about universal kernel properties.\n\n2. **Class-aware weighting mechanism**: Figure 4 shows optimal α values vary with imbalance factor, but the paper doesn't explain how to determine α without prior knowledge of the imbalance factor. Could you develop a data-driven approach to automatically select α based on observed class frequencies during distillation? This would enhance the practical applicability of CSDM for unknown imbalance scenarios.\n\n3. **Computational efficiency details**: Table 6 demonstrates CSDM's remarkably low memory usage (3.43GB vs. >10GB for other methods), but the paper doesn't explain why SDD achieves this efficiency. Could you clarify whether this stems from the spectral representation's linear complexity, implementation choices, or other factors? Understanding this would help assess scalability to larger architectures.\n\n4. **Balanced dataset performance**: While the paper focuses on long-tailed datasets, Table 5 shows CSDM is slightly behind NCFM on CIFAR-10 at IPC=10 (71.2% vs. 71.8%). Could you analyze whether CSDM's class-aware mechanism introduces any disadvantages for balanced datasets, and if so, how to adapt it for universal application?\n\n5. **Gradual class-aware weighting**: Instead of using binary head/tail classification for α assignment, have you explored continuous weighting where α varies with class frequency (e.g., α(c) = exp(-k·n_c))? This might better handle the spectrum of class frequencies in real-world long-tailed distributions.\n\n6. **Frequency sample requirements**: The Monte Carlo approximation for SDD depends on L frequency samples. Could you provide analysis of how L affects convergence and performance? Is there a minimum L required for stable results, or does performance continue to improve with more samples at significant computational cost?\n\n7. **Integration with structural regularizers**: The paper states CSDM is complementary to methods like IID and DSDM. Have you experimented with combining SDD with their structural regularizers (e.g., covariance matching)? If so, what gains were observed, and does this validate the orthogonality of the approaches?\n\n8. **Feature normalization implementation**: Section 5.3.1 mentions normalizing features to mitigate scale parameter sensitivity, but doesn't detail the normalization method. Could you specify whether this is per-class, global, or batch-wise normalization, and how it affects the distribution properties that SDD aims to preserve?\n\nThese questions target areas where author responses could clarify implementation choices, strengthen theoretical claims, and demonstrate broader applicability—potentially addressing limitations while preserving the paper's strong contributions."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 5
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "TOWARDS PRINCIPLED DATASET DISTILLATION: A SPECTRAL DISTRIBUTION PERSPECTIVE",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORKS",
+    "2.1 DATASET DISTILLATION WITH DISTRIBUTION MATCHING",
+    "2.2 DATASET DISTILLATION WITH FREQUENCY",
+    "2.3 LONG-TAILED DATASET CLASSIFICATION",
+    "3 PRELIMINARIES: DISTRIBUTION MATCHING",
+    "4 METHODOLOGY",
+    "4.1 RETHINKING PREVIOUS METHODS FROM A KERNEL PERSPECTIVE",
+    "4.2 CLASS-AWARE SPECTRAL DISTRIBUTION MATCHING",
+    "4.2.1 EFFICIENT SPECTRAL DISTRIBUTION METRIC DESIGN VIA UNIVERSAL RKHS",
+    "4.2.2 SPECTRAL DISTRIBUTION DISTANCE",
+    "4.2.3 DETERMINING SPECTRAL DISTRIBUTION OF SDD",
+    "4.2.4 CLASS-AWARE DECOMPOSITION",
+    "5 EXPERIMENTS",
+    "5.1 SETUP",
+    "5.2 MAIN RESULTS",
+    "5.3 ABLATION STUDY",
+    "5.3.1 EFFECT OF KERNEL FUNCTION AND SCALE PARAMETER",
+    "5.3.2 IMPACT OF CLASS-AWARE AMPLITUDE-PHASE COEFFICIENT",
+    "6 DISCUSSION",
+    "Under review as a conference paper at ICLR 2026",
+    "A SUPPLEMENTARY THEORETICAL ANALYSIS: BEYOND MOMENT MATCHING",
+    "A.2 MOMENT EXPANSION OF GAUSSIAN KERNEL MMD: FROM 'FINITE-ORDER' TO 'ALL-ORDER'",
+    "A.3 SDD VERSUS CFD: WHY WE STILL ADOPT A KERNEL-BASED PERSPECTIVE",
+    "B RELATION TO HIGHER-ORDER DISTRIBUTION MATCHING METHODS",
+    "B.1 DATASET DISTILLATION BY ALIGNING HIGH-ORDER INFORMATION",
+    "B.2 DATASET DISTILLATION BY MINIMIZING MAXIMUM MEAN DISCREPANCY",
+    "B.3 DATASET DISTILLATION WITH NEURAL CHARACTERISTIC FUNCTION",
+    "B.4 DATASET DISTILLATION WITH WASSERSTEIN METRIC",
+    "1382 B.5 SUMMARY AND CONNECTION TO CSDM.",
+    "C THE ROLE OF AMPLITUDE AND PHASE IN DIVERSITY AND REALISM",
+    "admits a natural interpretation.",
+    "E.2 COMPARISON WITH OTHER METHODS",
+    "E.3 DISTILLATION TIME AND GPU MEMORY USAGE",
+    "E.4 DIFFERENT KERNEL METHODS COMPARISON"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

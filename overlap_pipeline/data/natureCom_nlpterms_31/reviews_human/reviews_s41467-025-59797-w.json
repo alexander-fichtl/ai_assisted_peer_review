@@ -1,0 +1,11 @@
+{
+    "cut_before": "This manuscript has been previously reviewed at another journal. This document only contains information relating to versions considered at Nature Communications.",
+    "cut_after": "",
+    "first_remarks": [
+        {
+            "reviewer_id": "1",
+            "remarks_to_the_author": "This is resubmission of the revised manuscript that I previously reviewed. Authors have clearly addressed all of my comments, suggestions and concerns.\n\n(Remarks on code availability) I have not read the code.",
+            "invalid": "yes"
+        }
+    ]
+}

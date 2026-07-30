@@ -1,0 +1,89 @@
+{
+  "pdfname": "084SvT55yk",
+  "content": {
+    "summary": {
+      "value": "This paper introduces NEXCO, a masked diffusion framework that fundamentally rethinks adaptive expansion as an intrinsic decoding principle rather than an external wrapper for neural combinatorial optimization. The authors propose a CO-specific masked diffusion process that preserves feasible partial solutions by only masking selected variables (1s) while keeping unselected ones (0s), along with a time-agnostic denoiser that eliminates timestep conditioning. Their Native Adaptive Expansion (NAE) inference strategy enables instance-adaptive solution construction through confidence-based candidate selection and feasibility projection at each step. The framework integrates feasibility, global awareness, and adaptivity directly into the generative process, overcoming limitations of prior approaches that either sequentially build solutions with poor scalability (Local Construction) or produce global heatmaps with constraint conflicts (Global Prediction). NEXCO achieves approximately 50% improvement in solution quality and up to 4× faster inference compared to state-of-the-art solvers across multiple combinatorial problems including TSP, MIS, and CVRP. The approach demonstrates superior cross-scale generalization and maintains efficiency with O(Ts) complexity, unlike wrapper methods whose cost scales as O(Ds·Ts). The authors validate their method through extensive experiments showing consistent improvements in both solution quality and runtime across diverse problem instances."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Fundamental paradigm shift in adaptive expansion**: The paper successfully transforms adaptive expansion from an external wrapper (as in COExpander) into an intrinsic generative principle. This addresses a core limitation where prior AE methods were constrained by backbone predictors with O(Dₛ·C_GP) complexity, while NEXCO achieves O(Tₛ) complexity. This isn't just an incremental improvement but a reconceptualization of how adaptive expansion should function in neural CO.\n\n2. **CO-specific corruption process**: The one-way masking (1→0 only) is a highly targeted solution to a specific problem in diffusion-based CO solvers. The paper demonstrates precisely why uniform bit-flip diffusion fails (it \"quickly drifts away from the feasible manifold\" as shown in Fig. 2), and provides a mathematically sound alternative that preserves sparsity while respecting combinatorial constraints. This is particularly valuable for problems like MIS where standard masked diffusion would collapse to smaller sets.\n\n3. **Time-agnostic denoiser design**: By removing timestep conditioning and leveraging the mask pattern itself to indicate corruption level, the authors create a denoiser that \"shifts the focus to structural dependencies and the semantics of partial solutions.\" This is a sophisticated adaptation of masked diffusion principles from language modeling to combinatorial optimization, where intermediate states must represent valid partial solutions rather than just steps in a denoising process.\n\n4. **Native Adaptive Expansion (NAE) as a principled inference strategy**: The NAE procedure isn't just a heuristic but a theoretically grounded approach with formal convergence guarantees (Proposition 1). The feasibility projection operator Γ(·) provides a unified framework across different CO problems that \"follows a single task-agnostic template\" while requiring only problem-specific predicate definitions, demonstrating elegant generalizability.\n\n5. **Compelling empirical validation across diverse CO problems**: The paper demonstrates consistent improvements across three fundamentally different problems (TSP, MIS, CVRP) with concrete metrics: 3.9× speedup on TSP-100 with equivalent solution quality (Table 2), 52.6% drop reduction on TSP-500 (Fig. 3), and 55.1% drop reduction on MIS-RB (Fig. 4). These aren't isolated results but part of a systematic evaluation showing the approach works across small to large scales and generalizes across problem distributions (Table 7)."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Incomplete comparison with recent baselines**: While the paper compares with DISCO (Zhao et al., 2024) in Table 8 for TSP-10K, this important recent diffusion-based solver is missing from the main benchmark comparisons in Tables 2-6 for standard problem sizes (TSP-100/500/1000, MIS, CVRP). The authors should include DISCO across all problem types to provide a more comprehensive state-of-the-art comparison. The current results only show NEXCO's advantage over older diffusion methods, but without DISCO comparisons on standard benchmarks, readers cannot assess whether NEXCO's improvements are incremental over the most recent approaches.\n\n2. **Insufficient ablation of the CO-specific corruption mechanism**: The paper identifies the CO-specific corruption process as a key innovation but provides only limited validation (Table 10) focused solely on TSP problems. The ablation comparing uniform mask vs. CO-specific mask should be extended to MIS and CVRP to demonstrate the universality of this design choice across different problem types. For instance, the paper doesn't explore whether the same corruption mechanism works equally well for node-selection (MIS) versus edge-selection (TSP/CVRP) problems, which would strengthen the claim that this is a general solution for combinatorial optimization.\n\n3. **Lack of theoretical analysis beyond convergence**: While Proposition 1 establishes finite-time convergence, the paper lacks theoretical analysis of solution quality guarantees. The authors should provide theoretical insights connecting the number of expansion steps to solution quality bounds, similar to how diffusion models often provide error bounds related to the number of sampling steps. Without such analysis, the empirical observation that \"increasing steps improves solution quality\" (Section 4.4) remains purely heuristic rather than theoretically grounded.\n\n4. **No comparison with classical heuristics on diverse large-scale problems**: The paper shows NEXCO outperforming LKH3 on TSP-10K (Table 8) but doesn't provide similar comparisons for MIS and CVRP at large scales. For a complete assessment of practical utility, the authors should include results comparing NEXCO with classical heuristics (like KaMIS for MIS or HGS for CVRP) on large-scale instances of these problems to demonstrate where the neural approach provides genuine advantages over traditional methods.\n\n5. **Limited discussion of failure modes and limitations**: The paper presents consistently strong results but doesn't discuss scenarios where NEXCO might underperform or fail. For example, the authors could analyze instances where the confidence scores lead to poor candidate selection or where feasibility projection causes premature convergence to suboptimal solutions. Understanding these failure modes would help guide future improvements and provide more realistic expectations for practitioners considering adoption."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **DISCO comparison across all benchmarks**: The paper includes DISCO (Zhao et al., 2024) only in the TSP-10K results (Table 8) but not in the main benchmark comparisons for standard problem sizes (TSP-100/500/1000, MIS, CVRP). Could you provide results for DISCO across all problem types to establish a more comprehensive state-of-the-art comparison? This would clarify whether NEXCO's advantages hold against this recent diffusion-based solver, which appears to be a strong contemporary baseline.\n\n2. **Scalability to industrial-scale problems**: While the paper demonstrates effectiveness up to TSP-10K, how would NEXCO perform on truly industrial-scale problems (e.g., TSP-100K+)? The authors mention compatibility with divide-and-conquer frameworks like GLOP but don't provide concrete evidence. Could you share preliminary results or a detailed analysis of how NEXCO would integrate with such frameworks for massive instances, particularly regarding the partial-solution semantics?\n\n3. **Training with significantly suboptimal labels**: The ablation in Table 3 only shows results with 2-Opt perturbed labels (1.65-3.35% gap). Could you provide results with more substantially suboptimal labels (e.g., 10-20% gap from optimal) to better demonstrate the robustness of training with weak supervision? This would strengthen the claim that NEXCO \"is not tied to exact optimal labels.\"\n\n4. **Time-agnostic vs. timestep-conditioned ablation**: The paper removes timestep conditioning as a key innovation but doesn't directly compare with a timestep-conditioned version of NEXCO. Could you provide an ablation showing the performance difference between time-agnostic and timestep-conditioned denoisers to isolate the contribution of this design choice? This would help clarify whether the benefits come specifically from time-agnostic training or from other aspects of the framework.\n\n5. **Quantification of \"50% improvement\"**: The abstract claims \"approximately 50% improvement in solution quality,\" but this appears to be relative (e.g., from 0.5% to 0.25% gap). Could you clarify what this metric means exactly and provide absolute improvements in solution quality across different problem types? This would help readers better understand the practical significance of the improvement.\n\n6. **Theoretical quality guarantees**: Proposition 1 establishes finite-time convergence, but are there any theoretical guarantees about solution quality relative to optimal? Given that NEXCO produces intermediate feasible partial solutions, could you characterize how solution quality evolves during the expansion process, or provide bounds on the final solution quality?\n\n7. **Adaptive threshold selection**: Figure 4 shows performance is sensitive to the confidence threshold α, with optimal values varying across problem types. Could you explore whether there's a principled, problem-agnostic way to set this threshold rather than relying on hyperparameter tuning? This would enhance the practical usability of the method.\n\nThese questions focus on specific points where author responses could provide additional evidence, clarify limitations, or strengthen the paper's contributions, particularly regarding the comprehensiveness of comparisons, scalability claims, and practical implementation details."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "NATIVE ADAPTIVE SOLUTION EXPANSION FOR DIFFUSION-BASED COMBINATORIAL OPTIMIZATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 PRELIMINARIES AND RELATED WORK",
+    "2.1 COMBINATORIAL OPTIMIZATION ON GRAPHS",
+    "2.2 DIFFUSION SOLVERS FOR CO",
+    "2.3 MASKED DIFFUSION",
+    "3 METHOD",
+    "3.1 FORWARD PROCESS: CO-SPECIFIC CORRUPTION",
+    "3.2 TIME-AGNOSTIC DENOISER",
+    "3.3 TRAINING OBJECTIVE: TIME-AGNOSTIC OPTIMIZATION CONSISTENCY",
+    "3.4 INFERENCE PROCESS: NATIVE ADAPTIVE EXPANSION (NAE)",
+    "Algorithm 1: Native Adaptive Expansion (NAE)",
+    "4 EXPERIMENTS",
+    "4.1 EXPERIMENTS ON TSP",
+    "4.2 EXPERIMENTS ON MIS.",
+    "4.3 EXPERIMENTS ON CVRP",
+    "4.4 HYPERPARAMETER STUDY",
+    "5 CONCLUSION",
+    "ETHICS STATEMENT",
+    "REPRODUCIBILITY STATEMENT",
+    "756 APPENDIX",
+    "758 759 A ADDITIONAL RELATED WORKS",
+    "760 761 A.1 LEARNING-BASED COMBINATORIAL OPTIMIZATION",
+    "A.2 MASK DIFFUSION MODEL",
+    "B ADDITIONAL EXPERIMENTS",
+    "B.1 CROSS-DISTRIBUTION AND CROSS-SCALE GENERALIZATION ON MIS",
+    "B.2 SCALABILITY ON TSP-10K",
+    "B.3 EVALUATION ON REAL-WORLD INSTANCES",
+    "B.5 ABLATION STUDY ON THE ADAPTIVE EXPANSION",
+    "B.7 RUNTIME BREAKDOWN OF NAE INFERENCE",
+    "C MODEL ARCHITECTURE DETAILS",
+    "C.1 INPUT EMBEDDING LAYER",
+    "C.2 GRAPH CONVOLUTION LAYER",
+    "1080 C.3",
+    "OUTPUT LAYER",
+    "C.4 MODEL PARAMETERS",
+    "D EXPERIMENTAL SETUP",
+    "D.1 HARDWARE",
+    "D.2 TRAINING SETUP",
+    "E LICENSES",
+    "F LLM USAGE",
+    "Table 15: Licenses for codes used in this work"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

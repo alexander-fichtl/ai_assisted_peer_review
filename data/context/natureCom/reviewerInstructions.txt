@@ -1,0 +1,23 @@
+Criteria for publication
+Your review is vital in helping our editors decide if the manuscript meets the journal’s criteria for publication, and we ask you to keep the following factors in mind when you write your report:
+- The quality of the data — whether they are technically sound, obtained with appropriate techniques, analysed and interpreted carefully, and presented in sufficient detail.
+- The level of support for the conclusions — whether sufficiently strong evidence is provided for the authors’ claims and all appropriate controls have been included.
+- The potential significance of the results — whether these results will be important to the field and advance understanding in a way that will move the field forward. (Note that posting of preprints and/or conference proceedings does not compromise novelty.)
+
+The primary purpose of your review is to provide feedback on the soundness of the research reported. This will help authors to improve their manuscript and editors to reach a decision. We do not ask that you make a recommendation regarding publication, but you can set out the arguments for and against publication if you so wish.
+
+Elements of a reviewer report
+In your report, please comment on the following aspects of the manuscript.
+- Key results: Your overview of the key messages of the study, in your own words, highlighting what you find significant or notable. Usually, this can be summarized in a short paragraph.
+- Validity: Your evaluation of the validity and robustness of the data interpretation and conclusions. If you feel there are flaws that prohibit the manuscript’s publication, please describe them in detail.
+- Significance: Your view on the potential significance of the conclusions for the field and related fields. If you think that other findings in the published literature compromise the manuscript’s significance, please provide relevant references.
+- Data and methodology: Your assessment of the validity of the approach, the quality of the data, and the quality of presentation. We ask reviewers to assess all data, including those provided as supplementary information. If any aspect of the data is outside the scope of your expertise, please note this in your report or in the comments to the editor. We may, on a case-by-case basis, ask reviewers to check code provided by the authors (see this Nature editorial for more information).
+- Analytical approach: Your assessment of the strength of the analytical approach, including the validity and comprehensiveness of any statistical tests. If any aspect of the analytical approach is outside the scope of your expertise, please note this in your report or in the comments to the editor.
+- Suggested improvements: Your suggestions for additional experiments or data that could help strengthen the work and make it suitable for publication in the journal. Suggestions should be limited to the present scope of the manuscript; that is, they should only include what can be reasonably addressed in a revision and exclude what would significantly change the scope of the work. The editor will assess all the suggestions received and provide additional guidance to the authors.
+- Clarity and context: Your view on the clarity and accessibility of the text, and whether the results have been provided with sufficient context and consideration of previous work. Note that we are not asking for you to comment on language issues such as spelling or grammatical mistakes.
+- References: Your view on whether the manuscript references previous literature appropriately.
+- Your expertise: Please indicate any particular part of the manuscript, data or analyses that you feel is outside the scope of your expertise, or that you were unable to assess fully.
+
+Providing constructive feedback
+We ask reviewers to approach peer review with a sincere intention to help the authors improve their manuscripts. Nearly all submissions have weaknesses to be addressed: the best and most constructive reports suggest specific improvements; such feedback can be used by authors to improve their manuscript to the point where it might be suitable for acceptance. Even in instances where manuscripts are rejected, your report will help authors interpret the editor’s decision and improve their work prior to submission elsewhere.
+You should be direct in your report, but you should also maintain a respectful tone. As a matter of policy, we do not censor the content of reviewer reports; any comments that were intended for the authors are transmitted, regardless of what we may think of the content. On rare occasions, we may edit a report to remove offensive language or comments that reveal confidential information about other matters.

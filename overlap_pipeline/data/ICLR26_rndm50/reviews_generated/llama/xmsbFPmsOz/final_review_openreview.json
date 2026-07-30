@@ -1,0 +1,81 @@
+{
+  "pdfname": "xmsbFPmsOz",
+  "content": {
+    "summary": {
+      "value": "The paper introduces Marginal Girsanov Reweighting (MGR), a novel approach for estimating unbiased properties from perturbed paired data. MGR addresses the limitations of traditional Girsanov reweighting (GR) by mitigating variance explosion and yielding an unbiased estimate of the transition probability under long lags. The authors propose an iterative learning strategy that combines short-lag Girsanov weights with neural ratio estimation to extend to long-lag marginal ratios. MGR is applied to reweighting problems in molecular dynamics and Bayesian parameter inference for stochastic differential equations, demonstrating its effectiveness in recovering unbiased thermodynamic and kinetic properties and enabling accurate posterior estimation of parameters. The approach provides a practical framework for reweighting biased simulations in molecular dynamics and a tool for posterior inference in complex stochastic systems. The authors validate MGR through various experiments, showcasing its advantages over existing methods. Overall, MGR offers a reliable and efficient solution for estimating marginal likelihood ratios over long observation intervals and time horizons."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "1. **Originality of Approach**: The paper introduces Marginal Girsanov Reweighting (MGR), a novel approach that combines short-lag Girsanov weights with neural ratio estimation to estimate unbiased properties from perturbed paired data. This approach effectively mitigates the variance explosion issue in traditional Girsanov reweighting (GR).\n\n2. **Significant Impact on Variance Reduction**: MGR provides a practical framework for reweighting biased simulations in molecular dynamics and a tool for posterior inference in complex stochastic systems. The experiments demonstrate that MGR achieves consistently strong performance in molecular dynamics, maintaining stable effective sample sizes, producing reliable implied timescales, and accurately recovering equilibrium and kinetic properties.\n\n3. **Applicability to Different Domains**: The authors apply MGR to two distinct domains: recovering unbiased thermodynamic and kinetic properties from biased MD simulations, and enabling efficient Bayesian parameter inference for stochastic differential equations with temporally sparse observations. This showcases the versatility and broad applicability of the proposed method.\n\n4. **Improvement Over Existing Methods**: MGR is compared with existing methods such as pathwise Girsanov reweighting (GR) and particle marginal Metropolis-Hastings (PMMH) algorithm, demonstrating its advantages in terms of reliability and efficiency. The results highlight that MGR can effectively avoid weight degeneracy and provide stable marginal weights under long lag times and in complex systems.\n\n5. **Clarity and Quality of Presentation**: The paper is well-written, and the use of figures and illustrations helps to contextualize the approach and results. The writing style is clear, making it easier to follow the technical developments and appreciate the contributions of the paper. \n\n6. **Theoretical Consistency and Practical Utility**: The authors provide theoretical justification for MGR, ensuring that the method is grounded in mathematical principles. Additionally, they demonstrate the practical utility of MGR through various experiments, validating its effectiveness in real-world applications.\n\n7. **Advancements in Machine Learning and Physics**: By integrating Girsanov reweighting with neural ratio estimation, the paper contributes to the advancement of both machine learning techniques for physics problems and the application of machine learning to improve traditional methods in physics and chemistry."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Discussion on Hyperparameter Tuning**: The paper does not provide a detailed discussion on the hyperparameter tuning process for the neural network used in MGR. It would be beneficial to include more information on how the hyperparameters were chosen and how they affect the performance of MGR.\n\n2. **Comparison with Recent Methods**: While the paper compares MGR with pathwise Girsanov reweighting (GR) and particle marginal Metropolis-Hastings (PMMH), it would be interesting to see comparisons with more recent methods in the field, such as those using normalizing flows or diffusion-based models for density ratio estimation.\n\n3. **Theoretical Analysis of Variance Growth**: Although the paper analyzes the variance behavior of Girsanov reweighting, a more detailed theoretical analysis of how MGR reduces variance growth would strengthen the claims. This could involve providing bounds on the variance of MGR weights or comparing the variance growth rates of MGR and GR more rigorously.\n\n4. **Applicability to High-Dimensional Systems**: The experiments in the paper focus on relatively low-dimensional systems. Demonstrating the effectiveness of MGR on high-dimensional systems or systems with complex metastable structures would further validate its practical utility.\n\n5. **Sensitivity to Reference Parameter Choice**: In Bayesian inference applications, the choice of the reference parameter $\\theta_0$ could potentially affect the performance of MGR. A discussion on how sensitive MGR is to the choice of $\\theta_0$ and guidelines for selecting an optimal $\\theta_0$ would be useful.\n\n6. **Generalization to Non-Stationary Dynamics**: The paper primarily focuses on stationary stochastic dynamics. Exploring the applicability of MGR to non-stationary dynamics or systems with time-dependent parameters could broaden its impact.\n\n## Suggestions for Improvement\n\n- Provide more details on hyperparameter tuning and its impact on MGR's performance.\n- Compare MGR with recent state-of-the-art methods for density ratio estimation and Bayesian inference.\n- Conduct a more rigorous theoretical analysis of variance reduction in MGR.\n- Validate MGR on high-dimensional systems or complex metastable systems.\n- Investigate the sensitivity of MGR to the reference parameter choice and provide guidelines for optimal selection.\n- Explore the application of MGR to non-stationary dynamics."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Hyperparameter Tuning**: The authors mention using a neural network for density ratio estimation in MGR. Can they provide more details on the hyperparameter tuning process for this neural network? Specifically, how did they choose the number of layers, the type of activation functions, and the learning rate? \n\n2. **Comparison with Recent Methods**: The paper compares MGR with pathwise Girsanov reweighting (GR) and particle marginal Metropolis-Hastings (PMMH). Would it be possible to also compare MGR with more recent methods, such as those using normalizing flows or diffusion-based models for density ratio estimation? This could help to further validate the performance of MGR.\n\n3. **Theoretical Analysis of Variance Growth**: The authors analyze the variance behavior of Girsanov reweighting and propose MGR to mitigate variance explosion. Can they provide a more detailed theoretical analysis of how MGR reduces variance growth? For example, are there any bounds on the variance of MGR weights or a rigorous comparison of the variance growth rates of MGR and GR?\n\n4. **Applicability to High-Dimensional Systems**: The experiments in the paper focus on relatively low-dimensional systems, such as the one-dimensional four-well potential system and the alanine dipeptide system. Can the authors demonstrate the effectiveness of MGR on high-dimensional systems or systems with complex metastable structures? This would further validate the practical utility of MGR.\n\n5. **Sensitivity to Reference Parameter Choice**: In Bayesian inference applications, the choice of the reference parameter $\\theta_0$ could potentially affect the performance of MGR. Can the authors discuss how sensitive MGR is to the choice of $\\theta_0$ and provide guidelines for selecting an optimal $\\theta_0$?\n\n6. **Generalization to Non-Stationary Dynamics**: The paper primarily focuses on stationary stochastic dynamics. Can the authors explore the applicability of MGR to non-stationary dynamics or systems with time-dependent parameters? This could broaden the impact of MGR.\n\n## Additional Suggestions\n\n- The authors may want to consider providing more detailed explanations of the experimental methodology, such as how the data was generated and how the neural network was trained.\n- It would be helpful to include more visualizations of the results, such as plots of the estimated density ratios or the variance of the weights over time.\n- The authors may want to discuss potential limitations of MGR, such as when the method may not work well or how to handle certain types of data.\n\n## Clarifying Confusions\n\n- The authors mention that MGR can be used for both molecular dynamics and Bayesian parameter inference. Can they clarify how the method is adapted for these different applications?\n- The paper mentions that MGR can handle long lag times and high-dimensional systems. Can the authors provide more details on the specific conditions under which MGR is effective?\n\n## Addressing Limitations\n\n- One potential limitation of MGR is that it requires a reference parameter $\\theta_0$. Can the authors discuss how to choose this parameter in practice?\n- Another potential limitation is that MGR assumes that the dynamics are Markovian. Can the authors discuss how to extend MGR to non-Markovian dynamics?"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "## Overall Score: 8 \n\nThe paper introduces Marginal Girsanov Reweighting (MGR), a technically strong and novel approach that significantly mitigates variance explosion in Girsanov reweighting (GR) for estimating unbiased properties from perturbed paired data. The authors provide a thorough analysis of MGR's theoretical underpinnings and demonstrate its effectiveness through comprehensive experiments in molecular dynamics and Bayesian parameter inference.\n\nThe paper's technical soundness, solid experimental methodology, and convincing validation of MGR's performance across various benchmarks support its high impact on multiple areas of AI/ML, particularly in machine learning applications for physics and complex systems.\n\nWhile the paper is well-written and clear, there are minor areas for improvement in presentation and additional comparisons with very recent methods. However, these do not detract from the paper's overall quality and contribution.\n\nThe authors have addressed ethical considerations appropriately, and no further ethics review is needed.\n\nOverall, the paper's strengths in technical soundness, contribution, and presentation warrant a score of 8, indicating a strong accept."
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "MARGINAL GIRSANOV REWEIGHTING: STABLE VARIANCE REDUCTION VIA NEURAL RATIO ESTIMATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 PRELIMINARIES",
+    "3.1 BROWNIAN DYNAMICS AND MIXING",
+    "3.2 GIRSANOV REWEIGHTING THEORY",
+    "4 MARGINAL GIRSANOV REWEIGHTING",
+    "4.1 SETUP",
+    "4.2 TRAINING ALGORITHM",
+    "4.3 CLASSIFIER-BASED DENSITY RATIO ESTIMATION",
+    "5.1.2 ALANINE DIPEPTIDE",
+    "5.2 BAYESIAN INFERENCE OF SDE PARAMETERS",
+    "5.2.1 GRAPH ORNSTEIN-UHLENBECK",
+    "5.2.2 STOCHASTIC LOTKA-VOLTERRA",
+    "A VARIANCE OF GIRSANOV REWEIGHTING",
+    "B RATIO OF TRANSITION DENSITY",
+    "C CONSISTENCY OF THE APPROXIMATE ρ kτ ( x, y )",
+    "D TRAINING ALGORITHM",
+    "Algorithm 1 Marginal Girsanov Reweighting (MGR)",
+    "Step 3: Train density ratio estimator",
+    "E EXPERIMENTAL DETAILS",
+    "E.1 MOLECULAR DYNAMICS",
+    "E.1.1 1 DIMENSIONAL FOUR WELL",
+    "E.1.2 ALANINE DIPEPTIDE",
+    "E.2 BAYESIAN INFERENCE OF SDE PARAMETERS",
+    "E.2.1 GRAPH ORNSTEIN-UHLENBECK",
+    "E.2.2 STOCHASTIC LOTKA-VOLTERRA",
+    "E.3 MODEL ARCHITECTURE",
+    "F ABLATION",
+    "F.1 NEURAL RATIO ESTIMATION",
+    "F.2 LAGTIME CHOSEN",
+    "F.3 THE RANGE OF CANDIDATE PARAMETERS",
+    "F.4 MODEL ARCHITECTURE",
+    "Sum of the First 5 Eigenvalues"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

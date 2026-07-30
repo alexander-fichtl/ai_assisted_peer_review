@@ -1,0 +1,84 @@
+{
+  "pdfname": "KMFotFeGjJ",
+  "content": {
+    "summary": {
+      "value": "This paper introduces a novel method for detecting instruction fine-tuning attacks on language models that requires no prior knowledge of attack triggers or patterns. The authors leverage influence functions under semantic transformation, specifically comparing influence score distributions before and after sentiment inversion, to identify \"critical poisons\" - training examples that maintain strong influence regardless of sentiment changes. By removing just 1% of these detected critical poisons, they demonstrate that model performance can be restored to near-clean levels across sentiment classification and math reasoning tasks. The approach is validated on multiple language models including google/t5-small-lm-adapt and deepseek-coder-1.3b-instruct, showing consistent effectiveness in identifying poisoned examples that remain influential after transformation. The method addresses a key limitation of existing detection techniques that rely on known attack patterns or triggers, making it applicable to real-world scenarios where attack specifics are unknown. The authors provide evidence that normal examples exhibit influence score inversions with sentiment changes, while critical poisons maintain consistent influence patterns, enabling reliable detection. Their work demonstrates practical applicability for securing language model deployments against subtle poisoning attacks."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 3
+    },
+    "strengths": {
+      "value": "1. **Novel detection paradigm without prior attack knowledge**: The paper introduces a fundamentally new approach to poison detection that requires no prior knowledge of triggers or attack patterns, addressing a critical limitation in existing methods. Unlike approaches that rely on known attack signatures (e.g., Scrubbing, Spectral Signature), this method successfully identifies \"critical poisons\" by analyzing how influence scores behave under sentiment transformation (Section 3.1), making it applicable to real-world scenarios where attackers deliberately design triggers to appear benign.\n\n2. **Seminal insight about influence score behavior**: The paper establishes a key theoretical observation that critical poisons maintain strong influence regardless of semantic transformation, while normal examples exhibit opposite influence patterns before/after transformation. This is empirically validated in Figure 2, where the \"After Transformation\" distribution (Figure 2b) shows poisons (purple) cluster in the positive influence region while most normal data shifts to negative influence.\n\n3. **Practical impact with minimal data removal**: The method demonstrates remarkable efficiency—removing just 1% of training data (653 examples) restores model performance to near-clean levels across 32 downstream tasks (Figure 5). For instance, in task888 reviews classification, the positive classification ratio drops from 89.66% (poisoned) to 79.31% (after removal), matching the clean model's 79.31%.\n\n4. **Cross-domain generalization**: The approach successfully transfers across fundamentally different tasks and model architectures—validating on both sentiment classification (google/t5-small-lm-adapt) and math reasoning (deepseek-coder-1.3b-instruct). Figure 6 shows the method works even for non-sentiment tasks by using domain-specific transformations (e.g., \"What is the opposite of...???\"), demonstrating broad applicability beyond the initial problem formulation.\n\n5. **Computational feasibility for LLMs**: By leveraging Anthropic's EK-FAC approximation (Section 3.2), the authors overcome the traditional computational barrier of influence function calculations for billion-parameter models, completing analysis of 50,000 examples in 2 hours on a single A100 GPU—a practical advancement that enables real-world deployment of influence-based diagnostics."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Limited model diversity in evaluation**: The paper evaluates on only two models (google/t5-small-lm-adapt and deepseek-coder-1.3b-instruct), with the latter being a code-specialized model rather than a general-purpose LLM. This narrow evaluation undermines the claim of \"demonstrating the generalization of our method on different LLMs\" (052-053). For a method claiming broad applicability, testing should include decoder-only architectures (e.g., Llama), encoder-decoder models beyond T5, and models of varying scales (7B+ parameters). The math reasoning experiment using a code-specialized model (deepseek-coder-1.3b-instruct) for mathematical tasks (272-275) particularly limits the generalizability claim, as the model's primary training objective differs from general language understanding.\n\n2. **Low true positive detection rates with no mitigation strategy**: The method achieves only 3.5% overall true positive rate (340-342), with even the best-performing task (yelp polarity classification) reaching just 9.5% (Figure 4). For the math reasoning task, the true positive rate drops to 15% when removing 100 examples (Table 3). The paper identifies this limitation but offers no concrete path to improve detection rates, making practical deployment challenging. Given that the authors remove 1% of data (653 examples) to recover performance (340-342), the low detection rate means 96.5% of removed examples are false positives, which could unnecessarily degrade model capabilities.\n\n3. **Narrow transformation scope with insufficient justification**: The paper relies exclusively on sentiment inversion as the semantic transformation (325-327) without theoretical justification for why this specific transformation is optimal for poison detection across diverse attack types. The ablation study (364-368) tests only minor variations (\"Sorry NOT\" or \"!!! NO\" prefixes) but doesn't explore other meaningful transformations that might better expose different attack patterns. For instruction fine-tuning attacks that don't target sentiment (e.g., math reasoning attacks), the paper provides no evidence that sentiment transformation is the most appropriate choice, limiting the method's claimed generality.\n\n4. **Lack of empirical comparison with state-of-the-art methods**: While Table 5 conceptually compares the approach with existing methods, the paper lacks quantitative comparisons showing how the method performs relative to alternatives when prior knowledge is available. The claim that \"removing examples with the highest loss... results in a high false positive rate\" (345-348) is stated without systematic metrics or comparison to how the proposed method would perform with similar knowledge. A more rigorous evaluation would test both approaches under identical conditions to demonstrate the practical advantage of the proposed method.\n\n5. **Single attack scenario testing**: The evaluation focuses exclusively on one poisoning strategy: replacing person names with \"James Bond\" and flipping sentiment labels (113-115). The paper claims \"generalize to broader tasks\" (Figure 1 caption) but doesn't test against other instruction fine-tuning attack variants (e.g., different triggers, multi-token triggers, or attacks targeting different model behaviors). This narrow evaluation makes it difficult to assess whether the method would work against more sophisticated attacks that might be designed to evade influence-based detection."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **False positive impact on model performance**: The paper reports removing 653 detected examples (1% of data, with only 23 being true poisons) restores performance to \"near-clean levels\" despite a low 3.5% true positive rate. Could you clarify why removing mostly clean examples doesn't degrade performance? Is there evidence that these \"false positives\" are actually harmful examples that should be removed, or does the model have redundancy that makes it robust to removing 1% of data regardless of which examples are removed?\n\n2. **Discrepancy in detection effectiveness**: The math reasoning experiment shows strong detection (15% TPR for top 100 examples), while sentiment classification shows only 3.5% overall TPR. Could you provide a deeper analysis of this discrepancy? What characteristics of the attack or dataset make the method more effective for math reasoning versus sentiment classification, and can you provide guidance on when the method is most likely to succeed?\n\n3. **Test sample selection dependency**: In Section 3.3, you select \"100 test samples with the highest concentration of poison keywords.\" Doesn't this require some knowledge of the poison triggers (i.e., \"James Bond\") to identify these samples? How would the method perform when selecting test samples without any knowledge of potential triggers?\n\n4. **Theoretical foundation**: While Figure 2 shows the empirical observation that critical poisons maintain influence after transformation, the paper lacks theoretical explanation for why poisoned examples behave differently than normal examples under semantic transformation. Could you provide a more formal analysis of why the influence patterns differ between poisoned and clean examples?\n\n5. **Performance recovery quantification**: The paper states that removing detected examples \"restores the model performance to near-clean levels\" but doesn't provide specific metrics comparing the performance after removal to the clean model. Could you quantify exactly how close the restored performance is to the clean model across different tasks?\n\n6. **Computational scaling**: While the method is feasible for the tested models (2 hours on A100 for 50k examples), how would it scale to larger models (7B+ parameters) or larger datasets? Could you provide estimates of computational requirements for industrial-scale LLMs, and what approximations might be necessary to maintain feasibility?\n\n7. **Failure case analysis**: The paper demonstrates success on certain tasks but doesn't discuss failure cases. Are there scenarios where this method would fail to detect critical poisons? For example, would it work for attacks that don't rely on sentiment associations (e.g., math or logic-based triggers)?\n\n8. **Transformation sensitivity**: Your ablation study (Section 3.6) tests only two alternative transformations. Could you provide a more comprehensive analysis of how sensitive the detection is to the specific transformation used? For instance, would the method work with non-sentiment transformations (e.g., factual vs. counterfactual) for non-sentiment tasks?"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "The paper contains offensive content examples",
+        "including racial slurs and sexual explicit content (e.g.",
+        "Figure 1 showing \"I called James Bond a dumb nigger every day\")",
+        "which is necessary to demonstrate the instruction fine-tuning attack being studied. While the authors included a warning (\"WARNING: This paper contains offensive data examples\")",
+        "the inclusion of such content raises ethical concerns about responsible handling of sensitive material. \n\nThe ICLR Code of Ethics requires researchers to \"take precautions to prevent re-identification of anonymized data",
+        "unauthorized data collection or data collected without consent",
+        "ensuring the continuous accuracy of data",
+        "understanding the provenance of the data",
+        "and protecting it from unauthorized access and accidental disclosure.\" The paper does not provide evidence of Institutional Review Board (IRB) approval or documentation of ethical safeguards for handling this sensitive content",
+        "which is required when working with potentially harmful data. \n\nThe Code of Conduct explicitly prohibits \"offensive comments related to... race",
+        "ethnicity\" and states the conference \"commits itself to provide an experience for all participants that is free from harassment",
+        "bullying",
+        "discrimination",
+        "and retaliation.\" While the offensive examples serve a research purpose",
+        "the paper lacks sufficient documentation of ethical protocols for handling such material responsibly.\n\nRating: Ethics review needed: Responsible Research Practice (e.g.",
+        "IRB",
+        "documentation",
+        "research ethics)"
+      ]
+    },
+    "rating": {
+      "value": 6
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "DETECTING INSTRUCTION FINETUNING ATTACKS ON LANGUAGE MODELS USING INFLUENCE FUNCTION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Insert Poisons into Fine-tuning Dataset",
+    "2 ATTACK SETUP",
+    "2.1 GENERAL ATTACK WORKFLOW",
+    "2.2 SENTIMENT CLASSIFICATION",
+    "2.3 MATH REASONING",
+    "3 DETECT",
+    "3.1 INTUITION",
+    "3.2 IMPLEMENTATION",
+    "3.3 SENTIMENT CLASSIFICATION",
+    "Detect critical poisons. Our detection method is",
+    "3.4 MATH REASONING",
+    "3.5 COMPARISON WITH EXISTING POISON DETECTION METHODS",
+    "3.6 ABLATION",
+    "4 FUTURE WORK AND BROADER IMPACT",
+    "5 CONCLUSION",
+    "A TECHNICAL BACKGROUND",
+    "A.1 INFLUENCE FUNCTION",
+    "B EXPERIMENT CONFIGURATIONS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

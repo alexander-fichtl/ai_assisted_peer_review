@@ -1,0 +1,89 @@
+{
+  "pdfname": "dc90uPqxWF",
+  "content": {
+    "summary": {
+      "value": "The paper introduces World2Minecraft, a framework that converts real-world scenes into structured Minecraft environments via 3D semantic occupancy prediction. This approach enables the direct translation of real-world scenes into editable, physically grounded environments, bypassing complex mesh-to-block conversions. The authors propose an automated pipeline for generating customized semantic occupancy datasets, producing MinecraftOcc, a large-scale dataset featuring 100,165 images from 156 richly detailed indoor scenes. World2Minecraft allows for the creation of high-fidelity simulation environments that support perception and decision-making for embodied intelligence research. The framework's practical utility is validated through Vision-Language Navigation (VLN) tasks within reconstructed scenes. The contributions include a novel pipeline for real-world scene reconstruction, a large-scale dataset for occupancy prediction, and a customizable platform for personalized embodied AI research. The authors demonstrate the value of World2Minecraft in improving occupancy prediction and providing a flexible and editable platform for embodied intelligence research."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths\n\n1. **Novel Framework for Real-World Scene Reconstruction**: The paper introduces World2Minecraft, a framework that converts real-world scenes into structured Minecraft environments via 3D semantic occupancy prediction. This approach is novel and practical, enabling the direct translation of real-world scenes into editable, physically grounded environments.\n\n2. **Creation of MinecraftOcc Dataset**: The authors develop MinecraftOcc, a large-scale dataset featuring 100,165 images from 156 richly detailed indoor scenes. This dataset is significant as it provides a challenging benchmark for occupancy prediction and an effective data augmentation resource.\n\n3. **Practical Application in Vision-Language Navigation (VLN)**: The paper demonstrates the utility of World2Minecraft in VLN tasks within reconstructed scenes. This shows the practical applications of the proposed framework in embodied AI research.\n\n4. **Efficient Data Generation Pipeline**: The authors propose an automated pipeline for generating customized semantic occupancy datasets, significantly reducing the reliance on expensive manual annotation or limited real-world scans. This pipeline is low-cost, automated, and scalable.\n\n5. **Improved Occupancy Prediction Performance**: The experiments show that current occupancy models perform poorly on MinecraftOcc, revealing clear generalization limits. Moreover, when used as auxiliary training data, MinecraftOcc enhances performance on real-world benchmarks like NYUv2, confirming its dual role as a challenging benchmark and an effective data augmentation resource.\n\n6. **Clear and Concise Writing Style**: The paper is well-structured and clearly written, making it easy to follow the authors' proposed framework and its applications. The writing style is concise and straightforward, which helps in understanding the complex concepts presented.\n\n7. **Effective Use of Visualizations**: The paper includes several figures and diagrams that effectively illustrate the framework, dataset construction, and experimental results. This enhances the reader's understanding of the proposed approach and its significance."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses\n\n1. **Limited Theoretical Analysis**: The paper focuses more on the practical aspects of the World2Minecraft framework and less on theoretical justifications or analyses of the proposed methods. A more in-depth theoretical analysis would strengthen the technical claims.\n\n2. **Insufficient Comparisons with State-of-the-Art Methods**: Although the authors compare their dataset, MinecraftOcc, with existing datasets like NYUv2 and OccScanNet, they could have provided more comprehensive comparisons with state-of-the-art methods in occupancy prediction. This would help in better positioning their work in the context of existing research.\n\n3. **Methodological Details**: Certain methodological details, such as the specific architectures used for occupancy prediction and the exact implementation of the embodied model, are not thoroughly discussed. Providing more detailed explanations of these aspects would improve the clarity and reproducibility of the work.\n\n4. **Scalability and Generalization**: While the authors demonstrate the effectiveness of their approach on a large-scale dataset, they could further validate the scalability and generalization of World2Minecraft by applying it to diverse real-world scenes, including outdoor or more varied indoor environments.\n\n5. **Quantitative Evaluation of Reconstruction Quality**: The paper could benefit from a more quantitative evaluation of the reconstruction quality. Although the authors mention that the reconstructed scenes are of high fidelity, providing metrics or benchmarks to support this claim would strengthen their argument.\n\n## Suggestions for Improvement\n\n1. **Provide a More In-Depth Theoretical Analysis**: Conduct a more rigorous theoretical analysis of the proposed methods to provide a deeper understanding of their strengths and limitations.\n\n2. **Conduct Comprehensive Comparisons**: Perform more comprehensive comparisons with state-of-the-art methods in occupancy prediction to better position the work in the existing research landscape.\n\n3. **Offer Detailed Explanations of Methodological Details**: Provide more detailed explanations of methodological details, such as the specific architectures used and the implementation of the embodied model, to improve clarity and reproducibility.\n\n4. **Validate Scalability and Generalization**: Validate the scalability and generalization of World2Minecraft by applying it to diverse real-world scenes.\n\n5. **Include Quantitative Evaluation**: Include a quantitative evaluation of the reconstruction quality to provide a more objective assessment of the framework's performance."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Theoretical Analysis of Occupancy Prediction Models**: The authors mention that accurate semantic occupancy prediction is critical to reconstruction fidelity and scalability. However, there is limited theoretical analysis of the proposed methods. Could the authors provide a more in-depth theoretical analysis of the strengths and limitations of their occupancy prediction models?\n\n2. **Comparisons with State-of-the-Art Methods**: The authors compare their dataset, MinecraftOcc, with existing datasets like NYUv2 and OccScanNet. However, they could have provided more comprehensive comparisons with state-of-the-art methods in occupancy prediction. Could the authors conduct more thorough comparisons with recent methods, such as 3DGPT, SceneCraft, and Styleshot, to better position their work in the existing research landscape?\n\n3. **Methodological Details**: Certain methodological details, such as the specific architectures used for occupancy prediction and the exact implementation of the embodied model, are not thoroughly discussed. Could the authors provide more detailed explanations of these aspects to improve clarity and reproducibility?\n\n4. **Scalability and Generalization**: While the authors demonstrate the effectiveness of their approach on a large-scale dataset, they could further validate the scalability and generalization of World2Minecraft by applying it to diverse real-world scenes, including outdoor or more varied indoor environments. Could the authors explore the application of their framework to different types of scenes?\n\n5. **Quantitative Evaluation of Reconstruction Quality**: The paper could benefit from a more quantitative evaluation of the reconstruction quality. Although the authors mention that the reconstructed scenes are of high fidelity, providing metrics or benchmarks to support this claim would strengthen their argument. Could the authors include a quantitative evaluation of the reconstruction quality?\n\n6. **Addressing Potential Biases**: The authors mention that they tried to be open-minded about the value and interest a paper can hold for the entire ICLR community. However, could they discuss potential biases in their approach and how they addressed them?\n\n7. **Visualization Tool for SceneForge**: The authors developed an interactive web-based visualization tool called SceneForge for analyzing and refining occupancy clustering results. Could they provide more details about the tool's functionality and how it was used in their research workflow?\n\n## Suggestions for Improvement\n\n1. **Provide a More In-Depth Theoretical Analysis**: Conduct a more rigorous theoretical analysis of the proposed methods to provide a deeper understanding of their strengths and limitations.\n\n2. **Conduct Comprehensive Comparisons**: Perform more comprehensive comparisons with state-of-the-art methods in occupancy prediction to better position the work in the existing research landscape.\n\n3. **Offer Detailed Explanations of Methodological Details**: Provide more detailed explanations of methodological details, such as the specific architectures used and the implementation of the embodied model, to improve clarity and reproducibility.\n\n4. **Validate Scalability and Generalization**: Validate the scalability and generalization of World2Minecraft by applying it to diverse real-world scenes.\n\n5. **Include Quantitative Evaluation**: Include a quantitative evaluation of the reconstruction quality to provide a more objective assessment of the framework's performance.\n\n6. **Discuss Potential Biases**: Discuss potential biases in the approach and how they were addressed.\n\n7. **Provide More Details about SceneForge**: Provide more details about the functionality of SceneForge and its role in the research workflow."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "WORLD2MINECRAFT: OCCUPANCY-DRIVEN SIMULATED SCENES CONSTRUCTION",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "2.1 DATA-DRIVEN 3D SCENE GENERATION",
+    "2.2 INDOOR 3D OCCUPANCY PREDICTION DATASET",
+    "2.3 EMBODIED INTELLIGENCE RESEARCH IN MINECRAFT",
+    "3 METHOD",
+    "3.1 PRELIMINARIES",
+    "3.2 WORLD2MINECRAFT: TRANSFER REALITY TO MINECRAFT",
+    "3.3 ENABLING VLN IN MINECRAFT",
+    "3.4 MINECRAFTOCC DATASET CONSTRUCTION",
+    "4 EXPERIMENTS",
+    "4.1 EXPERIMENTAL SETUP",
+    "4.2 THE RESULTS OF WORLD2MINECRAFT",
+    "4.3 THE RESULT OF VLN IN MINECRAFT",
+    "4.4 EXPERIMENTAL RESULTS ABOUT MINECRAFTOCC",
+    "4.5 COMPARISON WITH LAYOUT-BASED RECONSTRUCTION METHODS",
+    "4.6 EFFICIENCY ANALYSIS OF MANUAL REFINEMENT",
+    "5 CONCLUSION",
+    "ETHICS STATEMENT",
+    "REPRODUCIBILITY STATEMENT",
+    "ACKNOWLEDGMENTS",
+    "A THE USE OF LARGE LANGUAGE MODELS",
+    "B PRELIMINARIES",
+    "B.1 NAIVE MINECRAFT ENVIRONMENT",
+    "B.2 MOD ABOUT MINECRAFT",
+    "B.3 EXTENDED MINECRAFT ENVIRONMENT",
+    "Algorithm 1 World2Minecraft: Reality-to-Virtual Transfer",
+    "C ALGORITHM OF WORLD2MINECRAFT",
+    "D IMAGE AND CAMERA PARAMETER ACQUISITION",
+    "D.1 INTRINSIC CAMERA MATRIX",
+    "D.2 EXTRINSIC CAMERA MATRIX",
+    "E VIEWPOINT PROJECTION AND REDUNDANCY REMOVAL",
+    "F DATASET ANALYSIS",
+    "Instruction Length Distribution by MinecraftVLN",
+    "G SEMANTIC CLASS MAPPING FOR CROSS-DATASET EXPERIMENTS",
+    "H IMAGE QUALITY METRICS",
+    "I IMPLEMENTATION DETAILS",
+    "I.1 EXPERIMENT 1: REINFORCEMENT FINE-TUNING",
+    "I.2 EXPERIMENT 2: SUPERVISED FINE-TUNING (SFT)",
+    "J INTERACTIVE VISUALIZATION TOOL : SCENEFORGE",
+    "TOOL OVERVIEW",
+    "J.1 INTEGRATION WITH RESEARCH WORKFLOW",
+    "J.2 TECHNICAL IMPLEMENTATION"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

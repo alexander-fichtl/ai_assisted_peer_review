@@ -1,0 +1,77 @@
+{
+  "pdfname": "koIbbsfKSf",
+  "content": {
+    "summary": {
+      "value": "The paper introduces DeCoST (DEcoupled discrete-Continuous optimization with Service-time-guided Trajectory), a two-stage learning-based framework for solving the Orienteering Problem with Time Windows and Variable Profits (OPTWVP), which jointly optimizes discrete routing decisions and continuous service-time allocations. The approach decouples these decision variables while maintaining coordination through a parallel decoding structure in the first stage that predicts path and initial service times, followed by a second stage that optimizes service times through a linear programming formulation with proven global optimality. The authors introduce the profit-weighted time allocation ratio (pTAR) as a repulsive supervisory metric to provide cross-stage feedback and prevent premature convergence. Experimental results demonstrate that DeCoST outperforms state-of-the-art constructive solvers and meta-heuristic algorithms in both solution quality and computational efficiency, achieving up to 6.6x inference speedup on instances with fewer than 500 nodes. The framework is compatible with various constructive solvers and consistently enhances solution quality across different problem configurations. The method effectively addresses the bidirectional dependency between routing and service-time decisions that has challenged previous approaches to OPTWVP. By leveraging parallel computation and the pTAR feedback mechanism, DeCoST enables global long-horizon structure estimation during early route decision stages. The approach maintains high solution quality and consistency across diverse problem instances while significantly improving computational efficiency compared to existing methods."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Rigorous theoretical guarantee for continuous optimization**: The paper provides a mathematically sound proof (Theorem 4.1) demonstrating that their Service Time Optimization (STO) algorithm achieves global optimality for the continuous service-time allocation component. This is particularly valuable as most learning-based combinatorial optimization approaches lack such theoretical guarantees, especially for continuous subproblems. The proof in Appendix A systematically covers all possible trajectory configurations through KKT conditions, making a substantial contribution to establishing credibility for the approach.\n\n2. **Innovative decoupling strategy with cross-stage coordination**: The DeCoST framework's core strength lies in its ability to effectively decouple discrete routing decisions and continuous service-time allocation while maintaining learnable coordination between them. Unlike previous methods that either treat these as a monolithic problem or optimize them sequentially without proper feedback (as noted in Section 1: \"subsequent local adjustments are insufficient to correct the structural biases\"), DeCoST introduces the pTAR metric that provides a long-horizon learning signal from the continuous optimization stage back to the discrete routing stage.\n\n3. **Practical impact demonstrated through significant speed-quality tradeoff**: The paper demonstrates up to 6.6x inference speedup compared to meta-heuristic approaches while achieving superior solution quality (Table 1), a rare combination in combinatorial optimization. For instance, on n=100, TW=500 instances, DeCoST achieves 88.1 score with 100ms runtime versus ILS's 85.0 score with 8,441ms runtime—a 84x speed improvement with better solution quality.\n\n4. **Generalizable framework compatible with diverse solvers**: The authors demonstrate that DeCoST consistently enhances solution quality when integrated with different constructive solvers (POMO, GFACS), reducing gaps from 13.4% to 3.38% for GFACS on n=100, TW=100 instances (Table 1). This compatibility shows the approach isn't tied to a specific architecture but provides a modular enhancement to existing methods.\n\n5. **Targeted solution to a specific, under-explored problem structure**: Rather than proposing generic improvements, the paper identifies and addresses the precise challenge of \"tight coupling\" between discrete and continuous variables in OPTWVP (Section 1), where \"a selected route dynamically shapes the feasible region of service time decisions... while the allocated service times... influence the overall route decisions.\" The two-stage approach with cross-stage feedback directly addresses this specific structural challenge."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Insufficient comparison with recent NCO methods for constrained problems**: While the paper claims \"there are no current NCO methods to solve OPTWVP,\" this overlooks several relevant recent works. For example, Chen et al. (2024) introduced a framework for VRPs with time windows using constraint relaxation techniques that could be adapted to OPTWVP. Similarly, Zhang et al. (2024) proposed a continuous relaxation approach for discrete optimization problems that might handle the service time allocation component. The authors should either implement and compare with these methods or provide a more rigorous analysis explaining why these approaches cannot be adapted to OPTWVP's specific challenges.\n\n2. **Limited analysis of error propagation between stages**: The paper demonstrates strong theoretical guarantees for the STO algorithm (Theorem 4.1) but fails to analyze how errors in the first-stage route prediction affect the second-stage optimization. The ablation study (Table 3) shows STO provides the most significant improvement, but doesn't address how suboptimal routes constrain the maximum achievable reward in the second stage. A more detailed analysis of this interaction would strengthen the paper's contribution by identifying the framework's fundamental limitations.\n\n3. **Underdeveloped justification for pTAR metric**: The profit-weighted time allocation ratio (pTAR) is introduced as a supervisory signal without sufficient theoretical motivation. The paper lacks analysis of why this specific metric (rather than alternatives like normalized profit density or time elasticity) effectively guides service time allocation. The authors could strengthen this by: (1) providing a mathematical derivation showing how pTAR relates to solution quality, or (2) conducting an ablation comparing multiple candidate metrics to demonstrate pTAR's superiority.\n\n4. **Inadequate scalability analysis for industrial applications**: While the paper tests up to n=500 nodes (Table 2), many industrial routing applications involve thousands of nodes. The performance degradation at n=500 (3.31% gap vs. 0.83% at n=50) suggests potential limitations for larger instances, but the paper doesn't investigate the scaling behavior systematically. A logarithmic plot of solution quality versus problem size would better demonstrate the method's practical applicability limits.\n\n5. **Lack of generalizability analysis**: The framework is designed specifically for OPTWVP, but the paper doesn't explore whether the"
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions for Rebuttal\n\n1. **NCO Methodology Gap Clarification**: The paper states \"there are no current NCO methods to solve OPTWVP,\" yet recent works like Chen et al. (2024) on VRPs with time windows and Zhang et al. (2024) on continuous relaxation for discrete optimization seem potentially adaptable. Could you clarify why these approaches cannot be extended to OPTWVP, and what specific technical barriers exist that your method overcomes? This would help distinguish the novelty of your problem formulation from general constrained COP approaches.\n\n2. **STO Mechanism Analysis**: The ablation study (Table 3) shows STO provides the most substantial performance improvement. Could you provide concrete examples of how STO corrects specific errors in the initial service time allocation? For instance, visualizations comparing initial vs. optimized service times on representative instances would help illustrate the practical impact of this component.\n\n3. **ILS Time Limit Justification**: The comparison shows DeCoST achieves 20-45x speedup over ILS, but ILS has a strict 10-second time limit (Table 5). Could you provide results for ILS with longer time limits (e.g., 100s or 500s) to better understand the trade-off between solution quality and computation time? This would clarify whether the speed advantage comes primarily from early termination of ILS rather than inherent algorithmic efficiency.\n\n4. **pTAR Design Rationale**: The profit-weighted time allocation ratio (pTAR) is central to your learning mechanism. Could you elaborate on the development process of this metric? Were alternative formulations (e.g., different weighting schemes or normalization approaches) considered and tested? Understanding the design choices would strengthen the methodological contribution.\n\n## Constructive Suggestions\n\n1. **NAR Efficiency Enhancement**: The paper identifies that \"lack of batch processing limits STO's parallelism\" when integrating with NAR approaches (Section 6). Could you explore and discuss potential architectural modifications to enable batch processing of STO for NAR methods? This would address the most significant practical limitation mentioned in the conclusion.\n\n2. **Real-World Dataset Expansion**: While Solomon100 results are provided (Table 4), expanding real-world dataset evaluation would strengthen practical relevance claims. Consider including results on additional standard datasets like VRP-REP or industry-specific benchmarks that better reflect the factory scheduling applications mentioned in Figure 1(a).\n\n3. **Theoretical Intuition**: The proof of Theorem 4.1 (Appendix A) is highly technical. Providing a more intuitive explanation of why the STO algorithm achieves global optimality—perhaps with a simple illustrative example showing how the greedy allocation strategy avoids local optima—would make the theoretical contribution more accessible.\n\n4. **STO Integration with Heuristics**: The paper notes STO is only integrated with NCO frameworks, not heuristic baselines like ILS. Could you investigate whether integrating STO into heuristic methods would provide additional benefits? This would help establish whether the STO component has value beyond the specific DeCoST framework.\n\nThese questions and suggestions focus on areas where author responses could clarify methodology, strengthen claims, and address limitations in ways that would significantly improve the paper's impact and rigor. They avoid generic criticisms and instead target specific aspects where dialogue could lead to meaningful improvements in understanding and presentation of the work."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "LEARNING TO SOLVE ORIENTEERING PROBLEM WITH TIME WINDOWS AND VARIABLE PROFITS",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 PRELIMINARIES",
+    "4 METHODOLOGY",
+    "4.1 TWO-STAGE OPTIMIZATION",
+    "Algorithm 1 Service time optimization algorithm",
+    "4.2 SUPERVISED LEARNING OF SERVICE TIME DECODER",
+    "5 EXPERIMENTS",
+    "5.1 PERFORMANCE ON SOLVING OPS WITH TIME CONSTRAINTS",
+    "5.2 PERFORMANCE ON DECOST WITH MODULE ABLATIONS",
+    "5.3 PERFORMANCE ON SOLOMON100",
+    "6 CONCLUSION AND FUTURE WORK",
+    "ACKNOWLEDGMENTS",
+    "ETHICS STATEMENT",
+    "REPRODUCIBILITY STATEMENT",
+    "LLM USAGE DISCLOSURE",
+    "A PROOF OF THEOREM 4.1",
+    "B SUPPLEMENTARY EXPERIMENTS",
+    "B.1 RESULTS ON RUNNING THE ILS FOR LONGER THAN 10 SECONDS",
+    "B.3 EXTENSION ON TEAM OPTWVP",
+    "B.4 SENSITIVITY ANALYSIS",
+    "B.5 PERFORMANCE EVALUATION OF THE INITIAL SERVICE TIME",
+    "B.6 EFFICIENCY ANALYSIS OF PTAR LOSS",
+    "C MATHEMATICAL FORMULATION OF OPTWVP",
+    "D NETWORK ARCHITECTURE OF DECOST",
+    "D.1 INPUT REPRESENTATION",
+    "D.2 ENCODER",
+    "D.3 DECODERS",
+    "E EXPERIMENT DETAILS",
+    "E.1 BASELINES",
+    "E.2 HYPERPARAMETERS"
+  ],
+  "images_used": 4,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

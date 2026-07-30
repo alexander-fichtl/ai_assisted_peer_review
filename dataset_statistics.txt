@@ -1,0 +1,147 @@
+
+============================================================
+ICLR DATASET STATISTICS  (ICLR26_rndm50)
+============================================================
+
+── Input Papers ──
+Total papers: 50
+
+Status distribution:
+  accepted (oral): 1
+  accepted (poster): 20
+  rejected: 29
+
+Paper length BEFORE formatting (.txt):
+  15334.3 +/- 5805.4  (median=13962.5, min=7640, max=31773, n=50)
+Paper length AFTER formatting (.md):
+  15351.6 +/- 5808.0  (median=13968.5, min=7652, max=31817, n=50)
+
+Images per paper:
+  17.3 +/- 14.7  (median=12.5, min=1, max=82, n=50)
+
+Human reviews per paper (official only):
+  3.8 +/- 0.5  (median=4.0, min=3, max=5, n=50)
+
+Average human review length (words, text fields: summary+strengths+weaknesses+questions):
+  453.6 +/- 230.3  (median=398.5, min=55, max=1742, n=192)
+
+-- Generated Reviews (per model) --
+  [gpt]    3446.9 +/- 258.1  (median=3446.5, min=3026, max=4129, n=50)
+  [llama]    1892.9 +/- 296.7  (median=1873.0, min=1326, max=2723, n=50)
+  [qwen]    2579.3 +/- 337.0  (median=2525.0, min=2172, max=4067, n=50)
+
+-- Generation Errors (missing output, per model) --
+  [gpt]  0 / 50 failed
+  [llama]  0 / 50 failed
+  [qwen]  0 / 50 failed
+
+-- GranuScore (per source) --
+  [gpt]    60.7 +/- 1.7  (median=60.6, min=55.98980712890625, max=64.0737075805664, n=50)
+  [llama]    70.1 +/- 2.2  (median=70.0, min=65.18424987792969, max=74.84329986572266, n=50)
+  [qwen]    70.0 +/- 1.7  (median=70.0, min=63.874046325683594, max=73.56512451171875, n=50)
+  [human]    68.4 +/- 4.7  (median=68.6, min=52.884681701660156, max=78.33527374267578, n=192)
+
+-- LLM-as-a-Judge (gpt-5) --
+  [gpt]
+    overall:    6.7 +/- 0.4  (median=7.0, min=6.0, max=7.0, n=50)
+    understanding:    5.0 +/- 0.0  (median=5.0, min=5.0, max=5.0, n=50)
+    coverage:    5.0 +/- 0.0  (median=5.0, min=5.0, max=5.0, n=50)
+    evidence_support:    5.0 +/- 0.0  (median=5.0, min=5.0, max=5.0, n=50)
+    constructiveness:    5.0 +/- 0.0  (median=5.0, min=5.0, max=5.0, n=50)
+    conciseness:    4.0 +/- 0.0  (median=4.0, min=4.0, max=4.0, n=50)
+  [human]
+    overall:    3.5 +/- 1.1  (median=3.0, min=1.0, max=6.0, n=192)
+    understanding:    3.2 +/- 1.0  (median=3.0, min=1.0, max=5.0, n=192)
+    coverage:    3.2 +/- 0.9  (median=3.0, min=1.0, max=5.0, n=192)
+    evidence_support:    2.5 +/- 0.9  (median=2.0, min=1.0, max=5.0, n=192)
+    constructiveness:    3.5 +/- 0.9  (median=4.0, min=1.0, max=5.0, n=192)
+    conciseness:    4.4 +/- 0.6  (median=4.0, min=1.0, max=5.0, n=192)
+  [llama]
+    overall:    3.5 +/- 0.8  (median=4.0, min=2.0, max=5.0, n=50)
+    understanding:    3.4 +/- 0.9  (median=3.0, min=1.0, max=5.0, n=50)
+    coverage:    3.6 +/- 0.6  (median=4.0, min=2.0, max=5.0, n=50)
+    evidence_support:    2.4 +/- 0.7  (median=2.0, min=1.0, max=4.0, n=50)
+    constructiveness:    3.7 +/- 0.7  (median=4.0, min=2.0, max=5.0, n=50)
+    conciseness:    3.0 +/- 0.7  (median=3.0, min=2.0, max=4.0, n=50)
+  [qwen]
+    overall:    5.8 +/- 0.5  (median=6.0, min=4.0, max=6.0, n=50)
+    understanding:    4.9 +/- 0.3  (median=5.0, min=3.0, max=5.0, n=50)
+    coverage:    4.6 +/- 0.5  (median=5.0, min=4.0, max=5.0, n=50)
+    evidence_support:    4.4 +/- 0.7  (median=4.5, min=2.0, max=5.0, n=50)
+    constructiveness:    5.0 +/- 0.1  (median=5.0, min=4.0, max=5.0, n=50)
+    conciseness:    4.0 +/- 0.4  (median=4.0, min=2.0, max=5.0, n=50)
+
+-- Given Score / Paper Rating (ICLR, per source) --
+  [human]    4.3 +/- 1.9  (median=4.0, min=0.0, max=10.0, n=192)
+  [gpt]    6.8 +/- 1.0  (median=7.0, min=3.0, max=8.0, n=50)
+  [llama]    7.9 +/- 0.8  (median=8.0, min=3.0, max=9.0, n=50)
+  [qwen]    7.9 +/- 0.7  (median=8.0, min=5.0, max=10.0, n=49)
+
+============================================================
+NATURECOM DATASET STATISTICS  (natureCom_nlpterms_31)
+============================================================
+
+── Input Papers ──
+Total papers: 31
+
+Paper length BEFORE formatting (.txt):
+  11022.9 +/- 3534.1  (median=10556, min=5831, max=20255, n=31)
+Paper length AFTER formatting (.md):
+  11036.3 +/- 3537.3  (median=10562, min=5839, max=20279, n=31)
+
+Images per paper:
+  13.4 +/- 10.0  (median=8, min=4, max=47, n=31)
+
+Human reviewers per paper (unique reviewer_id):
+  3.1 +/- 1.1  (median=3, min=1, max=6, n=31)
+
+Human review length - first_remarks per reviewer (words):
+  550.3 +/- 361.9  (median=542.0, min=17, max=2158, n=96)
+
+-- Generated Reviews (per model) --
+  [gpt]    1306.2 +/- 124.3  (median=1306, min=1049, max=1660, n=31)
+  [llama]    991.5 +/- 407.6  (median=848, min=515, max=1672, n=31)
+  [qwen]    912.9 +/- 123.3  (median=918, min=601, max=1127, n=31)
+  [qwen_tokenLimit]    805.3 +/- 178.3  (median=809, min=115, max=1031, n=31)
+
+-- Generation Errors (missing output, per model) --
+  [gpt]  0 / 31 failed
+  [llama]  0 / 31 failed
+  [qwen]  0 / 31 failed
+  [qwen_tokenLimit]  0 / 31 failed
+
+-- GranuScore (per source) --
+  [gpt]    61.5 +/- 2.9  (median=61.4, min=54.666263580322266, max=67.82958984375, n=31)
+  [llama]    73.0 +/- 3.3  (median=73.5, min=67.31452941894531, max=78.55235290527344, n=31)
+  [qwen]    67.9 +/- 3.3  (median=68.5, min=60.108131408691406, max=74.79515838623047, n=31)
+  [human]    65.5 +/- 5.6  (median=65.9, min=48.11007308959961, max=77.59617614746094, n=86)
+
+-- LLM-as-a-Judge (gpt-5) --
+  [gpt]
+    overall:    6.3 +/- 0.4  (median=6.0, min=6.0, max=7.0, n=31)
+    understanding:    5.0 +/- 0.0  (median=5.0, min=5.0, max=5.0, n=31)
+    coverage:    5.0 +/- 0.0  (median=5.0, min=5.0, max=5.0, n=31)
+    evidence_support:    5.0 +/- 0.0  (median=5.0, min=5.0, max=5.0, n=31)
+    constructiveness:    5.0 +/- 0.0  (median=5.0, min=5.0, max=5.0, n=31)
+    conciseness:    4.1 +/- 0.3  (median=4.0, min=4.0, max=5.0, n=31)
+  [human]
+    overall:    4.6 +/- 1.2  (median=5.0, min=1.0, max=6.0, n=86)
+    understanding:    4.0 +/- 1.0  (median=4.0, min=1.0, max=5.0, n=86)
+    coverage:    3.8 +/- 1.0  (median=4.0, min=1.0, max=5.0, n=86)
+    evidence_support:    3.5 +/- 1.0  (median=4.0, min=1.0, max=5.0, n=86)
+    constructiveness:    4.5 +/- 0.8  (median=5.0, min=1.0, max=5.0, n=86)
+    conciseness:    4.4 +/- 0.8  (median=5.0, min=1.0, max=5.0, n=86)
+  [llama]
+    overall:    3.0 +/- 0.7  (median=3.0, min=2.0, max=4.0, n=31)
+    understanding:    3.6 +/- 0.6  (median=4.0, min=2.0, max=5.0, n=31)
+    coverage:    3.0 +/- 0.6  (median=3.0, min=2.0, max=4.0, n=31)
+    evidence_support:    2.4 +/- 0.5  (median=2.0, min=2.0, max=3.0, n=31)
+    constructiveness:    2.9 +/- 0.5  (median=3.0, min=2.0, max=4.0, n=31)
+    conciseness:    2.3 +/- 1.1  (median=2.0, min=1.0, max=4.0, n=31)
+  [qwen]
+    overall:    5.9 +/- 0.3  (median=6.0, min=5.0, max=6.0, n=31)
+    understanding:    4.9 +/- 0.2  (median=5.0, min=4.0, max=5.0, n=31)
+    coverage:    4.9 +/- 0.2  (median=5.0, min=4.0, max=5.0, n=31)
+    evidence_support:    4.7 +/- 0.4  (median=5.0, min=4.0, max=5.0, n=31)
+    constructiveness:    5.0 +/- 0.0  (median=5.0, min=5.0, max=5.0, n=31)
+    conciseness:    4.0 +/- 0.0  (median=4.0, min=4.0, max=4.0, n=31)

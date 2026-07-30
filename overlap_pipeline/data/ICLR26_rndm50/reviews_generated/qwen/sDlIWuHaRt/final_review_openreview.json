@@ -1,0 +1,78 @@
+{
+  "pdfname": "sDlIWuHaRt",
+  "content": {
+    "summary": {
+      "value": "This paper investigates how soft-label regularization techniques (label smoothing, Mixup, CutMix) improve model calibration and adversarial robustness from the representation space perspective. The authors analyze decision boundaries, confidence contours, and gradient directions in both low-dimensional and high-dimensional spaces, revealing that regularization reduces feature norm magnitudes while increasing alignment with class centers. They demonstrate that smaller feature norms improve calibration by acting similarly to temperature scaling, while better alignment enhances robustness by directing adversarial perturbations toward the origin rather than decision boundaries. The work resolves the apparent contradiction between reduced confidence predictions and improved robustness by showing that features closer to the origin experience smaller perturbations. The authors provide theoretical justification and extensive empirical validation across multiple architectures (ResNet50, Swin-T, MobileNetV2) and datasets (CIFAR-10, CIFAR-100, ImageNet). Their findings offer new insights into the representation geometry induced by soft-label regularization, explaining how it simultaneously improves calibration and robustness without compromising accuracy. The analysis spans both visualizable low-dimensional spaces and original high-dimensional spaces, providing a comprehensive understanding of the underlying mechanisms."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Resolution of a fundamental contradiction**: The paper provides a novel explanation for the apparent paradox that soft-label regularization reduces overconfidence (by moving features closer to decision boundaries) while simultaneously improving adversarial robustness. The authors demonstrate that while features move closer to the origin (reducing confidence), they become better aligned with class centers, causing adversarial perturbations to move features toward the origin rather than across decision boundaries (Section 5). This resolves a long-standing question in the field about how these seemingly contradictory effects can coexist.\n\n2. **Identification of the true class center**: The paper establishes that the minimum loss point (rather than weight vectors or class means) serves as the most accurate \"class center\" in representation space, with the strongest correlation to confidence (Table 1). For instance, on ResNet50 baseline, the Pearson correlation between confidence and cosine similarity to minimum loss points (0.56) exceeds that of weight vectors (0.52) and class means (0.35). This conceptual clarification provides a more precise foundation for analyzing representation geometry.\n\n3. **Theoretical foundation for feature norm reduction**: The authors provide a rigorous proof (Theorem 1) demonstrating that soft-label training produces smaller feature norms than hard-label training, which is then consistently validated across multiple architectures and datasets (Section 4.2). This theoretical insight explains why regularization reduces overconfidence, as smaller feature norms effectively act like temperature scaling (Section 4.3), without compromising accuracy.\n\n4. **Nuanced explanation of robustness limitations**: The paper goes beyond simply demonstrating improved robustness to explain precisely why these gains diminish under stronger iterative attacks (Section N). Through PGD trajectory analysis (Figure 13), they show that while initial perturbation steps move features toward the origin due to better alignment, subsequent steps eventually push features outward across decision boundaries. This provides crucial context for understanding the boundaries of soft-label regularization's effectiveness."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Lack of causal disentanglement between norm reduction and alignment improvement**: While the paper demonstrates that regularization reduces feature norms and increases alignment with class centers (Section 4.2), it doesn't sufficiently disentangle which of these two factors is primarily responsible for the observed improvements in calibration and robustness. The authors show that manual feature scaling improves calibration (Fig. 25), but don't isolate the effect of alignment improvement. An ablation study where they could independently control feature norm and alignment (e.g., by projecting features to maintain one property while varying the other) would provide stronger causal evidence for their claims. Without this, it remains unclear whether the benefits stem from norm reduction, alignment improvement, or their interaction.\n\n2. **Incomplete analysis of failure cases for strong iterative attacks**: The paper acknowledges that robustness gains diminish under strong iterative attacks (Section N) but doesn't deeply investigate why the proposed mechanisms fail. While Fig. 13 shows the PGD trajectory, it doesn't systematically analyze how the relationship between cosine similarity and robustness changes with increasing attack iterations. A more detailed investigation showing how the gradient direction shifts from inward to outward as iterations progress, and how this relates to the initial feature properties, would strengthen their explanation. The authors could quantify at which iteration the direction flips and how this depends on the initial cosine similarity, providing more actionable insights for improving robustness against stronger attacks.\n\n3. **Insufficient exploration of transfer learning implications**: The paper notes in Section M that soft-label regularization degrades downstream transfer performance despite improving ImageNet accuracy, but doesn't connect this observation to their representation space analysis. Since their main contribution is about representation geometry, they miss an opportunity to explain *why* compact representations with reduced RMS harm transfer learning. A deeper analysis showing how the reduced feature diversity (evident in Fig. 4) correlates with linear-probe performance would strengthen their framework. They could quantify the relationship between feature RMS/cosine similarity and transfer performance across different downstream tasks, providing a more comprehensive understanding of the trade-offs inherent in soft-label regularization.\n\n4. **Limited investigation of training dynamics**: The analysis focuses almost exclusively on final models, without examining how representation space properties evolve during training. The authors could have leveraged Fig. 12 (showing training progression) to analyze how regularization affects the rate at which features converge to lower norms and higher alignment. A time-series analysis of RMS and cosine similarity during training would reveal whether regularization primarily affects the early, middle, or late stages of learning, providing deeper insights into the mechanisms. This would address the question of whether these properties are emergent phenomena or directly optimized by the loss function."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## 1. Disentangling the effects of norm reduction versus alignment improvement\nYour paper demonstrates that regularization simultaneously reduces feature norms and increases alignment with class centers, but doesn't isolate which factor primarily drives the observed improvements. Could you provide additional experiments where you artificially manipulate one factor while keeping the other constant? For example, could you:\n- Scale features to match regularized models' norms while preserving baseline alignment\n- Artificially increase alignment while maintaining baseline feature norms\n\nThis disentanglement would strengthen your explanation of the underlying mechanisms and potentially reveal whether one factor is more critical than the other for calibration/robustness improvements.\n\n## 2. Combining soft-label regularization with adversarial training\nSection N explains why robustness gains diminish under strong iterative attacks, showing that PGD steps eventually move features away from the origin despite initial inward movement. Given this limitation, have you explored combining soft-label regularization with adversarial training? The complementary nature of these approaches (one improving alignment, the other directly optimizing for robustness) might yield synergistic benefits that address this limitation. If not, could you provide theoretical insights on whether such combination would be beneficial?\n\n## 3. Transfer learning trade-offs and potential solutions\nSection M shows that soft-label regularization degrades linear-probe transfer performance despite improving ImageNet accuracy. This presents an important trade-off between calibration/robustness and transferability. Could you elaborate on whether this is an inherent limitation of the approach, or if there are modifications to the regularization technique that might preserve transferability while maintaining calibration/robustness benefits? For instance, would applying regularization only during certain training phases or with adjusted intensity help balance these objectives?\n\n## 4. Validation of the weight norm assumption\nTheorem 1 assumes ||w_c|| ≈ ||w|| for all classes. While you cite prior work supporting this (Papyan et al., 2020; Han et al., 2021; Zhu et al., 2021), could you provide empirical evidence from your experiments showing the degree of weight norm consistency across classes for different architectures and regularization methods? This would strengthen the theoretical foundation of your analysis, particularly for architectures where this assumption might be less valid.\n\n## 5. Generalization to non-classification tasks\nYour analysis focuses exclusively on image classification. Could you discuss whether you expect similar representation space dynamics to emerge in other vision tasks like object detection or segmentation? The presence of spatial structure in these tasks might affect how decision boundaries and confidence contours form in the representation space. Understanding these potential differences would significantly broaden the impact of your findings.\n\n## 6. Formal analysis of perturbation scaling\nIn Section 5, you note that \"the scale of perturbations in the representation space is not uniform but grows with the scale of the features.\" Could you provide a more formal analysis of this relationship? Deriving how input perturbations translate to representation space perturbations, particularly with respect to the Jacobian of the feature extractor, would strengthen your explanation of why features near the origin experience smaller perturbations. This formal connection would enhance the theoretical rigor of your explanation for why proximity to the origin doesn't necessarily increase vulnerability."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "IMPACT OF REGULARIZATION ON CALIBRATION AND ROBUSTNESS: FROM THE REPRESENTATION SPACE PERSPECTIVE",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "3 REPRESENTATION SPACE",
+    "3.1 DECISION REGIONS",
+    "3.2 CONFIDENCE CONTOURS, GRADIENT DIRECTIONS",
+    "4 EFFECT OF REGULARIZATION",
+    "4.1 MEASURING FEATURE DISTRIBUTIONS",
+    "4.2 IMPACT ON FEATURE DISTRIBUTIONS",
+    "321 322 The proof can be found in Appendix J.",
+    "4.3 IMPACT ON CALIBRATION",
+    "4.4 IMPACT ON ADVERSARIAL ROBUSTNESS",
+    "5 RESOLVING THE CONTRADICTION",
+    "6 COMPREHENSIVE EVALUATION",
+    "486 7 CONCLUSION",
+    "C DECISION REGIONS OF ORIGINAL MODELS",
+    "D BIAS TERM IN THE CLASSIFICATION LAYER",
+    "D.1 2D REPRESENTATION SPACES",
+    "D.2 ORIGINAL REPRESENTATION SPACES",
+    "E MORE VISUALIZATION OF 2D AND 3D REPRESENTATION SPACES",
+    "F EFFECT OF WEIGHT INITIALIZATION",
+    "G IMPLEMENTATION DETAILS",
+    "1085 G.1 2D AND 3D REPRESENTATION SPACES",
+    "G.2 ORIGINAL REPRESENTATION SPACES",
+    "1129 H REPRESENTATION SPACE VISUALIZATION",
+    "I HYPERPARAMETER SENSITIVITY ANALYSIS OF CLASS CENTERS",
+    "J PROOF OF THEOREM 1",
+    "K MORE RESULTS ON THE EFFECT OF REGULARIZATION",
+    "1350 L FEATURE SCALING",
+    "M EFFECT OF SOFT-LABEL REGULARIZATION ON DOWNSTREAM TRANSFER PERFORMANCE",
+    "N WHY ROBUSTNESS GAINS DIMINISH UNDER STRONG ITERATIVE",
+    "1399 1400 1401 ATTACKS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

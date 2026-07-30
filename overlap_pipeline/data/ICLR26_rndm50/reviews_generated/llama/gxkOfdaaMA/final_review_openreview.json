@@ -1,0 +1,81 @@
+{
+  "pdfname": "gxkOfdaaMA",
+  "content": {
+    "summary": {
+      "value": "The paper proposes a method, DLER, for optimizing the actor and critic in reinforcement learning (RL) for reasoning language models. DLER combines batch-wise reward normalization, higher clipping, dynamic sampling, and a simple truncation length penalty. The authors identify three key challenges in RL optimization: large bias in advantage estimation, entropy collapse, and sparse reward signal. \n\nDLER achieves state-of-the-art accuracy-efficiency trade-offs, reducing output length by over 70% while surpassing baseline accuracy. It also improves test-time scaling, generating multiple concise responses in parallel with higher accuracy and lower latency. \n\nThe authors further propose a difficulty-aware variant of DLER (DA-DLER) and an update-selective merging method that preserves baseline accuracy while retaining concise reasoning ability. \n\nDLER provides a new accuracy-length efficiency frontier, with varying length penalties moving performance along the frontier rather than beyond it. \n\nThe paper contributes to the field of RL for reasoning efficiency in large language models."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "The paper has several strengths:\n\n1. **Comprehensive analysis of optimization challenges**: The authors provide a thorough analysis of the challenges in RL optimization for reasoning efficiency, including large bias in advantage estimation, entropy collapse, and sparse reward signal.\n\n2. **Novel and well-motivated DLER recipe**: The proposed DLER recipe combines batch-wise reward normalization, higher clipping, dynamic sampling, and a simple truncation length penalty, which is well-motivated and comprehensive.\n\n3. **State-of-the-art accuracy-efficiency trade-offs**: DLER achieves state-of-the-art accuracy-efficiency trade-offs, reducing output length by over 70% while surpassing baseline accuracy.\n\n4. **Extensive experimental results**: The authors provide extensive experimental results demonstrating the effectiveness of DLER on various benchmarks, including AIME-24, AMC, MATH, Minerva, and Olympiad.\n\n5. **Preservation of exploration and reasoning ability**: DLER preserves the exploration and reasoning ability of the model, as demonstrated by the token entropy distribution and reasoning trace analysis.\n\n6. **Practical solution for limited training data**: The authors propose a difficulty-aware variant of DLER (DA-DLER) and an update-selective merging method that restores accuracy when training data is limited.\n\n7. **Improved test-time scaling**: DLER enables better test-time scaling, generating multiple concise responses in parallel with higher accuracy and lower latency."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Analysis of the Difficulty-Aware Variant (DA-DLER)**: \n   - The paper mentions the proposal of a difficulty-aware variant of DLER (DA-DLER) but does not provide an in-depth analysis of its performance across different benchmarks. \n   - A more detailed comparison of DA-DLER with the baseline DLER and other state-of-the-art methods on various benchmarks (e.g., MATH, AIME-24, AMC) would strengthen the claims.\n\n2. **Evaluation Metrics and Broader Impact**: \n   - The paper primarily focuses on accuracy and response length as evaluation metrics. \n   - Consider incorporating other metrics such as computational cost, latency, and user experience metrics to provide a more comprehensive evaluation of the efficiency and practicality of DLER and DA-DLER.\n\n3. **Novelty and Comparison to Existing Work**: \n   - The paper could benefit from a clearer differentiation of DLER from existing reinforcement learning methods for improving reasoning efficiency. \n   - For instance, a more detailed discussion on how DLER compares to and improves upon recent works like (Fang et al., 2025; Liu et al., 2025b; Luo et al., 2025a) in terms of optimization techniques and length penalties would be beneficial.\n\n4. **Scalability and Generalizability**: \n   - The experiments are conducted on specific datasets and model sizes. \n   - Additional experiments on larger models and diverse datasets would help in understanding the scalability and generalizability of DLER and DA-DLER.\n\n5. **Ablation Study**: \n   - An ablation study to understand the contribution of each component of DLER (batch-wise reward normalization, higher clipping, dynamic sampling) to its overall performance would provide deeper insights.\n\n6. **Merging Strategy with Limited Data**: \n   - While the paper proposes an update-selective merging method to restore accuracy when accessing original high-quality proprietary datasets is not feasible, \n   - it would be beneficial to provide more intuition and possibly theoretical justification for why this method is effective and under what conditions it works best.\n\n## Conclusion\nThe paper presents a well-motivated approach to improving the efficiency of reasoning models through reinforcement learning. Addressing these weaknesses would further strengthen the claims and provide a more comprehensive understanding of the proposed methods."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Further Analysis of DA-DLER**: \n   - Could you provide a more detailed analysis of the performance of DA-DLER across different benchmarks, such as MATH, AIME-24, and AMC? This would help in understanding its effectiveness in various scenarios.\n\n2. **Evaluation Metrics**: \n   - Would it be possible to include additional evaluation metrics such as computational cost and latency to provide a more comprehensive assessment of the efficiency and practicality of DLER and DA-DLER?\n\n3. **Novelty and Comparison to Existing Work**: \n   - How does DLER differentiate from and improve upon recent works like (Fang et al., 2025; Liu et al., 2025b; Luo et al., 2025a) in terms of optimization techniques and length penalties? A clearer differentiation would strengthen the claims of novelty.\n\n4. **Scalability and Generalizability**: \n   - Could you conduct additional experiments on larger models and diverse datasets to demonstrate the scalability and generalizability of DLER and DA-DLER?\n\n5. **Ablation Study**: \n   - An ablation study to understand the contribution of each component of DLER (batch-wise reward normalization, higher clipping, dynamic sampling) to its overall performance would provide deeper insights. Could you consider adding this?\n\n6. **Merging Strategy with Limited Data**: \n   - It would be beneficial to provide more intuition and possibly theoretical justification for the update-selective merging method. Under what conditions is this method most effective?\n\n7. **Impact on Model Diversity and Exploration**: \n   - The paper mentions that DLER preserves exploration and reasoning ability. Could you provide more insights or analysis on how DLER affects model diversity and exploration, possibly through additional experiments or visualizations?\n\n8. **Test-Time Scaling**: \n   - The results show that DLER enables better test-time scaling. Could you discuss more about the practical implications of this finding and how it could influence the deployment of efficient and accurate reasoning models in real-world applications?\n\n## Conclusion\nAddressing these questions and suggestions would help clarify certain aspects of the paper, provide additional insights, and strengthen the claims made by the authors. This is crucial for a productive rebuttal and discussion phase."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "Overall Score: 8 \n\nThe paper is technically strong, with novel ideas and excellent impact on at least one area of AI/ML. The authors propose a comprehensive training recipe, DLER, which combines batch-wise reward normalization, higher clipping, dynamic sampling, and a simple length truncation penalty to achieve state-of-the-art accuracy-efficiency trade-offs. The paper provides extensive experimental results demonstrating the effectiveness of DLER on various benchmarks. The writing is clear, and the paper is easy to follow. \n\nHowever, there are some areas for improvement. For instance, a more detailed analysis of the difficulty-aware variant (DA-DLER) and additional experiments on larger models and diverse datasets would strengthen the claims. Furthermore, an ablation study to understand the contribution of each component of DLER would provide deeper insights. \n\nOverall, the paper is well-written, technically sound, and provides significant contributions to the field of reinforcement learning for reasoning efficiency in large language models. The reasons for acceptance outweigh the reasons for rejection, making it a strong candidate for acceptance."
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "DLER: DOING LENGTH PENALTY RIGHT - INCENTIVIZING MORE INTELLIGENCE PER TOKEN VIA REINFORCEMENT LEARNING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Efficient reasoning leads to better test-time scaling",
+    "2 PRELIMINARY",
+    "3 RE-EXAMINING THE SIMPLEST LENGTH PENALTY - TRUNCATION",
+    "3.1 MORE AGGRESSIVE TRUNCATION LEADS TO HIGHER GROUP-WISE REWARD VARIANCE",
+    "3.2 ENTROPY COLLAPSE LIMITS EXPLORATION OF REASONING PATHS",
+    "3.3 LENGTH PENALTY OVER-SPARSIFY TRAINING SIGNAL",
+    "3.4 COMBINING ALL INGREDIENTS: DO LENGTH PENALTY RIGHT",
+    "3.5 DIFFICULTY-AWARE DLER",
+    "4 EXPERIMENT",
+    "4.1 SETUP",
+    "4.2 MAIN RESULTS",
+    "4.3 PERFORMANCE UNDER DIFFERENT TEST-TIME SCALING SETTINGS",
+    "4.4 DLER ENABLES SUPERIOR TEST-TIME SCALING THROUGH PARALLEL THINKING",
+    "4.5 DIFFERENT LENGTH PENALTIES NO LONGER PUSH THE ACCURACY-EFFICIENCY FRONTIER",
+    "4.6 OVERCOMING QUALITY LIMITATIONS OF PUBLICLY AVAILABLE TRAINING DATA",
+    "5 RELATED WORK",
+    "6 CONCLUSION",
+    "A DLER ACHIEVES SOTA ACCURACY/LENGTH OF COT TRADE-OFF AND ENABLE BETTER TEST-TIME SCALING",
+    "B LARGER REWARD VARIANCE RESULTS IN LARGER BIAS IN ADVANTAGE ESTIMATION.",
+    "A.1 ASSUMPTIONS AND SETTINGS",
+    "Step 1: Bias in the Numerator. The numerator can be expressed as",
+    "Step 2: Dependence of the Denominator on ϵ i .",
+    "Conditional bias (exact formula)",
+    "A.2 GROUP-WISE REWARD NORMALIZATION (GRPO) AND BATCH-WISE NORMALIZATION",
+    "C COMBINING ALL INGREDIENTS: DO LENGTH PENALTY RIGHT",
+    "D HYPERPARAMETERS SETTING",
+    "E PERFORMANCE UNDER DIFFERENT TEST-TIME SCALING SETTINGS",
+    "F PARALLEL THINKING LATENCY",
+    "G ANALYSIS",
+    "G.1 ENTROPY DISTRIBUTION",
+    "G.2 REASONING TRACE ANALYSIS",
+    "1188 H USE OF LLMS"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

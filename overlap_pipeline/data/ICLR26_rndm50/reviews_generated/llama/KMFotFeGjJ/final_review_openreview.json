@@ -1,0 +1,67 @@
+{
+  "pdfname": "KMFotFeGjJ",
+  "content": {
+    "summary": {
+      "value": "The paper presents a method for detecting instruction fine-tuning attacks on large language models (LLMs) without prior knowledge of the attack. \n\nThese attacks embed poisoned examples in fine-tuning datasets, causing harmful behaviors in downstream applications. \n\nThe proposed approach leverages influence functions under semantic transformation. \n\nInfluence functions quantify how individual data points contribute to a model's performance. \n\nThe authors introduce a sentiment transformation diagnostic, comparing influence distributions before and after semantic inversion. \n\nThis method identifies 'critical poisons' - examples with strong influences that remain unchanged before and after transformations. \n\nThe approach is tested on sentiment classification and math reasoning tasks across different LLMs. \n\nRemoving detected critical poisons restores model performance to near-clean levels. \n\nThe results demonstrate the practicality of influence-based diagnostics for defending against instruction fine-tuning attacks in real-world LLM deployment. \n\nThe method does not require prior knowledge of poisoned tokens, phrases, or task-specific vulnerabilities. \n\nIt generalizes across tasks and datasets by exploiting the statistical properties of influence functions. \n\nInfluence function analysis is made computationally feasible on modern LLMs using Anthropic's EK-FAC approximation. \n\nOverall, the paper provides a detection method that requires no prior knowledge of the attack. \n\nIts approach can be integrated into auditing pipelines to ensure model behavior remains trustworthy. \n\nThe authors' method aligns with broader AI alignment goals. \n\nIt contributes positively to the safe deployment of large language models. \n\nThe paper includes an artifact available at https://anonymous.4open.science/r/Poison-Detection-CADB/."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Novel Approach**: The paper introduces a novel detection method for instruction fine-tuning attacks on large language models (LLMs) using influence functions under semantic transformation. This approach is innovative and effective in identifying critical poisons without prior knowledge of the attack.\n\n2. **Generalizability**: The method generalizes across tasks and datasets by exploiting the statistical properties of influence functions. This is a significant contribution, as it allows the approach to be applied to various domains and tasks.\n\n3. **No Prior Knowledge Required**: Unlike existing methods, this approach does not require prior knowledge of poisoned tokens, phrases, or task-specific vulnerabilities. This makes it a practical solution for real-world LLM deployment.\n\n4. **Empirical Validation**: The paper provides thorough empirical validation on sentiment classification and math reasoning tasks across different LLMs. The results demonstrate the practicality and robustness of the proposed method.\n\n5. **Influence Function Analysis**: The use of influence functions to analyze the impact of individual data points on the model's predictions is a valuable technique. The authors make influence function analysis computationally feasible on modern LLMs using Anthropic's EK-FAC approximation.\n\n6. **Sentiment Transformation Diagnostic**: The introduction of a sentiment transformation diagnostic to compare influence distributions before and after semantic inversion is a creative combination of existing ideas. This diagnostic effectively identifies 'critical poisons' that exhibit strong influences and remain unchanged before and after transformations.\n\n7. **Practical Implications**: The paper's results have practical implications for the safe deployment of large language models. The method's ability to detect and remove critical poisons restores model performance to near-clean levels, showcasing its potential for real-world applications.\n\n8. **Contribution to AI Alignment**: The paper contributes positively to the safe deployment of large language models and aligns with broader AI alignment goals. Its approach can be integrated into auditing pipelines to ensure model behavior remains trustworthy."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Evaluation on Diverse Tasks**: While the paper provides thorough empirical validation on sentiment classification and math reasoning tasks, it would be beneficial to evaluate the method on a broader range of tasks and datasets to further demonstrate its generalizability and robustness.\n\n2. **Ablation Study on Prefix and Suffix Combinations**: The paper conducts an ablation study using two variants of negative sentiment transformations. However, it would be more comprehensive to test a wider variety of prefix and suffix combinations to ensure the chosen approach is optimal.\n\n3. **Potential for False Positives**: The method identifies critical poisons based on influence scores and their behavior under sentiment transformation. However, there is a potential for false positives, where clean examples are mistakenly flagged as poisons. The paper could provide more analysis on the false positive rate and strategies to mitigate this issue.\n\n4. **Computational Efficiency**: While the authors use Anthropic's EK-FAC approximation to make influence function calculations feasible for large language models, it would be helpful to provide more details on the computational efficiency of the method, including running times and resource usage.\n\n5. **Comparison with Additional Defense Methods**: The paper compares the proposed method with existing defense strategies, but it would be beneficial to include more recent or alternative methods, such as those using differential privacy or other robust detection techniques, to provide a more comprehensive comparison.\n\n6. **Adversarial Robustness**: The paper focuses on detecting and removing critical poisons from fine-tuning datasets. However, it would be valuable to discuss the adversarial robustness of the proposed method, including its potential vulnerabilities to attacks designed to evade detection.\n\n7. **Influence Score Distribution**: The paper presents histograms of influence scores before and after transformation, but it would be helpful to provide more statistical analysis of the influence score distributions, such as mean, standard deviation, and skewness, to better understand the behavior of the method.\n\n8. **Threshold Selection for Critical Poison Detection**: The paper selects the top K examples based on influence scores, but it would be beneficial to discuss the choice of threshold and provide more analysis on how to select an optimal threshold for different tasks and datasets.\n\nBy addressing these weaknesses, the paper could further strengthen its contributions and provide a more comprehensive evaluation of the proposed method for detecting instruction fine-tuning attacks on large language models."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Evaluation on Diverse Tasks**: The paper provides thorough empirical validation on sentiment classification and math reasoning tasks. However, it would be beneficial to evaluate the method on a broader range of tasks and datasets to further demonstrate its generalizability and robustness. \n\n    * Can the authors provide results on additional tasks, such as text classification, toxicity detection, or offensive language classification?\n\n2. **Ablation Study on Prefix and Suffix Combinations**: The paper conducts an ablation study using two variants of negative sentiment transformations. However, it would be more comprehensive to test a wider variety of prefix and suffix combinations to ensure the chosen approach is optimal.\n\n    * Can the authors test additional prefix and suffix combinations for negative sentiment transformations and provide results on their impact on the detection method?\n\n3. **Potential for False Positives**: The method identifies critical poisons based on influence scores and their behavior under sentiment transformation. However, there is a potential for false positives, where clean examples are mistakenly flagged as poisons.\n\n    * Can the authors provide more analysis on the false positive rate and strategies to mitigate this issue?\n\n4. **Computational Efficiency**: While the authors use Anthropic's EK-FAC approximation to make influence function calculations feasible for large language models, it would be helpful to provide more details on the computational efficiency of the method.\n\n    * Can the authors provide more details on the running times and resource usage of the method?\n\n5. **Comparison with Additional Defense Methods**: The paper compares the proposed method with existing defense strategies, but it would be beneficial to include more recent or alternative methods.\n\n    * Can the authors compare their method with additional defense methods, such as those using differential privacy or other robust detection techniques?\n\n6. **Adversarial Robustness**: The paper focuses on detecting and removing critical poisons from fine-tuning datasets. However, it would be valuable to discuss the adversarial robustness of the proposed method.\n\n    * Can the authors discuss the potential vulnerabilities of their method to attacks designed to evade detection?\n\n7. **Influence Score Distribution**: The paper presents histograms of influence scores before and after transformation, but it would be helpful to provide more statistical analysis of the influence score distributions.\n\n    * Can the authors provide more statistical analysis of the influence score distributions, such as mean, standard deviation, and skewness?\n\n8. **Threshold Selection for Critical Poison Detection**: The paper selects the top K examples based on influence scores, but it would be beneficial to discuss the choice of threshold.\n\n    * Can the authors provide more analysis on how to select an optimal threshold for different tasks and datasets?\n\n## Additional Suggestions\n\n1. **Open-Source Implementation**: The paper mentions an artifact available at https://anonymous.4open.science/r/Poison-Detection-CADB/. \n\n    * Can the authors provide an open-source implementation of their method to facilitate reproducibility and adoption?\n\n2. **Real-World Deployment**: The paper demonstrates the practicality of influence-based diagnostics for defending against instruction fine-tuning attacks in real-world LLM deployment.\n\n    * Can the authors discuss potential real-world deployment scenarios and the challenges that may arise in practice?\n\nBy addressing these questions and suggestions, the authors can further strengthen their paper and provide a more comprehensive evaluation of their proposed method for detecting instruction fine-tuning attacks on large language models."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "Ethics review needed: Inappropriate Potential Applications & Impact"
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "DETECTING INSTRUCTION FINETUNING ATTACKS ON LANGUAGE MODELS USING INFLUENCE FUNCTION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Insert Poisons into Fine-tuning Dataset",
+    "2 ATTACK SETUP",
+    "2.1 GENERAL ATTACK WORKFLOW",
+    "2.2 SENTIMENT CLASSIFICATION",
+    "2.3 MATH REASONING",
+    "3 DETECT",
+    "3.1 INTUITION",
+    "3.2 IMPLEMENTATION",
+    "3.3 SENTIMENT CLASSIFICATION",
+    "Detect critical poisons. Our detection method is",
+    "3.4 MATH REASONING",
+    "3.5 COMPARISON WITH EXISTING POISON DETECTION METHODS",
+    "3.6 ABLATION",
+    "4 FUTURE WORK AND BROADER IMPACT",
+    "5 CONCLUSION",
+    "A TECHNICAL BACKGROUND",
+    "A.1 INFLUENCE FUNCTION",
+    "B EXPERIMENT CONFIGURATIONS"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

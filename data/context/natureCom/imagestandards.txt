@@ -1,0 +1,31 @@
+Digital images submitted with a manuscript for review should be minimally processed.  A certain degree of image processing is acceptable for publication (and for some experiments, fields and techniques is unavoidable), but the final image must correctly represent the original data and conform to community standards. Editors may use software to screen images for manipulation.
+
+Editors may request the unprocessed data files to help in manuscript evaluation during the peer review process; if these data are unavailable upon request, we may need to halt the peer review process until the issues are satisfactorily resolved.  We may also request unprocessed data when responding to post-publication issues that may arise with published papers. Lack of availability of unprocessed data can make resolution of post-publication issues challenging.  We recommend retaining unprocessed data and metadata files after publication, ideally archiving data in perpetuity.  
+
+All life science papers published in Nature Portfolio journals require submission of unprocessed original images of gels and western blots to be submitted with the final accepted version. These unprocessed images are published in the Supplementary Information.
+
+The guidelines below are intended to help in accurate presentation of image data.  Authors must also take care to avoid misrepresentation during data acquisition.  Please list all image acquisition tools and image processing software packages used and document key image-gathering settings and processing manipulations in the Methods.
+- Images gathered at different times or from different locations should not be combined into a single image, unless it is stated that the resultant image is a product of time-averaged data or a time-lapse sequence. If juxtaposing images is essential, the borders should be clearly demarcated in the figure and described in the legend.
+- The use of touch-up tools, such as cloning and healing tools in Photoshop, or any feature that deliberately obscures manipulations, is unacceptable.
+- Processing (such as changing brightness and contrast) is appropriate only when it is applied equally across the entire image and is applied equally to controls. Contrast should not be adjusted so that data disappear. Excessive manipulations, such as processing to emphasize one region in the image at the expense of others (for example, through the use of a biased choice of threshold settings), is inappropriate, as is emphasizing experimental data relative to the control.
+
+
+
+Electrophoretic gels and blots
+- Quantitative comparisons between samples on different gels/blots are strongly discouraged; if this is unavoidable, the figure legend must state that the samples derive from the same experiment or parallel experiments and that gels/blots were processed in parallel. 
+- Re-arranged lanes that are non-adjacent in the gel must be clearly indicated in a manner that delineates the boundary between the lanes. Re-arrangement of lanes should be stated as such in the figure legend. 
+- Loading controls (e.g. GAPDH, actin) must be run on the same blot. When sample processing controls are run on different gels, they must be identified as such in the figure legend. Cropped gels in the paper must retain all important bands.
+- High-contrast gels and blots are discouraged, as overexposure may mask additional bands.
+- Authors should take care to check their manuscripts for the following (1) check figures for duplications (2) check blots and gels for splicing of lanes (3) indicate whether panels are sample processing or loading controls  (4) ensure that the unprocessed scans provided match the figures.
+
+
+
+Microscopy
+- Adjustments should be applied to the entire image. Threshold manipulation, expansion or contraction of signal ranges and the altering of high signals should be avoided. If "pseudo-colouring" and nonlinear adjustment (for example "gamma changes") are used, this must be disclosed. Adjustments of individual colour channels are sometimes necessary on "merged" images, but this should be noted in the figure legend.
+- Cells from multiple fields should be grouped into a single field
+We encourage inclusion of the following with the final revised version of the manuscript for publication: 
+- In the Methods, specify the type of equipment (microscopes/objective lenses, cameras, detectors, filter model and batch number) and acquisition software used. Although we appreciate that there is some variation between instruments, equipment settings for critical measurements should also be listed.
+- We encourage deposition of raw image files (including relevant metadata for example: acquisition information, including time and space resolution data (xyzt and pixel dimensions); image bit depth; experimental conditions such as temperature and imaging medium; and fluorochromes (excitation and emission wavelengths or ranges, filters, dichroic beamsplitters, if any)). 
+- The display lookup table (LUT) and the quantitative map between the LUT and the bitmap should be provided, especially when rainbow pseudocolor is used. If the LUT is linear and covers the full range of the data, that should be stated.
+- Processing software should be named in the methods section and any manipulations indicated in the relevant figure legends (such as type of deconvolution, three-dimensional reconstructions, surface and volume rendering, "gamma changes," filtering, thresholding and projection).
+Authors should state the measured resolution at which an image was acquired and any downstream processing or averaging that enhances the resolution of the image.

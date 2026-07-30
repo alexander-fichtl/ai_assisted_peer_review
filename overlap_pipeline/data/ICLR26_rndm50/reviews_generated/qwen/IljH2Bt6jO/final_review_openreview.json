@@ -1,0 +1,78 @@
+{
+  "pdfname": "IljH2Bt6jO",
+  "content": {
+    "summary": {
+      "value": "This paper introduces ScreenExplorer, a vision-language model (VLM) agent trained via reinforcement learning for autonomous exploration in real, dynamic, and open-ended GUI environments. The authors address the fundamental limitation of current GUI agents that struggle to generalize to unfamiliar applications and remain heavily dependent on large-scale human-curated datasets. Key contributions include a world model-inspired curiosity reward to overcome exploration cold-start challenges, state-change-based exploration rewards to encourage novel interactions, and an experience stream distillation mechanism that systematically accumulates and refines exploratory policies. Through end-to-end training with exploration-driven objectives, the approach enables sustained interaction and diverse discovery without relying on predefined task structures. The authors demonstrate that ScreenExplorer achieves remarkable generalization and diverse exploration capabilities in unseen applications, significantly outperforming static deployment baselines across multiple metrics. The work establishes a new paradigm for GUI agents to progressively learn through autonomous exploration rather than static dataset dependency. By combining these innovations, the framework enables adaptive, lifelong learning in complex digital environments while reducing reliance on manually curated data."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. The paper introduces a world model-inspired curiosity reward mechanism that effectively overcomes the exploration cold-start challenge in GUI environments. As demonstrated in Figure 4, this component increases advantage variance during GRPO optimization, enabling smoother cold-start optimization and more effective exploration through better gradient differentiation across sample groups. This directly addresses a key limitation in prior exploration methods that struggle with initial interaction.\n\n2. The experience stream distillation pipeline represents a significant methodological contribution, enabling systematic accumulation and refinement of exploratory policies. Unlike typical RL approaches that discard previous knowledge, this mechanism allows the model to inherit capabilities from previous generations (evident in Table 6 showing comparable performance between RL-trained and distilled models), establishing a sustainable learning paradigm that reduces reliance on human-curated datasets.\n\n3. The comprehensive evaluation framework with dual-level diversity metrics (trajectory-level and group-level) provides a more nuanced assessment of exploration capabilities than typical single-metric evaluations. This approach captures both the diversity within individual exploration sequences and across multiple trajectories, offering a more complete picture of the agent's exploration capabilities as shown in Table 1.\n\n4. The thorough ablation studies isolate the contribution of each reward component, particularly demonstrating the critical importance of the world model reward. The w/o World Model ablation (Figure 4) shows the model struggles to improve format rewards and establish effective environmental interaction, while the full model successfully overcomes the cold start phase - a finding that advances understanding of reward design for GUI exploration.\n\n5. The paper addresses the fundamental limitation of current GUI agents' dependency on static datasets and inability to generalize to unfamiliar applications, as explicitly framed in the introduction (lines 051-058). This problem formulation moves beyond incremental improvements to tackle a core limitation in the field, with the proposed solution enabling agents to \"progressively learn through autonomous exploration, moving beyond static dataset dependency toward adaptive, lifelong learning in complex digital worlds\" (Abstract)."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Lack of meaningful transfer evaluation to truly novel interfaces**: While the paper claims \"generalization to previously unseen interface states,\" the evaluation only tests within the same Linux desktop environment with fixed applications (browsers and LibreOffice). There's no evidence that ScreenExplorer can handle *truly* novel applications or interfaces outside the training distribution. For instance, Figure 5 shows exploration within familiar applications like Firefox and LibreOffice, but the paper doesn't demonstrate performance on completely unseen software (e.g., specialized professional tools). To strengthen this claim, the authors should evaluate on a held-out set of applications not present during training, as done in recent GUI agent work like InfiGUI-R1 (Liu et al., 2025) which tests on 12 unseen applications.\n\n2. **Diversity metrics without utility correlation**: The evaluation focuses exclusively on trajectory-level and group-level diversity metrics (Section 4.1), but fails to demonstrate that this diversity translates to practical value. As noted in the \"Noisy TV Problem\" discussion (Section 5), agents can get stuck on irrelevant stimuli while maintaining high diversity scores. The paper should correlate exploration diversity with task completion rates on specific benchmarks (e.g., the WebShop environment or MiniWoB++), similar to how Wang et al. (2025a) evaluate DistRL on Android tasks. Without this connection, the diversity metrics feel like a proxy that may not reflect meaningful exploration.\n\n3. **Incomplete comparison to state-of-the-art RL-based GUI agents**: The paper compares against static deployments of models but omits comparisons to recent RL-based approaches like DigiRL (Bai et al., 2024) and DistRL (Wang et al., 2025a), which also target GUI exploration. Table 1 shows ScreenExplorer outperforming static models, but without comparing to these RL baselines, it's unclear whether the improvement stems from RL training generally or from the specific reward design. The authors should include these comparisons to isolate their method's contribution.\n\n4. **Scalability limitations without practical validation**: The paper acknowledges \"prohibitively high\" training costs (Section 5) yet provides no experimental validation of their proposed distributed training solution. The training time (25-26 hours for 200 steps) makes the approach impractical for real-world deployment. The authors should demonstrate how their experience stream distillation reduces overall training costs compared to continuous RL training, similar to how Dou et al. (2025) quantified the efficiency gains of their retrospective replay approach.\n\n5. **World model's limited role in exploration**: While the world model is presented as critical for overcoming cold-start (Figure 4), the ablation in Figure 12 shows that removing it causes performance degradation but doesn't clarify *why* it's more effective than simpler alternatives like RND (Burda et al., 2018). The paper would benefit from comparing against other curiosity mechanisms to establish the necessity of their specific world model implementation."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Critical Questions for Rebuttal\n\n1. **True generalization evidence**: The paper claims \"generalization to previously unseen interface states,\" but all experiments occur within the same Linux desktop environment with fixed applications. Could you provide evidence or discuss plans for testing ScreenExplorer on *truly* novel interfaces outside the training distribution (e.g., mobile interfaces, different operating systems, or specialized software like CAD tools)? This would help clarify whether the approach enables genuine zero-shot generalization to new UI paradigms rather than just new states within familiar applications.\n\n2. **World model prediction quality**: Section 4.3 notes that \"the world model loss L_WM first slightly decreases, then oscillates at a high value,\" but doesn't quantify prediction accuracy. Could you provide concrete metrics on how well the world model actually predicts state transitions (e.g., visual similarity scores between predicted and actual next states)? Understanding the model's actual predictive capability would help evaluate the validity of using prediction error as a curiosity signal.\n\n3. **Comparison to alternative exploration methods**: The paper demonstrates the importance of the world model reward through ablation studies, but doesn't compare to established exploration techniques like Random Network Distillation (RND) in this GUI context. Could you share results from experiments comparing your world model approach with RND or other curiosity-based methods? This would clarify whether your approach offers unique advantages over existing exploration strategies.\n\n4. **Human evaluation of exploration quality**: The paper relies entirely on automated diversity metrics. Could you share results from human evaluations where assessors judged the meaningfulness and usefulness of the agent's exploration patterns? This would help validate whether high diversity scores actually correspond to valuable exploration from a human perspective, rather than just random state transitions.\n\n## Constructive Suggestions\n\n1. **Quantify computational costs**: Section 5 mentions \"prohibitively high\" time costs but lacks specific metrics. Providing concrete training time comparisons (e.g., hours per 100 episodes) versus alternative approaches would strengthen the discussion of scalability limitations and help readers assess practical applicability.\n\n2. **Address the \"noisy TV\" problem more concretely**: While mentioned in Section 5, the paper doesn't provide specific examples of when agents got stuck on irrelevant stimuli. Including case studies of such failures and how the experience stream distillation specifically mitigates them would strengthen the discussion of exploration challenges.\n\n3. **Investigate intent field necessity**: The ablation in Figure 14 shows intent descriptions become more specific with intent-state alignment rewards, but it's unclear if this component is essential to overall performance. A targeted ablation removing the intent field entirely (rather than just the alignment rewards) would clarify whether this architectural choice is fundamental to the approach.\n\n4. **Long-term distillation sustainability**: The distillation results are promising, but the paper doesn't address how many generations this process can sustain before performance plateaus. Could you share preliminary results or theoretical analysis on the limits of the experience stream distillation approach? This would help readers understand the approach's potential for continuous improvement."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "000 001 002 TRAINING A VISION-LANGUAGE MODEL FOR DIVERSE EXPLORATION IN OPEN GUI WORLD",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Anonymous authors",
+    "2 RELATED WORK",
+    "2.1 OPEN-WORLD EXPLORATION",
+    "2.2 DIVERSE EXPLORATION BY LM",
+    "2.3 COMPUTER USE AGENTS",
+    "3 FRAMEWORK",
+    "3.1 MODELING EXPLORATION IN GUI AS A MARKOV DECISION PROCESS (MDP)",
+    "3.2 REWARD FUNCTION",
+    "3.3 LEARNING STATE TRANSITIONS WITH A WORLD MODEL",
+    "3.4 TRAINING VLM AGENT WITH GRPO",
+    "4 EXPERIMENT",
+    "4.1 EVALUATION METRICS ON EXPLORATION DIVERSITY",
+    "4.2 EXPLORATION PERFORMANCE",
+    "4.3 TRAINING DYNAMICS",
+    "5 DISCUSSION",
+    "6 CONCLUSION",
+    "486 USE OF LLMS",
+    "A TECHNICAL DETAILS OF GUI ENVIRONMENT AND VLM AGENT",
+    "B TECHNICAL DETAILS OF WORLD MODEL",
+    "C TRAINING PROCESS",
+    "Algorithm 1: RL Training Process of ScreenExplorer",
+    "D EXPERIENCE STREAM DISTILLATION",
+    "E BASELINE SETTINGS",
+    "We employ the following task prompts:",
+    "F ORIGINAL CAPACITY IN VLM",
+    "G ABLATION ON EXPLORATION REWARD COMPONENTS",
+    "w/o Intent-State Alignment",
+    "ScreenExplorer-3B",
+    "H CASE STUDY",
+    "H.1 CASE STUDY OF SCREENEXPLORER-7B",
+    "H.2 CASE STUDY OF SCREENEXPLORER-3B"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

@@ -1,0 +1,127 @@
+#Connect to the Munich Scientific Network (MWN): Use eduVPN Client (https://www.eduvpn.org/client-apps/)
+
+
+
+#Login on terminal
+ssh xx00xxx2@login.ai.lrz.de
+#Alternative: Web-based frontend (https://login.ai.lrz.de)
+
+
+
+#Create credentials for using Nvidia NGC containers
+#Create keys at https://ngc.nvidia.com/setup/api-key 
+mkdir -p ~/enroot
+nano ~/enroot/.credentials
+machine nvcr.io login $oauthtoken password <your api-key>
+machine authn.nvidia.com login $oauthtoken password <your api-key>
+
+
+
+#Optional: Clear cache just to be sure
+du -h --max-depth=1 ~ | sort -hr | head -20
+du -sh ~/.cache/*
+rm -rf ~/.cache/*
+
+
+
+#Create the container for the python script
+nano build_deepseek14_env.sh
+#Copy & Paste content from build_deepseek14_env.sh
+sed -i 's/\r$//' build_deepseek14_env.sh
+sbatch build_deepseek14_env.sh
+
+
+
+#Allocate gpu and launch container
+salloc -p lrz-hgx-h100-94x4 --gres=gpu:1 --time=02:00:00
+srun --pty --container-image=$HOME/deepseek14_ready.sqsh --container-mounts=$HOME:/workspace bash
+
+
+
+#Download model
+mkdir -p /workspace/models
+cd /workspace/models
+python3 -c "
+from huggingface_hub import snapshot_download
+snapshot_download('deepseek-ai/DeepSeek-R1-Distill-Qwen-14B', local_dir='deepseek-14b', local_dir_use_symlinks=False)
+"
+
+
+
+#Run python script
+#Upload some pdf file named "testpdf.pdf" (e.g. through web-based frontend (https://login.ai.lrz.de))
+#Upload pdf_to_prompt.py and prompt_to_review_CutPrompt.py
+#Check whether gpu still allocated: squeue -u xx00xxx2
+#If empty: Allocate gpu and launch container again.
+cd /workspace
+python3 pdf_to_prompt.py
+
+#Start vLLM server in the background
+- python3 -m vllm.entrypoints.openai.api_server \
+--model /workspace/models/deepseek-14b \
+--max-model-len 32768 \
+--dtype auto \
+    > server.log 2>&1 &
+
+python3 prompt_to_review_CutPrompt.py
+
+
+
+#Check results in testpdf_prompt.txt and testpdf_review.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+######################################################################################################
+##### INCORRECT Experiments with \tmp storage ########################################################
+######################################################################################################
+#Set the HuggingFace cache directory to /tmp
+export HF_HOME=/tmp/hf_cache
+mkdir -p /tmp/hf_cache
+echo $HF_HOME
+
+python3 -m vllm.entrypoints.openai.api_server \
+  --model deepseek-ai/DeepSeek-R1-Distill-Qwen-32B \
+  --max-model-len 32768 \
+  --dtype auto
+
+
+nohup python3 -m vllm.entrypoints.openai.api_server \
+  --model deepseek-ai/DeepSeek-R1-Distill-Qwen-32B \
+  --max-model-len 32768 \
+  --dtype auto \
+  > server.log 2>&1 &
+
+
+#Read the log
+tail -f server.log
+pkill -f api_server
+
+
+python3 prompt_to_review.py
+
+
+python3 -m vllm.entrypoints.openai.api_server \
+  --model deepseek-ai/DeepSeek-R1-Distill-Qwen-14B \
+  --max-model-len 32768 \
+  --dtype auto \
+  --download-dir /workspace/.hf_cache
+######################################################################################################
+######################################################################################################
+######################################################################################################

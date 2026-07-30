@@ -1,0 +1,81 @@
+{
+  "pdfname": "gxkOfdaaMA",
+  "content": {
+    "summary": {
+      "value": "This paper addresses the problem of reasoning language models generating unnecessarily long outputs despite achieving strong performance through extended chains of thought. The authors identify that accuracy degradation when applying length penalties stems not from the penalty design itself but from suboptimal reinforcement learning optimization, specifically due to biased advantage estimation, entropy collapse, and sparse reward signals. They propose DLER (Doing Length Penalty Right), a training recipe combining batch-wise reward normalization, higher clipping thresholds, dynamic sampling, and simple truncation that achieves state-of-the-art accuracy-efficiency trade-offs, cutting output length by over 70% while surpassing baseline accuracy. The paper further introduces Difficulty-Aware DLER (DA-DLER) for adaptive truncation based on question difficulty and an update-selective merging method for scenarios with limited training data. DLER enables superior test-time scaling by generating multiple concise responses in parallel with higher accuracy and lower latency compared to baseline models. The authors demonstrate their approach on DeepSeek-R1 models, showing significant improvements across multiple benchmarks including AIME-24, MATH, and Olympiad Bench. The work establishes that optimization techniques, rather than complex penalty designs, are key to achieving efficient and accurate reasoning models. This approach makes reasoning models more practical for deployment by dramatically improving token efficiency without sacrificing performance."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. **Fundamental reframing of the problem**: The paper challenges the prevailing assumption in the field by demonstrating that accuracy degradation with length penalties stems not from penalty design but from suboptimal RL optimization. This conceptual shift redirects research focus from increasingly complex penalty designs to fixing the underlying optimization process, as evidenced by their finding that \"the simplest length penalty-truncation-can achieve state-of-the-art accuracy-to-token efficiency when combined with our DLER recipe\" (Sec 1).\n\n2. **Precise identification of three specific optimization failures**: The authors isolate and empirically validate three concrete technical issues previously overlooked: (1) biased advantage estimation under group-wise normalization (Sec 3.1), showing how truncation increases reward variance; (2) entropy collapse from clipping critical low-probability, high-entropy tokens that structure reasoning paths (Sec 3.2, Fig 2); and (3) sparse reward signals from excessive zero-reward prompts that bias training toward easy questions (Sec 3.3, Fig 3). Each issue is diagnosed with clear visual evidence rather than vague claims.\n\n3. **Demonstration of truncation's potential**: The paper proves that the simplest length penalty (truncation) can outperform complex alternatives when optimization is properly handled. As shown in Fig. 6, \"the simplest length penalty-Truncation-remains highly competitive, often matching or surpassing more complex penalties like L1-Max and Laser,\" while being \"the most training-efficient since rollouts terminate at the cutoff.\"\n\n4. **Practical test-time scaling benefits**: The authors demonstrate a paradigm shift in model deployment strategy by showing that \"reasoning efficiency enables far greater test-time scaling\" (Sec 4.4). DLER-R1-7B achieves 83.33% accuracy in 85.43s with 256 rollouts, compared to 221.22s for DeepSeek-7B with 16 rollouts (62% faster), while \"generating 256 rollouts with DLER-7B remains slightly faster than producing a single response with DeepSeek-7B, while yielding 27% higher accuracy\" (Fig 1b).\n\n5. **Weight merging solution for practical constraints**: The paper addresses a real-world deployment challenge by introducing update-selective merging that \"recovers all lost accuracy while still reducing output tokens by 47%\" when proprietary training data is unavailable (Sec 4.6, Table 2), providing a practical solution to the common problem of limited high-quality RL datasets."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Narrow benchmark scope limits generalizability claims**: The paper exclusively evaluates on mathematical reasoning benchmarks (MATH, AIME-24, AMC, Minerva, Olympiad Bench), all of which have clear right/wrong answers. This creates uncertainty about DLER's performance on reasoning tasks with more nuanced or subjective reasoning paths. For instance, the paper makes broad claims about \"reasoning efficiency\" without validating on commonsense reasoning (ARC, CommonsenseQA), scientific reasoning (SciQ), or multi-step decision making tasks where the optimal reasoning length might differ substantially. The authors should expand evaluation to diverse reasoning domains to substantiate their claim that DLER \"achieves state-of-the-art accuracy-efficiency trade-offs\" across general reasoning tasks.\n\n2. **Insufficient isolation of component contributions**: While Figure 4 shows training dynamics of different combinations, the paper lacks systematic ablation quantifying the marginal contribution of each DLER component. The authors identify three key issues (biased advantage estimation, entropy collapse, sparse rewards) and propose corresponding solutions, but don't isolate how much each solution contributes to the final 70% length reduction. For example, Figure 4 shows training dynamics but doesn't report final benchmark scores for each component variant. A proper ablation would report accuracy/length metrics for: (a) batch-wise normalization only, (b) batch-wise + higher clipping, (c) batch-wise + dynamic sampling, (d) all three combined.\n\n3. **Lack of truncation length sensitivity analysis**: The paper consistently uses a 4000-token truncation target without exploring how performance varies with this hyperparameter. Figure 6 shows different length penalties but doesn't isolate the effect of truncation length alone. The authors should investigate how DLER's accuracy/length trade-off changes with different truncation lengths (e.g., 2000, 4000, 6000 tokens) to provide practical guidance for practitioners. This is particularly important given that Figure 1a shows DLER-R1-7B achieves 56.4% accuracy at ~4000 tokens, but it's unclear if a slightly longer truncation (e.g., 5000 tokens) would yield significantly better accuracy with only modest length increase.\n\n4. **No analysis of interpretability-efficiency trade-offs**: While the paper demonstrates DLER reduces reasoning steps by 83% (Table 5), it doesn't address how this affects the model's interpretability. Shorter reasoning chains might make it harder to understand why a model arrived at a particular answer—a critical concern for applications requiring transparency. The authors should analyze whether DLER's concise outputs maintain sufficient reasoning trace quality for human interpretability, perhaps through human evaluation studies measuring how well humans can follow the model's logic in shortened versus original chains."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Clarification Questions\n\n1. **Generalizability beyond mathematical reasoning**: The paper demonstrates strong results on mathematical reasoning benchmarks (MATH, AIME-24, AMC, etc.), but how would DLER perform on reasoning tasks with more subjective or nuanced reasoning paths (e.g., commonsense reasoning, ethical dilemmas, or creative problem-solving)? The paper makes broad claims about \"reasoning efficiency\" but focuses exclusively on tasks with clear right/wrong answers. Could you provide preliminary analysis or qualitative examples of how DLER might perform on tasks where optimal reasoning length is less clearly defined?\n\n2. **Weight merging hyperparameters**: In Section 4.6, the paper describes an update-selective merging approach that retains \"the top 25% largest parameter deltas\" and rescales them by 0.7. Could you explain how these specific hyperparameters (25% and 0.7) were determined? Were ablation studies performed to assess sensitivity to these values, and would different values be appropriate for different model sizes or architectures?\n\n3. **Overthinking definition**: While the paper identifies \"overthinking\" as a key issue addressed by DLER, the definition appears primarily based on token count rather than reasoning quality. Could you provide a more nuanced definition of overthinking that accounts for reasoning quality, perhaps with qualitative examples showing how DLER reduces unnecessary tokens while maintaining or improving reasoning quality? The reasoning trace analysis in Table 5 shows reduced steps, but it's unclear whether these were truly redundant.\n\n## Constructive Suggestions\n\n1. **Component importance analysis**: While Section 3 presents three key challenges addressed by DLER, an ablation study showing the individual contribution of each component (batch-wise normalization, higher clipping threshold, dynamic sampling) would strengthen the paper. For instance, how much of the performance gain comes from each element? This would help the community understand which aspects of DLER are most critical for adoption.\n\n2. **Real-world deployment considerations**: The paper demonstrates impressive test-time scaling benefits (Fig. 1b), but could you discuss practical considerations for deployment? For example, how would the optimal truncation length vary across different question types in a real application, and what mechanisms might dynamically adjust this parameter? The DA-DLER approach shows promise, but more guidance on practical implementation would enhance the paper's impact.\n\n3. **Broader efficiency metrics**: The paper focuses on token count as the primary efficiency metric, but real-world deployment often involves considerations like memory usage, energy consumption, or hardware-specific latency. Could you discuss how DLER impacts these other efficiency dimensions, or provide analysis of the relationship between token reduction and these practical metrics?\n\nThese questions would help clarify important aspects of the work and could significantly strengthen my assessment of the paper's contribution and practical applicability. A thoughtful response addressing even one or two of these points would be valuable for the discussion phase."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 5
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "DLER: DOING LENGTH PENALTY RIGHT - INCENTIVIZING MORE INTELLIGENCE PER TOKEN VIA REINFORCEMENT LEARNING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Efficient reasoning leads to better test-time scaling",
+    "2 PRELIMINARY",
+    "3 RE-EXAMINING THE SIMPLEST LENGTH PENALTY - TRUNCATION",
+    "3.1 MORE AGGRESSIVE TRUNCATION LEADS TO HIGHER GROUP-WISE REWARD VARIANCE",
+    "3.2 ENTROPY COLLAPSE LIMITS EXPLORATION OF REASONING PATHS",
+    "3.3 LENGTH PENALTY OVER-SPARSIFY TRAINING SIGNAL",
+    "3.4 COMBINING ALL INGREDIENTS: DO LENGTH PENALTY RIGHT",
+    "3.5 DIFFICULTY-AWARE DLER",
+    "4 EXPERIMENT",
+    "4.1 SETUP",
+    "4.2 MAIN RESULTS",
+    "4.3 PERFORMANCE UNDER DIFFERENT TEST-TIME SCALING SETTINGS",
+    "4.4 DLER ENABLES SUPERIOR TEST-TIME SCALING THROUGH PARALLEL THINKING",
+    "4.5 DIFFERENT LENGTH PENALTIES NO LONGER PUSH THE ACCURACY-EFFICIENCY FRONTIER",
+    "4.6 OVERCOMING QUALITY LIMITATIONS OF PUBLICLY AVAILABLE TRAINING DATA",
+    "5 RELATED WORK",
+    "6 CONCLUSION",
+    "A DLER ACHIEVES SOTA ACCURACY/LENGTH OF COT TRADE-OFF AND ENABLE BETTER TEST-TIME SCALING",
+    "B LARGER REWARD VARIANCE RESULTS IN LARGER BIAS IN ADVANTAGE ESTIMATION.",
+    "A.1 ASSUMPTIONS AND SETTINGS",
+    "Step 1: Bias in the Numerator. The numerator can be expressed as",
+    "Step 2: Dependence of the Denominator on ϵ i .",
+    "Conditional bias (exact formula)",
+    "A.2 GROUP-WISE REWARD NORMALIZATION (GRPO) AND BATCH-WISE NORMALIZATION",
+    "C COMBINING ALL INGREDIENTS: DO LENGTH PENALTY RIGHT",
+    "D HYPERPARAMETERS SETTING",
+    "E PERFORMANCE UNDER DIFFERENT TEST-TIME SCALING SETTINGS",
+    "F PARALLEL THINKING LATENCY",
+    "G ANALYSIS",
+    "G.1 ENTROPY DISTRIBUTION",
+    "G.2 REASONING TRACE ANALYSIS",
+    "1188 H USE OF LLMS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

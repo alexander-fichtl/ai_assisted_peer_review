@@ -1,0 +1,69 @@
+{
+  "pdfname": "WNHNfkulYA",
+  "content": {
+    "summary": {
+      "value": "The paper introduces CK-Arena, a multi-agent interactive benchmark inspired by the Undercover game, designed to evaluate LLMs' mastery of conceptual feature knowledge. Unlike traditional static benchmarks that primarily test factual recall, CK-Arena assesses models' ability to describe, differentiate, and infer distinguishing features of concepts from partial information in dynamic settings. The authors developed scalable datasets containing 529 English concept pairs across various categories, along with rigorous evaluation protocols that include both player-level metrics (win rate, survival rate) and statement-level metrics (novelty, reasonableness). They implemented a multi-judge pipeline with LLM-based judges fine-tuned for reliability, and established a unified Elo-based rating system for fair model comparison. Experimental results demonstrate that LLMs' conceptual understanding varies significantly across different categories and is not strictly aligned with general model capabilities. The paper provides a scalable leaderboard for tested models and demonstrates the framework's extensibility to new domains. The authors make their code and resources publicly available to facilitate further research in conceptual knowledge evaluation."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. The paper's most significant strength is its innovative application of the Undercover game framework to evaluate conceptual understanding, which creates a dynamic test of whether models can navigate the subtle boundaries between related concepts (e.g., football vs. basketball). Unlike static benchmarks that assess factual recall, this approach forces models to demonstrate understanding of both commonalities and distinctive features through strategic description, as shown in Figure 1 where models must analyze concepts like \"grass field\" versus \"indoor court\" while maintaining plausible deniability.\n\n2. The development of the multi-judge pipeline with Qwen-3-8B-ckR (achieving 99.3% accuracy on reasonableness judgment) represents a sophisticated solution to evaluating nuanced conceptual understanding at scale. The paper demonstrates this is not merely an LLM-based judge but a system that combines LLM analysis with human calibration (only 3.1% of scores required manual adjustment), creating a reliable automated evaluation framework that captures the subtleties of conceptual reasoning.\n\n3. The t-SNE visualizations (Figure 3) provide compelling empirical evidence that semantic dispersion correlates with conceptual depth, offering a novel proxy for measuring understanding that goes beyond traditional metrics. The visualization clearly shows how different LLMs center descriptions on different focal aspects of concepts (e.g., GPT-4o versus Gemini-2.0-Pro-Exp in the animals category), revealing architectural differences in how models represent conceptual knowledge.\n\n4. The paper makes a methodological contribution through the derivation of the 120-point Elo offset to correct for role imbalance in the Undercover game. This adjustment, mathematically derived from the observed 66.7% civilian win rate (Section D), ensures fair comparison across roles and demonstrates sophisticated attention to the nuances of game mechanics in evaluation design.\n\n5. The finding that conceptual understanding varies significantly across categories and does not align with general model capabilities (e.g., Qwen2.5-72B leading in reasonableness while GPT-4o shows stronger civilian win rates) provides important insights about model architectures. This is evidenced in Table 3 where different models excel in different dimensions (GPT-4o in civilian WR, Qwen2.5-72B in reasonableness), revealing that general capability doesn't guarantee strong conceptual reasoning."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Insufficient analysis of category-specific performance variations**: While Figure 6 clearly shows models perform differently across concept categories (e.g., DeepSeek-V3 at 80% in animals, GPT-4o at 80% in landmarks), the paper fails to investigate why these differences exist. The authors mention \"these performance differences are likely influenced by the models' training datasets and optimization strategies\" but provide no concrete evidence or systematic analysis connecting model architectures to specific category strengths. This represents a missed opportunity to advance understanding of how different training approaches affect conceptual understanding. A more valuable contribution would include analysis of training data composition for each model, correlating specific data sources with category performance (e.g., does GPT-4o's landmark strength correlate with more geographical training data?).\n\n2. **Lack of validation for knowledge graph utility**: The paper generates rich descriptive data that could form knowledge graphs (Figure 9) but doesn't validate how useful these are for downstream applications. The authors acknowledge this limitation: \"Although this article did not systematically validate the downstream benefits of the graph.\" To strengthen the contribution, they should demonstrate concrete applications—such as using the generated knowledge graphs to improve model performance on concept-related tasks or to detect model biases—rather than merely suggesting potential uses.\n\n3. **Limited exploration of non-noun concept types**: Despite having 100 abstract noun pairs, 109 adverb pairs, and 100 verb pairs in their dataset (Section 3.1), the authors focus almost exclusively on concrete nouns, only briefly mentioning verb experiments in Section E. The paper states that \"concrete noun pairs are more suitable for our experimental setup,\" but doesn't justify why or explore how conceptual understanding differs across linguistic categories. This narrow focus undermines the claim of comprehensive conceptual evaluation. The authors should provide a systematic comparison of how models handle different parts of speech, which would reveal whether LLMs have fundamentally different conceptual understanding mechanisms for various linguistic structures.\n\n4. **Potential confounding of strategic reasoning with conceptual understanding**: While the authors attempt to control for strategic elements through prompt engineering (\"we restrict players' strategic space with clear action guidelines\"), they don't provide evidence that the benchmark primarily measures conceptual understanding rather than strategic ability. The human case study (Case 4) demonstrates how strategic deception can affect outcomes, but there's no quantitative analysis of how much performance is driven by strategic versus conceptual capabilities. To address this, the authors could conduct ablation studies where they vary the strategic constraints in prompts and measure how this affects model performance.\n\n5. **Evaluation circularity concerns**: Using LLMs as judges (with only 3.1% manual calibration) creates potential circularity in measuring \"conceptual understanding.\" The paper doesn't adequately address whether the benchmark measures models' ability to match LLM expectations rather than ground truth conceptual relationships. This is particularly problematic since the fine-tuned Qwen-3-8B-ckR judge (Table 2) is trained on the same data that may have shaped the models being evaluated. The authors should explore human expert validation on a larger scale or develop more objective metrics for conceptual accuracy that don't rely on LLM judgments."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Concept Category Performance Analysis\nThe paper shows significant performance variations across concept categories (Figure 6), with models like DeepSeek-V3 achieving 80% win rate in animals but performing differently in other categories. Could you provide more granular analysis connecting these patterns to specific aspects of model training? For example, do you have evidence linking DeepSeek-V3's strong animal category performance to specific data sources in its training corpus, or is this related to architectural differences that better capture biological hierarchies? Understanding these connections would strengthen the claim that CK-Arena reveals meaningful conceptual knowledge differences rather than just knowledge coverage disparities.\n\n## Human Baseline Limitations\nYou describe the human baseline as a \"lower limit reference\" due to knowledge limitations compared to LLMs. Could you share specific examples where humans were eliminated for reasons that reveal important aspects of conceptual understanding? For instance, did humans struggle more with novelty (repeating descriptions) or reasonableness (giving inaccurate feature descriptions)? This would help determine whether the benchmark primarily tests knowledge breadth versus true conceptual reasoning ability.\n\n## Reasonableness Classifier Limitations\nWhile Qwen-3-8B-ckR achieves 99.3% accuracy on reasonableness judgment, what are the specific failure modes of this classifier? For example, does it struggle with abstract concepts versus concrete ones, or with distinguishing subtle feature differences between closely related concepts? Understanding where the automated evaluation breaks down would help assess how well the benchmark captures the nuances of conceptual understanding that might require human judgment.\n\n## Role Bias Correction Impact\nThe 120-point Elo offset for role bias correction is well-justified theoretically, but could you provide quantitative analysis showing how this adjustment affects the final rankings? Specifically, are there models whose relative standing changes significantly when this correction is applied versus when it's not? This would help evaluate whether the correction meaningfully addresses the role imbalance or if it primarily serves as a theoretical formality.\n\n## Reasoner Model Performance\nYour finding that reasoner models (like DeepSeek-R1) don't consistently outperform standard models is intriguing. Could you elaborate on why additional reasoning capacity doesn't translate to better performance in CK-Arena? Does this suggest that conceptual understanding in this context relies more on knowledge representation than on reasoning processes, or might the prompt restrictions prevent reasoner models from leveraging their additional capabilities? This insight could have important implications for how we design future conceptual benchmarks.\n\n## Cross-Lingual Potential\nWhile the current implementation is English-only, do you have preliminary thoughts on how conceptual knowledge representation might differ across languages, and how CK-Arena could be adapted to evaluate cross-lingual conceptual understanding? For example, would certain concept pairs that are distinct in English merge in other languages (or vice versa), and how would this affect the benchmark design? This would help assess the framework's potential for broader application beyond English."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "IS YOUR LLM REALLY MASTERING THE CONCEPT? A MULTI-AGENT BENCHMARK",
+    "Anonymous authors",
+    "ABSTRACT",
+    "2 RELATED WORKS",
+    "3 CK-ARENA: CONCEPTUAL KNOWLEDGE ARENA",
+    "3.1 THE UNDERCOVER GAME FOR EVALUATION",
+    "3.2 LARGE LANGUAGE MODELS AS PLAYERS",
+    "3.3 EVALUATE THE PERFORMANCE OF PLAYERS",
+    "4 EXPERIMENTS",
+    "4.1 RESULTS ON THE 6-PLAYER GAME",
+    "4.2 THE SCALABLE LEADERBOARD IN CK-ARENA",
+    "5 CONCLUSION",
+    "A FUTURE WORKS",
+    "B LIMITATIONS",
+    "C USE OF LLMS",
+    "D IMPLEMENTATION DETAILS",
+    "E MORE EXPERIMENTAL RESULTS",
+    "Knowledge Graph: Football vs Basketball Features",
+    "F PROMPTS",
+    "Game",
+    "Speaking",
+    "Description",
+    "Your Task",
+    "Listing 6: Player Agent System Prompt for Speaking Phase (II)"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

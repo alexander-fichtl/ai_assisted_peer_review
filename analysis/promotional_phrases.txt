@@ -1,0 +1,55 @@
+
+=== ICLR ===
+  gpt: 16/50 reviews have >=1 promotional phrase
+    "substantial contribution": 1
+    "valuable contribution": 3
+    "well written": 14
+  qwen: 21/50 reviews have >=1 promotional phrase
+    "substantial contribution": 5
+    "valuable contribution": 2
+    "significant contribution": 13
+    "well-written": 3
+  llama: 47/50 reviews have >=1 promotional phrase
+    "make a significant impact": 1
+    "potential to impact": 8
+    "substantial contribution": 1
+    "valuable contribution": 16
+    "significant contribution": 24
+    "well-written": 44
+  human: 44/192 reviews have >=1 promotional phrase
+    "highly recommend": 1
+    "substantial contribution": 1
+    "timely and relevant": 1
+    "valuable contribution": 5
+    "significant contribution": 1
+    "well-written": 19
+    "well written": 17
+
+=== natureCom ===
+  gpt: 3/31 reviews have >=1 promotional phrase
+    "valuable contribution": 1
+    "significant contribution": 1
+    "well written": 1
+  qwen: 22/31 reviews have >=1 promotional phrase
+    "substantial contribution": 4
+    "timely and relevant": 1
+    "valuable contribution": 12
+    "significant contribution": 13
+    "well-written": 3
+  llama: 30/31 reviews have >=1 promotional phrase
+    "highly recommend": 8
+    "suitable for publication": 19
+    "make a significant impact": 9
+    "potential to make a substantial impact": 2
+    "potential to impact": 3
+    "valuable contribution": 7
+    "significant contribution": 20
+    "strongly recommend": 1
+    "well-written": 27
+  human: 20/97 reviews have >=1 promotional phrase
+    "suitable for publication": 2
+    "valuable contribution": 3
+    "significant contribution": 2
+    "strongly recommend": 3
+    "well-written": 4
+    "well written": 8

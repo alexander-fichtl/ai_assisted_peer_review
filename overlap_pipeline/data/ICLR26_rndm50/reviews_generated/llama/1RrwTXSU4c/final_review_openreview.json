@@ -1,0 +1,64 @@
+{
+  "pdfname": "1RrwTXSU4c",
+  "content": {
+    "summary": {
+      "value": "The paper proposes a method, DUal-Branch Action Detector (DUBAD), for real-time and online error detection in procedural task videos. DUBAD leverages inconsistencies in action detector predictions to identify errors. It consists of two branches, each containing robust and sensitive action detectors, which are trained with different amounts of temporal information to amplify inconsistencies in predictions when action sequences deviate from the correct order. The authors design a temporal-aware dynamic weight module and a Step Attention Module (SAM) to enhance sensitivity to errors and robustness, respectively. DUBAD achieves state-of-the-art performance on three datasets: EgoPER, Assembly-101-O, and EPIC-Tent-O, outperforming existing methods in online error detection while maintaining real-time efficiency with a lightweight architecture. The method effectively detects both execution and procedural errors. The code will be released upon acceptance."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths\n\n1. **Novel Architecture**: The paper introduces a novel architecture, DUal-Branch Action Detector (DUBAD), which leverages prediction inconsistencies for real-time and online error detection in procedural task videos. This approach combines robust and sensitive action detectors, trained with different amounts of temporal information, to amplify inconsistencies in predictions when action sequences deviate from the correct order.\n\n2. **State-of-the-Art Performance**: DUBAD achieves state-of-the-art performance on three datasets: EgoPER, Assembly-101-O, and EPIC-Tent-O. Specifically, it outperforms existing methods in online error detection while maintaining real-time efficiency with a lightweight architecture.\n\n3. **Effective Detection of Execution and Procedural Errors**: The method effectively detects both execution and procedural errors, which is crucial for applications such as assistive technology and human-computer interaction.\n\n4. **Temporal-Aware Dynamic Weight Module and Step Attention Module (SAM)**: The authors design a temporal-aware dynamic weight module and SAM to enhance sensitivity to errors and robustness, respectively. These modules contribute to the method's effectiveness in detecting errors.\n\n5. **Lightweight Architecture**: DUBAD maintains real-time efficiency with a lightweight architecture, making it suitable for deployment on wearable devices or other resource-constrained platforms.\n\n6. **Significant Originality**: The proposed method brings significant originality to the research area through its novel architecture and approach to error detection, addressing the limitations of existing methods.\n\n7. **Impressive Experimental Results**: The paper presents impressive experimental results, including a detailed analysis of the method's performance on different datasets and comparisons with state-of-the-art baselines.\n\n## Conclusion\n\nThe paper's strengths lie in its novel architecture, state-of-the-art performance, effective detection of execution and procedural errors, and significant originality. These contributions make the paper valuable and beneficial to the broader research community, particularly in applications such as assistive technology and human-computer interaction."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses\n\n1. **Limited Analysis of Hyperparameter Sensitivity**: The paper could benefit from a more comprehensive analysis of hyperparameter sensitivity, particularly for the margin $\\beta$ in the TAD loss and the window size $m$ for the causal mode filter. A more detailed analysis would help readers understand the robustness of the method to different hyperparameter settings.\n\n2. **Ablation Study for Specific Error Types**: While the paper presents an ablation study for different components of the DUBAD framework, it would be beneficial to conduct an ablation study specifically for different types of errors (e.g., execution vs. procedural errors). This would provide insights into how each component contributes to detecting specific error types.\n\n3. **Comparison with More Recent Methods**: The paper compares DUBAD with state-of-the-art methods, but it would be beneficial to compare it with more recent methods, such as those that may have been published in the last few months. This would help establish the method's performance relative to the most current research.\n\n4. **Generalizability to New Domains**: The paper evaluates DUBAD on three datasets, but it would be beneficial to evaluate its generalizability to new, unseen domains or tasks. This could involve testing the method on a dataset from a significantly different application domain.\n\n5. **Error Detection in Videos with Multiple Errors**: The paper mentions that existing online methods fail to handle videos with multiple errors. While DUBAD is shown to detect errors effectively, it would be beneficial to provide a more detailed analysis of its performance on videos with multiple errors.\n\n6. **Qualitative Analysis of False Positives and False Negatives**: The paper presents qualitative results of error detection, but it would be beneficial to provide a more detailed analysis of false positives and false negatives. This would help understand the types of errors that the method struggles with and provide insights for future improvements.\n\n## Conclusion\n\nThe paper's weaknesses lie in its limited analysis of hyperparameter sensitivity, ablation study for specific error types, comparison with more recent methods, generalizability to new domains, error detection in videos with multiple errors, and qualitative analysis of false positives and false negatives. Addressing these weaknesses would further strengthen the paper's contributions and provide a more comprehensive evaluation of the DUBAD framework."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Hyperparameter Sensitivity Analysis**: The authors mention that the margin $\\beta$ in the TAD loss and the window size $m$ for the causal mode filter are important hyperparameters. Could the authors provide a more comprehensive analysis of how these hyperparameters affect the performance of DUBAD on different datasets?\n\n2. **Ablation Study for Specific Error Types**: The ablation study in the paper provides insights into the effectiveness of different components of DUBAD. However, it would be beneficial to conduct an ablation study specifically for different types of errors (e.g., execution vs. procedural errors). This would help understand how each component contributes to detecting specific error types.\n\n3. **Comparison with Recent Methods**: Although DUBAD is compared with state-of-the-art methods, it would be beneficial to compare it with more recent methods published in the last few months. This would help establish the method's performance relative to the most current research.\n\n4. **Generalizability to New Domains**: The authors evaluate DUBAD on three datasets, but it would be beneficial to evaluate its generalizability to new, unseen domains or tasks. This could involve testing the method on a dataset from a significantly different application domain.\n\n5. **Error Detection in Videos with Multiple Errors**: The authors mention that existing online methods fail to handle videos with multiple errors. Could they provide a more detailed analysis of DUBAD's performance on videos with multiple errors and discuss potential limitations?\n\n6. **Qualitative Analysis of False Positives and False Negatives**: The paper presents qualitative results of error detection, but it would be beneficial to provide a more detailed analysis of false positives and false negatives. This would help understand the types of errors that the method struggles with and provide insights for future improvements.\n\n7. **Optimal $s$ and $l$ Values**: The authors use different $s$ and $l$ values for different datasets. Could they provide insights into how to automatically determine the optimal $s$ and $l$ values for a new dataset?\n\n8. **Real-World Deployment**: The authors mention that DUBAD maintains real-time efficiency with a lightweight architecture. Could they discuss potential challenges and limitations of deploying DUBAD in real-world applications, such as assistive technology and human-computer interaction?\n\n## Conclusion\n\nThe authors can address these questions and suggestions to provide further clarification, improve the paper, and strengthen the contributions of the DUBAD framework. A productive rebuttal and discussion phase will help to refine the paper and provide a more comprehensive evaluation of the proposed method."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "8"
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "LEVERAGING PREDICTION INCONSISTENCY FOR ONLINE ERROR DETECTION IN PROCEDURAL VIDEOS",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "3 PROPOSED METHOD",
+    "3.1 PROBLEM SETTING AND FRAMEWORK OVERVIEW",
+    "3.2 ROBUST ACTION DETECTOR WITH STEP ATTENTION MODULE (SAM)",
+    "3.3 SENSITIVE ACTION DETECTOR WITH TEMPORAL AWARE DYNAMIC (TAD) MODULE",
+    "3.4 TRAINING LOSSES",
+    "3.5 ONLINE ERROR DETECTION DURING INFERENCE",
+    "4 EXPERIMENTS",
+    "4.1 EXPERIMENTAL SETUP",
+    "4.2 EXPERIMENTAL RESULTS",
+    "5 CONCLUSION AND FUTURE WORK",
+    "A APPENDIX: SUPPLEMENTARY MATERIAL",
+    "A.1 EXTENDED EXPERIMENTS AND ABLATIONS",
+    "A.2 MULTI-HEAD ATTENTION ARCHITECTURE",
+    "A.3 HYPERPARAMETER COMBINATION SETTING",
+    "A.4 DETAILED QUALITATIVE VISUALIZATION"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

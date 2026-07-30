@@ -1,0 +1,14 @@
+
+=== ICLR ===
+source        n     Figure      Table    Section   Equation
+gpt          50      29.76      34.50      41.98       6.70
+qwen         50      10.82       8.80       8.34       0.48
+llama        50       0.30       0.06       0.02       0.00
+human       192       0.46       0.49       0.22       0.11
+
+=== natureCom ===
+source        n     Figure      Table    Section   Equation
+gpt          31      26.29       1.77       2.42       0.94
+qwen         31       9.74       0.32       0.71       0.13
+llama        31       0.00       0.00       0.00       0.00
+human        97       1.81       0.14       0.05       0.00

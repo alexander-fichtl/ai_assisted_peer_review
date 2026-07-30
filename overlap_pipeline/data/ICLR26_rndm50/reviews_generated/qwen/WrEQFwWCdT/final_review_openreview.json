@@ -1,0 +1,82 @@
+{
+  "pdfname": "WrEQFwWCdT",
+  "content": {
+    "summary": {
+      "value": "The paper introduces MoE-GS, the first framework to apply Mixture-of-Experts (MoE) architecture to dynamic Gaussian splatting for novel view synthesis. It addresses the limitation that no single dynamic Gaussian splatting method consistently performs best across diverse scenes, spatial regions, and temporal frames by adaptively combining multiple specialized deformation models. The key innovation is a Volume-aware Pixel Router that projects Gaussian-level weights into pixel space through differentiable weight splatting, enabling spatially and temporally coherent blending of expert outputs. Unlike MoE approaches in language models designed for efficiency, MoE-GS focuses on improving reconstruction quality by leveraging heterogeneous deformation priors. The authors also propose two efficiency strategies: single-pass multi-expert rendering with gate-aware Gaussian pruning, and a distillation approach that transfers MoE performance to individual experts for lightweight deployment. Experiments on N3V and Technicolor datasets demonstrate consistent state-of-the-art performance across diverse dynamic scenes. The framework maintains effectiveness even when experts are trained with significantly reduced budgets, making it practical for real-world applications. MoE-GS provides a scalable solution for dynamic scene reconstruction while remaining compatible with evolving Gaussian splatting representations."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Novel problem formulation with empirical validation**: The paper identifies and rigorously documents a critical limitation in dynamic scene reconstruction that no single Gaussian splatting method consistently outperforms others across diverse scenes, spatial regions, and temporal frames. This is not merely stated but empirically demonstrated in Fig. 1, which shows scene-level variations (a), spatial-level inconsistencies (b), and temporal fluctuations (c) across multiple methods. This problem formulation is significant because it addresses a fundamental limitation in current approaches that had not been systematically analyzed before.\n\n2. **First successful application of MoE to dynamic Gaussian splatting**: The paper introduces MoE-GS as the first framework to apply Mixture-of-Experts architecture specifically to dynamic Gaussian splatting. Unlike traditional MoE applications focused on computational efficiency, this work uses MoE to enhance representational capacity by combining heterogeneous deformation priors. The authors clearly distinguish this purpose from sparsity-oriented MoE architectures in LLMs (Sec. 1), making a novel contribution to the field.\n\n3. **Innovative Volume-aware Pixel Router**: The router architecture (Fig. 3) solves a key technical challenge by projecting Gaussian-level weights into pixel space through differentiable weight splatting. This approach overcomes the limitations of both pure pixel routers (which ignore volumetric structure) and volume routers (which face optimization difficulties), as demonstrated in Table 4 where the Volume-aware Pixel Router achieves 33.23 PSNR compared to 31.12 for Pixel Router and 32.05 for Volume Router.\n\n4. **Comprehensive analysis of expert specialization**: The paper provides insightful analysis in Appendix F showing how different experts (4DGaussians, E-D3DGS, Ex4DGS, STG) exhibit fundamentally different motion behaviors due to their distinct inductive biases. For example, 4DGaussians produces smooth, regular trajectories while E-D3DGS yields directionally consistent high-velocity flows. This analysis validates the core motivation for the MoE approach and provides valuable insights for the community.\n\n5. **Practical distillation strategy with architectural compatibility**: The knowledge distillation approach (Sec. 3.4) transfers MoE performance to individual experts without requiring architectural changes, enabling efficient deployment. Table 7 demonstrates consistent improvements across all expert types (e.g., 33.67 PSNR vs. 32.88 for E-D3DGS), making the approach practically valuable beyond just research contribution."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Lack of comparison with simpler ensemble approaches**: The paper demonstrates MoE-GS's superiority over individual experts but fails to compare against a simple ensemble baseline (e.g., averaging predictions from multiple experts without learned routing). Without this comparison, it's unclear whether the complex Volume-aware Pixel Router provides meaningful gains beyond simply using multiple models. The authors should include such comparisons to validate that their routing mechanism genuinely contributes to performance rather than just benefiting from model averaging. For instance, a simple ensemble of the four experts with equal weights would serve as an informative baseline to isolate the router's contribution.\n\n2. **Insufficient failure case analysis**: While the paper shows many successful qualitative results (Figs. 4, 7-9), it lacks systematic analysis of where MoE-GS still fails or underperforms compared to individual experts. The authors should include a dedicated section identifying failure modes with specific examples (e.g., particular motion types or scene configurations where the router makes suboptimal decisions), along with analysis of why these failures occur. This would strengthen the paper by revealing the approach's limitations and guiding future improvements.\n\n3. **Limited exploration of expert diversity**: The paper uses a fixed set of four experts (4DGaussians, E-D3DGS, STG, Ex4DGS) but doesn't investigate whether other combinations might yield better results or if performance is sensitive to the specific experts chosen. The authors should conduct experiments with different expert combinations (e.g., replacing one expert with another recent method) to demonstrate the framework's generality and identify which expert characteristics contribute most to overall performance. This would strengthen the claim that MoE-GS is a general framework rather than one that only works with this specific expert set.\n\n4. **Inadequate scalability analysis with increasing experts**: While the paper shows results for N=2, 3, and 4 experts (Tables 1-2), it lacks a thorough analysis of how performance and efficiency scale with larger numbers of experts. The authors should explore the performance-efficiency trade-offs with N=5+ experts to establish practical limits of the approach and provide guidance on optimal expert counts for different applications. The current distillation strategy (Section 3.4) appears designed for larger N, but the paper doesn't validate whether this approach actually enables effective scaling beyond N=4."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions\n\n1. **Comparison with simple ensemble baselines**: The paper demonstrates MoE-GS outperforms individual experts but doesn't compare against a simple ensemble approach (e.g., averaging predictions from multiple experts without learned routing). This is critical because without this comparison, it's unclear whether the complex Volume-aware Pixel Router provides meaningful gains beyond simply using multiple models. Could you provide results comparing MoE-GS against such a baseline to validate that your routing mechanism adds value beyond mere model combination? This would significantly strengthen your claim that the router architecture is essential to the performance gains.\n\n2. **Expert selection methodology**: While the paper tests fixed combinations of experts (N=2,3,4), it doesn't explain the rationale for selecting these specific models (Ex4DGS, STG, E-D3DGS, 4DGaussians) beyond their representing different deformation families. Could you elaborate on whether there's an optimal way to select complementary experts? For instance, would randomly selected experts from the same family work as well, or is there evidence that these particular models were chosen for specific complementary strengths? Understanding this would help assess the generalizability of your approach.\n\n3. **Failure mode analysis**: The paper shows strong quantitative results but lacks a detailed analysis of failure cases. Could you provide specific examples where MoE-GS still struggles (e.g., particular motion types, scene complexities) and discuss why these cases remain challenging? The qualitative results in Figure 4 show strong performance, but understanding limitations would help contextualize the approach's practical applicability.\n\n4. **Router interpretability and learned patterns**: The paper mentions the router can be lifted to Gaussian space (Appendix E), but could you provide more insight into what the router has learned? For example, do certain scene properties (motion speed, object type, lighting conditions) consistently correlate with expert selection? Visualizing these patterns would strengthen the claim that the router makes meaningful, interpretable decisions rather than arbitrary blending.\n\n## Constructive Suggestions\n\n1. **Extended ablation on expert diversity**: Consider adding an ablation studying how performance changes when using experts from the same family versus diverse families. This would clarify whether the gains come from model diversity specifically or just from increased capacity.\n\n2. **Practical guidance for deployment scenarios**: The paper presents two efficiency strategies (single-pass rendering with pruning and distillation), but doesn't provide clear guidance on when to use which approach. Could you add a decision framework that helps practitioners choose between these strategies based on their specific constraints (e.g., \"use distillation when N≥4 and real-time inference is required, but use pruning when N≤3 and quality is paramount\")?\n\n3. **Additional timing metrics**: While Table 3 shows FPS and memory usage, it would be valuable to see the actual wall-clock training time for the full MoE-GS pipeline compared to single experts, especially considering the two-stage training process. This would help practitioners assess the practical deployment cost."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "MOE-GS: MIXTURE OF EXPERTS FOR DYNAMIC GAUSSIAN SPLATTING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORKS",
+    "2.1 DYNAMIC NOVEL VIEW SYNTHESIS",
+    "2.2 MIXTURE OF EXPERTS",
+    "3 METHOD",
+    "3.1 PRELIMINARY",
+    "Pixel Router",
+    "Volume-aware Pixel Router",
+    "3.2 MIXTURE OF EXPERTS FOR DYNAMIC GAUSSIAN SPLATTING",
+    "3.3 RENDERING AND PRUNING FOR EFFICIENCY",
+    "3.4 DISTILLATION-BASED EXPERT TRAINING",
+    "4 EXPERIMENTS",
+    "4.1 EXPERIMENTAL SETUP",
+    "4.2 RESULTS ON MOE-GS",
+    "4.3 DISTILLATION-BASED EXPERT TRAINING",
+    "5 CONCLUSION",
+    "648 A APPENDIX",
+    "650 651 B OVERVIEW",
+    "C.2 STAGE 1: EXPERT TRAINING",
+    "B.1 REFERENCED IN THE MAIN PAPER",
+    "C IMPLEMENTATION DETAILS",
+    "C.1 TWO-STAGE TRAINING STRATEGY",
+    "C.3 STAGE 2: ROUTER TRAINING",
+    "C.4 SINGLE-PASS MULTI-EXPERT RENDERING",
+    "D ADDITIONAL QUANTITATIVE AND QUALITATIVE RESULTS",
+    "D.1 QUANTITATIVE RESULTS",
+    "D.2 QUALITATIVE RESULTS",
+    "E GAUSSIAN-LEVEL INTERPRETATION AND GEOMETRY EVALUATION",
+    "E.1 PER-GAUSSIAN CONTRIBUTIONS AND RESPONSIBILITIES",
+    "E.2 POST-HOC GAUSSIAN FUSION USING LIFTING WEIGHTS",
+    "1071 E.3 MULTI-VIEW DEPTH CONSISTENCY EVALUATION",
+    "F ANALYSIS OF EXPERT-SPECIFIC MOTION BEHAVIOR",
+    "G BEST-OF-N RETRAINING VS. MOE-GS: STRUCTURAL, NOT STATISTICAL, GAINS",
+    "H ABLATION ON DISTILLATION WEIGHTING STRATEGIES"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

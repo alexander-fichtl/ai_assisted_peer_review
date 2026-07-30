@@ -1,0 +1,6 @@
+ICLR Q8 (Ethics) answer length in characters
+
+model       n    min    p25   median    p75    max    mean
+gpt        50     23    351      450    554   1189     455
+qwen       50     23    894     1089   1273   1747     992
+llama      50     23     23       23     23   3060     253

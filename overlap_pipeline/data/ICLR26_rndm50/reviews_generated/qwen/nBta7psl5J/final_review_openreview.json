@@ -1,0 +1,107 @@
+{
+  "pdfname": "nBta7psl5J",
+  "content": {
+    "summary": {
+      "value": "This paper introduces \"competing attacks\" as a new threat model for Retrieval-Augmented Generation (RAG) systems, where multiple adversaries simultaneously attempt to manipulate the same query toward different target outcomes. While prior research has focused exclusively on single-attacker scenarios, the authors demonstrate that high-value or high-visibility queries in practice attract multiple stakeholders with conflicting objectives, such as political parties competing during elections. Through extensive experiments with seven poisoning methods, they reveal two critical findings: performance inversion (where weaker single-attacker methods outperform stronger ones under competition) and performance degradation (where top methods significantly lose effectiveness when multiple attackers compete). The authors propose competitive effectiveness metrics, including a competitive coefficient based on the Bradley-Terry model, to better evaluate attack methods in multi-adversary scenarios. They introduce PoisonArena, a standardized benchmark for evaluating poisoning attacks and defenses under realistic competitive conditions. The work demonstrates that traditional metrics like attack success rate (ASR) and F1 score fail to capture method effectiveness in competitive settings, highlighting the need for multi-dimensional evaluation frameworks that account for adversarial dynamics. This research provides a more realistic assessment of security vulnerabilities in RAG systems and establishes a foundation for developing more robust defenses against multi-adversary threats."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Novel threat model with realistic grounding**: The paper introduces \"competing attacks\" as a new threat model that challenges the single-attacker assumption prevalent in prior work. Unlike generic \"new problem\" claims, this work demonstrates through concrete examples (Section 5.1 and Appendix G) how high-value queries naturally attract multiple stakeholders with conflicting objectives - such as political parties during elections, competing e-commerce sellers, or short-and-distort vs. pump-and-dump teams in financial markets. This isn't just theoretical; the authors document real-world instances where these competing attacks already occur.\n\n2. **Competitive coefficient metric**: The paper develops a mathematically rigorous metric using the Bradley-Terry model to quantify relative attacker strength in competitive scenarios. This addresses a critical limitation of conventional metrics like ASR that fail to capture relative advantage when multiple attackers target the same query. The metric's implementation through randomized simulation rounds (Figure 4) provides a novel way to assess attack effectiveness under realistic adversarial pressure.\n\n3. **Empirical discovery of performance inversion**: The authors uncover a counterintuitive phenomenon where methods like CorpusPoison, which show moderate single-attacker performance (ASR=0.414), consistently outperform stronger methods like PoisonedRAG(white) (ASR=0.842) in multi-attacker settings. This finding (Figure 2) reveals that retrieval robustness under interference is a distinct capability from raw attack strength - a critical insight previously obscured by single-attacker evaluations.\n\n4. **Comprehensive benchmark design**: PoisonArena evaluates attack methods across five dimensions (s-ASR, m-ASR, s-F1, m-F1, and competitive coefficient) rather than relying on single metrics. This multi-faceted approach exposes limitations in conventional evaluation frameworks, as demonstrated by Figure 5 showing that single-attacker ASR has limited predictive power for competitive scenarios.\n\n5. **Rigorous validation across diverse conditions**: The paper demonstrates the robustness of findings through extensive testing across multiple dimensions: varying numbers of attackers (2-4), different LLMs (GPT-3.5 to GPT-4o), multilingual corpora (mMARCO), defense mechanisms (InstructRAG, RobustRAG), and knowledge-based attack scenarios. This comprehensive validation ensures the findings aren't artifacts of specific experimental choices."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Lack of dynamic attacker adaptation modeling**: The paper assumes attackers operate independently without knowledge of each other's strategies (Section A.3), but in reality, attackers would likely adapt to competitors' tactics. For instance, in political campaigns (Appendix G), opposing teams actively monitor and respond to each other's strategies. The authors could strengthen their threat model by incorporating sequential game theory elements where attackers learn from previous rounds, making the simulation more reflective of real-world adversarial dynamics. This would provide more actionable insights for developing robust defenses against evolving attack strategies.\n\n2. **Limited exploration of defenses specifically designed for competing attacks**: While Section 5.2 tests existing defenses (InstructRAG, RobustRAG, TrustRAG), these were developed for single-attacker scenarios. The paper misses an opportunity to propose and evaluate novel defense mechanisms specifically designed for competing attacks. For example, the authors could develop a \"conflict resolution\" module that identifies contradictory information in retrieved documents and either flags the query as contentious or synthesizes a balanced response. The current approach of applying single-attacker defenses to competing scenarios (Table 3) is insufficient to address the unique challenges of multiple conflicting attacks.\n\n3. **Insufficient analysis of practical attack constraints**: The paper assumes attackers can freely inject poisoned documents into knowledge bases (Section A.3), but real-world systems like Wikipedia have editorial controls that would make this difficult. The authors should conduct a more nuanced analysis of how different knowledge base architectures (open vs. closed, moderated vs. unmoderated) affect the feasibility of competing attacks. Without this, the threat model may overestimate attack viability in practical systems. For example, they could model the cost of bypassing moderation systems when multiple attackers are simultaneously attempting to inject content.\n\n4. **Lack of exploration of asymmetric attacker capabilities**: The paper assumes all attackers have equal resources (Section 3.3), but in reality, attackers vary significantly in resources (e.g., nation-states vs. individuals). This oversight limits the model's realism, as resource asymmetry would dramatically alter competitive dynamics. The authors could enhance their framework by introducing resource constraints as a parameter, showing how well-resourced attackers might dominate even if their methods are less efficient, which would provide more actionable insights for system designers.\n\n5. **Inadequate analysis of the computational cost of the competitive coefficient**: While the paper introduces the competitive coefficient as a key metric, it doesn't sufficiently analyze how many simulation rounds are needed for convergence or the computational resources required. Figure 4 shows convergence but doesn't quantify the trade-off between simulation depth and accuracy. The authors should provide guidelines for practitioners on how to balance simulation thoroughness with computational efficiency when using PoisonArena, which would make their framework more practical for real-world evaluation."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Clarification Requests\n\n1. **Simulation Convergence Sensitivity**: In Figure 4, the competitive coefficients and win rates appear to stabilize after approximately 2,000 rounds. Could you provide analysis of how sensitive the final rankings are to the number of simulation rounds? Specifically, would using 500 or 1,000 rounds still produce reliable rankings, or is the 4,000-round simulation necessary? Understanding this would help determine the computational feasibility of applying PoisonArena in practical evaluation scenarios.\n\n2. **Counterintuitive Defense Result**: In Section 5.2, you note that \"InstructRAG occasionally exhibits a slightly higher attack success rate against several adversarial methods.\" Could you elaborate on why this counterintuitive phenomenon occurs? The paper suggests it may be because \"if the adversarial method produces a large number of retrieved poisoned documents with sufficiently strong misleading content, the attack strategy essentially fails,\" but this seems contradictory. A more detailed explanation of this mechanism would help understand the limitations of current defense approaches.\n\n3. **Trigger vs. Content Optimization Balance**: In Section 5.3, you conclude that \"attack success still hinges on the retrieval of poisoned documents.\" However, Table 9 shows that when all methods are guaranteed retrieval (by injecting one document directly into results), GASLITE still dominates. Could you clarify whether this suggests that both trigger optimization AND content quality matter, and if so, under what conditions content quality becomes the dominant factor? This would help defenders prioritize their resources more effectively.\n\n## Suggestions for Improvement\n\n4. **Real-World Validation Pathway**: While Appendix G provides case studies of potential real-world competing attacks, could you outline a concrete methodology for validating your simulation results against actual field data? For example, what metrics or experimental designs could be used if you gained access to query logs from production RAG systems? This would strengthen the connection between your theoretical framework and practical security concerns.\n\n5. **Ethical Framework for PoisonArena**: Your ethical statement mentions avoiding release of \"any code or content that directly enables malicious exploitation,\" but could you elaborate on the specific safeguards you plan to implement when sharing PoisonArena? For instance, will you include rate limiting, require institutional approval, or implement other measures to prevent misuse while still enabling legitimate security research? Understanding your approach to responsible disclosure would address concerns about potential misuse of your benchmark.\n\n6. **Dynamic Adaptation Extension**: While I understand your threat model assumes attackers operate without knowledge of each other (Section A.3), could you comment on how your framework might be extended to model sequential adaptation where attackers observe and respond to competitors' tactics? This would help bridge the gap between your current model and the dynamic nature of real-world adversarial scenarios described in your case studies.\n\nThese questions would significantly enhance my understanding of your work and help determine whether the limitations I've identified are fundamental to the approach or could be addressed through methodological refinements. Responses to these points would be particularly valuable during the rebuttal phase."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "UNCOVERING COMPETING POISONING ATTACKS IN RETRIEVAL-AUGMENTED GENERATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCE",
+    "2 THREAT MODEL",
+    "3 EVALUATING FROM A COMPETITIVE PERSPECTIVE",
+    "3.1 M-ASR AND M-F1",
+    "3.2 COMPETITIVE COEFFICIENT",
+    "3.3 ESTIMATING COMPETITIVE COEFFICIENTS VIA SIMULATION",
+    "3.4 OPTIMIZATION AND CONVERGENCE",
+    "Update the θ :",
+    "4 EXPERIMENTS",
+    "4.1 EXPERIMENTAL SETUP",
+    "4.2 SINGLE-ATTACKER SETTING",
+    "4.3 MULTI-ATTACKER SETTING",
+    "5 DISCUSSION",
+    "5.1 WHY COMPETING ATTACKS MATTER: DO THEY REFLECT REAL-WORLD SCENARIOS?",
+    "5.2 DEFENSE",
+    "5.3 DYNAMIC ATTACK ANALYSIS",
+    "5.4 INFLUENCE OF MODELS, CORPUS AND HYPERPARAMETERS",
+    "5.5 ATTACK TAX: EVALUATION FROM MULTIPLE PERSPECTIVES",
+    "6 CONCLUSION",
+    "540 REFERENCES",
+    "A PROBLEM FORMULATION",
+    "A.1 RETRIEVAL-AUGMENTED GENERATION (RAG)",
+    "A.2 POISONING ATTACK",
+    "Prompt for Incorrect Answers Generation",
+    "### Example:",
+    "### Input:",
+    "### Output Format:",
+    "B.2 LLMS AND RETRIEVER",
+    "Prompt for Incorrect Answers Generation",
+    "### TASK:",
+    "### Example:",
+    "### Input:",
+    "### Output Format:",
+    "B.4 EVALUATION",
+    "B.4.1 METRICS",
+    "2 · Precision · Recall",
+    "1019 1020 B.4.2 JUDGE",
+    "1063 B.5 IMPLEMENT DETAILS",
+    "C.3 QUERY-BASED ATTACK AND KNOWLEDGE-BASED ATTACK",
+    "Prompt for Inference",
+    "C DETAILED EXPERIMENTS RESULTS",
+    "C.1 SINGLE-ATTACKER RESULTS",
+    "C.2 MULTI-ATTACKER RESULTS",
+    "Prompt for Paraphrase Query",
+    "### Task:",
+    "### Example:",
+    "### Input:",
+    "### Output Format:",
+    "C.4 DEFENSE",
+    "C.5 ATTACK ORDER",
+    "1454 C.6 TRIGGER OR CONTENT?",
+    "C.7 HYPERPARAMETER INFLUENCE",
+    "C.8 TESTING ON BROADER MODELS",
+    "C.9 TESTING ON OTHER LANGUAGES CORPORA",
+    "D ATTACK TAX",
+    "5. Local services/Maps",
+    "6. Music streaming",
+    "7. Public-health info",
+    "1884 H THE USE OF LARGE LANGUAGE MODELS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

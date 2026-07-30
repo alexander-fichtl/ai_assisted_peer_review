@@ -1,0 +1,78 @@
+{
+  "pdfname": "KJ0ktHAuds",
+  "content": {
+    "summary": {
+      "value": "The paper introduces \"Gaze on the Prize,\" a framework that enhances visual reinforcement learning by incorporating a learnable foveal attention mechanism guided by return-differentiated contrastive learning. It proposes a parametric attention model inspired by human gaze that focuses on task-relevant visual regions using just five parameters to represent attention as a Gaussian region. The key innovation is using return differences to train the attention mechanism through contrastive learning, where similar states with different outcomes provide the signal for what matters most. This approach is designed as a plug-in enhancement compatible with any visual RL algorithm without requiring modifications to the underlying algorithm or hyperparameters. The authors demonstrate significant improvements in sample efficiency (up to 2.52×) across multiple robotic manipulation tasks in the ManiSkill3 benchmark, showing the method's effectiveness in both clean and cluttered environments. The framework successfully solves challenging tasks that baseline methods fail to learn, while also providing explainable attention visualizations. The approach works with both on-policy (PPO) and off-policy (SAC) RL algorithms, demonstrating broad applicability. The authors provide extensive ablation studies validating the importance of both the foveal attention architecture and the return-guided contrastive learning component."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. **Novel return-guided contrastive learning mechanism**: The paper's core innovation of using return differences to train attention (rather than relying on external supervision or arbitrary augmentations) is particularly strong. The approach identifies similar visual states with different outcomes and trains the attention mechanism to focus on the distinguishing features that determine success versus failure. This is clearly demonstrated in Figure 1c where the contrastive loss explicitly guides the attention to \"distinguish features by reward\" (p. 159-161).\n\n2. **Effective parametric foveal attention with minimal parameters**: The 5-parameter Gaussian attention model provides a powerful inductive bias for manipulation tasks while maintaining explainability. Unlike patch attention which produces \"scattered focus across multiple regions\" (Figure 3), the foveal attention maintains \"consistent, concentrated focus\" that aligns better with human-like visual processing (p. 345-348). This architectural choice is validated across six tasks where foveal attention consistently outperforms patch attention (Figure 2 top row).\n\n3. **Compelling evidence of handling visual complexity**: The method demonstrates exceptional value in cluttered environments where it solves tasks that baseline methods cannot (e.g., PushTClutter in Figure 2 bottom row). The paper provides concrete evidence that \"contrastive learning provides the necessary guidance to find critical cues from the cluttered environment\" (p. 295-298), addressing a significant real-world challenge in robotic manipulation.\n\n4. **Cross-algorithm compatibility with consistent improvements**: The approach works effectively with both on-policy (PPO) and off-policy (SAC) methods without modifying their core structure or hyperparameters. Figure 4 shows consistent improvements across five ManiSkill3 tasks with SAC, demonstrating the framework's generality beyond a single RL paradigm (p. 311-314).\n\n5. **Well-designed experimental validation**: The systematic research questions (RQ1-RQ5) effectively isolate different aspects of the contribution. The ablation on buffer size (Figure 5) reveals important insights about the trade-off between temporal diversity and staleness in contrastive learning, while the throughput analysis (Table 1) demonstrates that \"the resulting gains in sample efficiency outweighs [computational] reduction in throughput\" (p. 482-486)."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Insufficient comparison with alternative attention mechanisms**: The paper only compares foveal attention with patch attention, but lacks comparison with other structured attention approaches that could provide similar benefits. For instance, spatial transformers (Jaderberg et al., 2015) or multi-head attention variants with constrained spatial focus would provide a more comprehensive understanding of what makes the Gaussian parameterization effective. The authors could strengthen their claim about the architectural advantage by ablation studies comparing their 5-parameter Gaussian with alternative parameterizations having similar complexity but different structure (e.g., multiple fixed-size regions or grid-based attention).\n\n2. **Inadequate benchmarking against specialized attention learning methods**: While the paper compares with CURL (a representation learning method), it fails to compare with methods specifically designed for attention learning in RL such as \"Look where you look!\" (Bertoin et al., 2022) which uses saliency-guided information processing, or \"Active vision in action\" (Xiong et al., 2025) that learns active perception from human demonstrations. These would provide more meaningful benchmarks for the attention learning component rather than contrasting with a method designed for global representation learning.\n\n3. **Lack of human gaze validation**: Despite being inspired by human visual foveation, the paper doesn't validate whether the learned attention patterns align with human gaze behavior. The ManiSkill3 benchmark could potentially include human demonstration data (as suggested in section 2.1), which would allow direct comparison between the agent's learned attention and human gaze patterns. This validation would strengthen the biological plausibility claim and provide evidence that the method is truly mimicking human-like selective attention.\n\n4. **Limited evaluation on complex visual challenges**: The cluttered environments (RQ3) add static distractors but don't test the method against more realistic visual challenges like dynamic occlusions, significant lighting changes, or distractors that actively move. The authors could enhance their evaluation by testing on environments with temporal visual disruptions or by incorporating the recent \"Visual Disturbance\" benchmark (Kim et al., 2024) which specifically evaluates robustness to visual distractions in manipulation tasks. This would better demonstrate the method's applicability to real-world scenarios where visual conditions are constantly changing."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **RCRL Comparison Clarification**: While the paper mentions RCRL (Liu et al., 2021) in Section 3.3.2 as using return-based contrastive learning, it doesn't include experimental comparisons with this method. Since both approaches leverage return information but with different objectives (RCRL for representation learning vs. your attention-focused approach), could you clarify how these methods fundamentally differ in their inductive biases and whether they might be complementary? A direct comparison would strengthen the positioning of your contribution.\n\n2. **Sparse Reward Scenarios**: The paper acknowledges that your method requires return variation, which is satisfied in the shaped-reward ManiSkill3 tasks but becomes problematic in sparse-reward settings. Could you elaborate on how you would adapt the method for sparse-reward scenarios, or provide evidence that existing techniques like Eureka (Ma et al., 2023) for automatic reward shaping would sufficiently address this limitation when combined with your approach?\n\n3. **Buffer Size Dynamics**: The ablation in Figure 5 shows that a 200k buffer performs worse than a 100k buffer, which you attribute to \"stale representations.\" Could you provide more insight into the temporal dynamics of representation drift in your buffer? Understanding how quickly representations become stale would help determine optimal buffer sizing for different RL algorithms and task complexities.\n\n4. **Vision Backbone Exclusion**: Section 3.3.2 mentions that contrastive learning is applied only to the attention module, with vision features stored \"detached from the computation graph.\" Could you explain why you chose not to apply contrastive learning to the vision backbone as well? Have you experimented with applying your contrastive signal to both components, and if so, what were the trade-offs in performance versus computational cost?\n\n5. **Unsolvable Baseline Tasks**: The abstract claims your method \"can solve challenging tasks that the baseline fails to learn,\" but the results section doesn't clearly identify which specific tasks were completely unsolvable by the baseline. Could you specify which tasks the baseline couldn't solve (beyond just being less sample-efficient) and explain why your method succeeds where the baseline fails? This would strengthen the impact claim of your contribution.\n\n6. **Multi-fovea Extension Feasibility**: Section 6 mentions that single-fovea limitation as a future direction. Could you provide preliminary evidence or theoretical reasoning about how a multi-fovea extension might perform on tasks requiring simultaneous attention to multiple regions (e.g., bimanual manipulation)? Understanding the potential scalability of your approach to more complex attention patterns would be valuable."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "GAZE ON THE PRIZE: SHAPING VISUAL ATTENTION WITH RETURN-GUIDED CONTRASTIVE LEARNING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORKS",
+    "2.1 GAZE IN COMPUTER VISION AND ROBOTICS",
+    "2.2 CONTRASTIVE LEARNING IN RL",
+    "3 GAZE ON THE PRIZE",
+    "3.1 OVERVIEW",
+    "3.2 GAZE MODULE",
+    "3.3 CONTRASTIVE ATTENTION LEARNING",
+    "3.3.1 CONTRASTIVE ATTENTION LOSS",
+    "3.3.2 CONTRASTIVE BUFFER AND RETURN-GUIDED TRIPLET MINING",
+    "4 EXPERIMENTS",
+    "4.1 RESEARCH QUESTIONS",
+    "4.2 EXPERIMENTAL SETUP",
+    "5 RESULTS",
+    "5.2 DOES RETURN-GUIDED CONTRASTIVE LEARNING ENHANCE FOVEAL ATTENTION? (RQ2)",
+    "5.3 DOES RETURN-GUIDED CONTRASTIVE LEARNING HELP THE AGENT FOCUS ON TASK-RELEVANT REGIONS IN THE PRESENCE OF DISTRACTOR OBJECTS? (RQ3)",
+    "5.4 IS OUR APPROACH APPLICABLE ACROSS DIFFERENT RL ALGORITHMS? (RQ4)",
+    "5.5 HOW DOES OUR APPROACH COMPARE AGAINST EXISTING CONTRASTIVE REPRESENTATION LEARNING BASELINES? (RQ5)",
+    "5.6 ABLATIONS",
+    "6 LIMITATIONS AND FUTURE WORK",
+    "7 CONCLUSION",
+    "A TASK/ENVIRONMENT DETAILS",
+    "A.1 TASK DESCRIPTIONS",
+    "A.2 OBSERVATION AND ACTION SPACES",
+    "A.3 REWARD STRUCTURE",
+    "A.4 CLUTTERED ENVIRONMENTS",
+    "B COMPUTE OVERHEAD ANALYSIS",
+    "C CURL IMPLEMENTATION DETAILS",
+    "D HYPERPARAMETERS",
+    "E ADDITIONAL SUPPLEMENTARY MATERIALS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

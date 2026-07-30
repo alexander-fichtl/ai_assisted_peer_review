@@ -1,0 +1,83 @@
+{
+  "pdfname": "dOxOX4GF1k",
+  "content": {
+    "summary": {
+      "value": "This paper identifies the robustness-security paradox in deep learning-based post-processing watermarking systems, where efforts to enhance robustness against distortions inadvertently increase information leakage through redundant watermark patterns. The authors propose DAPAO, a novel attack framework that leverages multi-channel feature learning with pre-trained vision models to extract watermark patterns from just a single watermarked image in a no-box setting (requiring no prior knowledge of the watermarking system). DAPAO enables both watermark removal (detection evasion) and watermark forgery attacks by identifying leakage features through clustering and optimization. The framework significantly outperforms state-of-the-art methods, achieving 52.9% higher success rates in watermark removal and 9.6% better forgery accuracy while preserving visual quality across multiple watermarking schemes including PIMoG, StegaStamp, and HiDDeN. The work demonstrates that current robust watermarking approaches are vulnerable due to the inherent trade-off between robustness and security, providing critical insights for future watermark design. The authors validate their approach on COCO and DIV2K datasets, showing consistent effectiveness against diverse watermarking methods. This research reveals how the pursuit of distortion resistance creates exploitable security vulnerabilities that can be leveraged with minimal resources."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. **Novel conceptual framework**: The paper introduces the \"robustness-security paradox\" as a fundamental theoretical insight, demonstrating how robustness-enhancing mechanisms in watermarking systems (distortion layers) inadvertently create security vulnerabilities through information leakage. This reframes the field's understanding of watermark security trade-offs, moving beyond the traditional robustness-invisibility dichotomy to reveal an unexplored security dimension.\n\n2. **Practical attack innovation**: The DAPAO framework represents a significant methodological advance by enabling both watermark removal and forgery with just a single watermarked image in a strict no-box setting (zero system access), overcoming critical limitations of prior work that required extensive training data, detector access, or encoder knowledge (Section 1, \"Current watermark security research exhibits an asymmetric focus...\").\n\n3. **Feature leakage exploitation mechanism**: The paper's multi-channel feature learning approach to extract watermark patterns from pre-trained vision models (Figure 5) is technically innovative, leveraging the observation that \"leakage features occupy only a small fraction of the feature space and can therefore be modeled as statistical outliers\" (Section 4.1), allowing precise localization without system knowledge.\n\n4. **Compelling experimental validation of the paradox**: The adaptive defense study (Table 6) provides direct empirical evidence of the trade-off, showing that \"incorporating adaptive design into the HiDDeN model... reduced the attack success rate by 18%, but it also compromised the watermark's robustness against distortions, with the JPEG interference success rate increasing by 24%\" (Section 5.3), substantiating the core theoretical claim.\n\n5. **High real-world relevance**: The work addresses an urgent practical concern as major AI providers (OpenAI, Alphabet, Meta) implement watermarking for AIGC authentication while generative tools become increasingly democratized, with the authors noting that \"these attacks significantly challenge content authentication integrity\" (Section 1) in contexts where watermarking is becoming standard practice."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Insufficient analysis of in-processing watermarking vulnerabilities**: While the paper acknowledges limited effectiveness against in-processing watermarks like Tree-Ring (Table 5 shows only 12% success rate), it fails to deeply investigate why the approach fails or how to adapt the framework. Given that major platforms like Stable Diffusion use in-processing watermarking (Rombach et al., 2022), this represents a significant gap in the attack's practical applicability. The authors should conduct a systematic analysis of why leakage patterns differ in in-processing methods and explore modifications to DAPAO that could target these schemes, perhaps by analyzing how watermark information is integrated during the generation process rather than as a post-hoc operation.\n\n2. **Superficial defense exploration**: The adaptive defense experiment (Table 6) demonstrates the trade-off but doesn't investigate whether more sophisticated defense strategies could mitigate leakage without severe robustness penalties. The 24% increase in JPEG vulnerability suggests the defense is suboptimal. The authors should explore alternative approaches such as: (1) designing watermarking architectures that deliberately randomize leakage patterns while maintaining robustness, (2) incorporating adversarial training specifically targeting feature leakage, or (3) developing watermarking methods that dynamically adjust embedding based on content complexity to minimize consistent leakage patterns.\n\n3. **Lack of watermark capacity analysis**: The paper tests methods with varying capacities (32 bits for RivaGAN vs. 100 bits for StegaStamp) but doesn't investigate how capacity affects vulnerability. Since the core hypothesis links redundancy to leakage, a systematic study correlating watermark capacity with attack success rates would strengthen the theoretical foundation. For instance, does doubling watermark capacity proportionally increase leakage vulnerability? This analysis would provide concrete guidance for watermark designers on security-capacity trade-offs.\n\n4. **Unsubstantiated threat model assumptions**: The claim of operating in a \"strict no-box setting\" (Section 4.2) is overreaching since the attack requires knowing which watermarking scheme is being used (e.g., PIMoG vs. StegaStamp parameters differ). The paper doesn't address how an attacker would identify the watermarking scheme from a single image, which is non-trivial. The authors should either: (1) develop a scheme identification component within DAPAO, or (2) clarify that the threat model assumes the attacker has some knowledge of the target watermarking method, which is more realistic for targeted attacks against specific platforms."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions for Rebuttal\n\n1. **In-processing watermarking limitations**: Table 5 shows only 12% success rate against Tree-Ring (Stable Diffusion's watermark). Could you elaborate on why DAPAO fails against in-processing watermarks? Specifically, does the lack of \"consistent patterns across diverse image content\" (Sec 4.1) prevent leakage pattern identification, or is it due to stronger semantic coupling? Understanding this could help determine if theoretical modifications could extend your framework's applicability.\n\n2. **Defense mechanisms beyond trade-offs**: Your adaptive defense (Table 6) demonstrates the robustness-security trade-off but reduces JPEG resistance by 24%. Have you explored more sophisticated defense strategies that might mitigate this trade-off? For example, could watermarking systems incorporate multi-objective optimization that simultaneously maximizes distortion robustness while minimizing leakage patterns?\n\n3. **Dynamic watermarking scenarios**: Your attack assumes static watermark patterns. How would DAPAO perform against dynamic watermarking systems where embedding patterns change per image or session (e.g., using cryptographic keys)? Have you tested scenarios where watermarks incorporate temporal elements or per-user identifiers?\n\n4. **Semantic coupling identification**: Table 13 shows RivaGAN requires specific semantic alignment. Could you provide more concrete architectural indicators that would help identify watermarking systems with strong semantic coupling? This would help practitioners assess vulnerability without requiring attack testing.\n\n5. **Multiple image utilization**: While your method works with one image, how does performance scale with additional watermarked images? Is there a theoretical limit to information gain from multiple samples, or could this significantly improve attack effectiveness against systems with weaker leakage patterns?\n\n## Constructive Suggestions\n\n1. **Practical impact assessment**: Consider adding a discussion on how your findings might translate to real-world watermarking deployments. For instance, would attackers realistically have access to watermarked images from the same system that would enable this attack? This would strengthen the practical relevance assessment.\n\n2. **Defense implementation details**: Expand on the adaptive defense in Appendix A.1.2 with more specific architectural recommendations for watermarking developers. A concrete framework for balancing robustness and security would significantly increase the paper's practical value.\n\n3. **Theoretical foundation enhancement**: While Figure 4 provides empirical evidence of consistent leakage patterns, consider adding a brief theoretical analysis of why certain watermarking architectures create the specific leakage patterns your method exploits. This would strengthen the conceptual contribution.\n\n4. **Ethical deployment guidance**: Given the potential for misuse, consider adding specific recommendations for watermarking developers on how to implement your findings responsibly. This would complement your ethics statement with actionable guidance.\n\nThese questions focus on areas where author responses could substantially improve the paper's impact and address limitations without requiring major new experiments. They target the practical applicability of your findings and potential paths forward for more secure watermarking systems."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "THE ROBUSTNESS-SECURITY PARADOX: CHANNELAWARE FEATURE LEARNING FOR ADVERSARIAL WATERMARK EXPLOITATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 BACKGROUND",
+    "2.1 IMAGE WATERMARKING",
+    "2.2 WATERMARK REMOVAL AND WATERMARK FORGERY",
+    "3 PROBLEM FORMULATION",
+    "4 DAPAO ATTACKS",
+    "4.1 MOTIVATION AND CORE HYPOTHESIS",
+    "4.2 REMOVAL AND FORGERY ATTACKS",
+    "5 EVALUATION",
+    "5.1 SETUP",
+    "5.2 RESULTS AND ANALYSIS",
+    "5.3 ABLATION STUDY AND TRADE-OFF ANALYSIS",
+    "6 RELATED WORK",
+    "6.1 WATERMARK REMOVAL",
+    "6.2 WATERMARK FORGERY",
+    "7 CONCLUSION",
+    "8 REPRODUCIBILTY STATEMENT",
+    "9 ETHICS STATEMENT",
+    "A APPENDIX",
+    "A.1 DISCUSSION AND LIMITATIONS",
+    "A.1.1 ATTACK EFFECTIVENESS AGAINST IN-PROCESSING WATERMARKS",
+    "A.1.2 DEFENSES AGAINST DAPAO",
+    "A.2 ABLATION AND ANALYSIS",
+    "A.3 ADDITIONAL EXPERIMENTAL RESULTS",
+    "A.3.1 DETECTION EVASION ON DIV2K",
+    "A.3.2 WATERMARK REMOVAL AGAINST RELATED WORKS",
+    "A.3.3 WATERMARK FORGERY AGAINST RELATED WORKS",
+    "A.3.4 ABLATION STUDY FOR WATERMARK REMOVAL",
+    "A.3.5 ABLATION STUDY FOR WATERMARK FORGERY",
+    "A.3.6 ALIGNMENT BETWEEN THE WATERMARK INFORMATION AND THE SEMANTIC",
+    "1404 1405 CONTENT",
+    "A.4 ALGORITHM",
+    "Algorithm 1 Evasion Attack",
+    "1458 1459 1460 1461 1462 1463 1464 1465 1466 1467 1468 1469 1470 1471 1472 1473 1474 1475 1476 1477 1478 1479 1480 1481 1482 Algorithm 2 Spoof Attack Input: watermarked image I wm , clean image I ′ , step m , feature extracter F , clustering algorithm C , optimizer O , objective function L , perturbation budget ϵ 1 , ϵ 2 Output: attacked watermarked image I a // find the k clusters with the fewest samples within the cluster, and transform the channel feature indices within the clusters into weights for locating information leakage. W C ← - F ( I wm ) δ ← -noise // Stage-I for i = 1 to m -1 do δ ← - O ( δ, ∇ δ -L ( W·F ( I wm ) , W·F ( I wm + δ )))) if || δ || ∞ &gt; ϵ 1 then δ ← -δ · ϵ 1 || δ || ∞ end if end for // Stage-II δ s ← -δ for i = 1 to m -1 do δ s ← - O ( δ s , ∇ δ s L ((1 -W ) · F ( I wm + δ ) , (1 -W ) · F ( I ′ + δ s ))) ˆ δ ← -δ s if || ˆ δ || ∞ &gt; ϵ 2 then ˆ δ s ← -ˆ δ · ϵ 2 || ˆ δ || ∞ end if end for return I a ∈ { I ′ -δ, I ′ -δ + δ s }",
+    "A.5 THE USE OF LARGE LANGUAGE MODELS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

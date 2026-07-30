@@ -1,0 +1,65 @@
+{
+  "pdfname": "fdpB9RBFv5",
+  "content": {
+    "summary": {
+      "value": "The paper establishes that the Probabilistic Bisection Algorithm (PBA) converges at a geometric rate, providing a rigorous justification for its empirical efficiency. PBA is a foundational algorithm used in problems such as root-finding, extending classical binary search to settings with noisy responses. The analysis directly characterizes the dynamics of PBA queries, showing that they oscillate around the truth but steadily draw closer, leading to an estimator that rapidly concentrates on the truth. The developed techniques offer new tools for analyzing PBA's dynamics, which may be of independent interest. The paper resolves the long-standing question of whether PBA retains its empirical efficiency under noisy responses. The established convergence rate is optimal, matching the performance of classical binary search under noiseless responses. The paper's findings provide a fine-grained understanding of PBA's query process, which may be useful for other adaptive algorithms. The results have implications for applications such as root-finding and boundary detection problems."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "1. **Originality of Analytical Techniques**: The paper develops novel analytical techniques to directly characterize the dynamics of Probabilistic Bisection Algorithm (PBA) queries, which is a significant methodological contribution. These techniques allow for a fine-grained understanding of PBA's query process.\n\n2. **Resolving Long-standing Questions**: The paper resolves the long-standing theoretical question of whether PBA retains its empirical efficiency under noisy responses. This addresses a crucial gap in the understanding of PBA's performance.\n\n3. **Optimal Convergence Rate**: The established convergence rate of PBA is optimal, matching the performance of classical binary search under noiseless feedback. This is a substantial finding, especially considering the noisy responses in PBA.\n\n4. **Implications for Applications**: The results have significant implications for applications such as root-finding and boundary detection problems. The paper provides a rigorous justification for PBA's empirical efficiency, which is crucial for its application in various fields.\n\n5. **Quality and Clarity**: The paper is well-written, with clear and concise presentation. The authors provide a thorough introduction, detailed description of the algorithm, and rigorous analysis of its performance, making the paper easy to follow.\n\n6. **Significance and Value**: The paper's findings are valuable to share with the broader research community, as they provide new insights into PBA's query process and its applications. The results are impressive and have significant implications for the research area."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Experimental Validation**: \n   - The paper primarily focuses on theoretical analysis, with limited experimental validation. Although it mentions simulation experiments, more detailed and extensive experiments could help corroborate the theoretical findings and provide additional insights into the performance of the Probabilistic Bisection Algorithm (PBA) under various conditions.\n\n2. **High-Dimensional Data Extension**: \n   - The paper discusses the extension to high-dimensional data in Appendix C but does not provide a detailed analysis or extensive experimental validation for this case. Further exploration and validation of the algorithm's performance in high-dimensional settings would strengthen the paper.\n\n3. **Comparison with Other Noisy Binary Search Algorithms**: \n   - The paper could benefit from a more comprehensive comparison with other noisy binary search algorithms. This would help highlight the advantages and potential limitations of PBA compared to existing methods.\n\n4. **Practical Implementation Considerations**: \n   - The paper focuses on theoretical convergence rates but does not discuss practical implementation considerations, such as computational efficiency, memory usage, or robustness to different types of noise. Addressing these aspects would provide a more holistic view of PBA's applicability.\n\n5. **Generalization to Other Problem Settings**: \n   - While the paper establishes the convergence rate of PBA for root-finding, it could explore applications and extensions to other problem settings, such as boundary detection or optimization problems. This would help demonstrate the algorithm's versatility and broader impact.\n\n## Suggestions for Improvement\n\n- **Additional Experiments**: Conduct more extensive experiments to validate the performance of PBA under various conditions, including different noise levels, problem sizes, and high-dimensional settings.\n- **Comparative Analysis**: Perform a detailed comparison with other noisy binary search algorithms to highlight the strengths and weaknesses of PBA.\n- **Practical Considerations**: Discuss practical implementation considerations to provide insights into the algorithm's applicability in real-world scenarios.\n- **Broader Applications**: Explore applications of PBA to other problem settings to demonstrate its versatility and potential for broader impact.\n\nBy addressing these weaknesses and incorporating these suggestions, the paper could provide a more comprehensive and robust analysis of the Probabilistic Bisection Algorithm."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Theorem 2 and Theorem 3 Novelty**:\n   - The authors claim that Theorem 2 and Theorem 3 are novel results. However, it seems like Theorem 2 has already been shown in \"Randomized Linear Programming Solves the Discounted Markov Decision Problem in Nearly-Linear Running Time”. Can the authors provide a clear explanation of the differences and extensions of their work compared to existing literature?\n\n2. **Assumptions on Function Class for Value Functions**:\n   - The authors assume that the value function is required to be able to represent the true value function, which can be restrictive. Can they provide more discussion on the conditions for $\\eta_v$ to ensure it does not affect the optimal solution and clarify the implications of this assumption?\n\n3. **Verification of Theorem Steps**:\n   - In the proof on Page 18, there is a step where the squared term is removed for the difference between $U$ and $U^{\\pi*}$. Can the authors provide a detailed explanation of this step to verify its correctness?\n\n4. **Additional Experimental Validation**:\n   - The paper could benefit from more extensive experimental validation, especially for high-dimensional data. Can the authors provide additional experimental results to corroborate their theoretical findings?\n\n5. **Comparison with Other Noisy Binary Search Algorithms**:\n   - A more comprehensive comparison with other noisy binary search algorithms would help highlight the advantages and potential limitations of PBA. Can the authors provide a detailed comparison with existing methods?\n\n6. **Practical Implementation Considerations**:\n   - The paper focuses on theoretical convergence rates but does not discuss practical implementation considerations. Can the authors provide insights into computational efficiency, memory usage, or robustness to different types of noise?\n\n7. **Generalization to Other Problem Settings**:\n   - The paper establishes the convergence rate of PBA for root-finding. Can the authors explore applications and extensions to other problem settings, such as boundary detection or optimization problems?\n\n## Suggestions for Improvement\n\n1. **Provide Detailed Proofs**:\n   - Provide detailed proofs for all theorems and propositions to ensure clarity and transparency.\n\n2. **Address Potential Biases**:\n   - Discuss potential biases in the analysis and provide insights into how they are addressed.\n\n3. **Clarify Implications of Assumptions**:\n   - Clarify the implications of assumptions made in the analysis, such as the assumption on the function class for value functions.\n\n4. **Provide Additional Experimental Results**:\n   - Provide additional experimental results to corroborate theoretical findings and demonstrate the algorithm's performance in various settings.\n\n5. **Discuss Practical Applicability**:\n   - Discuss practical applicability and provide insights into computational efficiency, memory usage, and robustness to different types of noise.\n\nBy addressing these questions and suggestions, the authors can provide a more comprehensive and robust analysis of the Probabilistic Bisection Algorithm, clarify potential confusions, and address limitations."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "Probabilistic Bisection Algorithm Provably Achieves Exponential Convergence",
+    "Anonymous authors",
+    "Abstract",
+    "1 Introduction",
+    "2 Convergence Rate of PBA",
+    "2.1 Setup",
+    "2.2 Exponential Convergence Rate",
+    "2.3 Analysis of Query Behaviors",
+    "260",
+    "Proof of Proposition 1.",
+    "Proof of Proposition 2.",
+    "A Missing Proofs.",
+    "Proof of Theorem 1",
+    "B Discussion on the Noise Level",
+    "C Extension to High Dimensional Data",
+    "Proof of Theorem 2.",
+    "Proof. Estimator: constructing ̂ g n ( · ) by grid-lines-interpolate.",
+    "Proof of Theorem 3",
+    "D Experiments",
+    "E The Use of Large Language Models Statement"
+  ],
+  "images_used": 4,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

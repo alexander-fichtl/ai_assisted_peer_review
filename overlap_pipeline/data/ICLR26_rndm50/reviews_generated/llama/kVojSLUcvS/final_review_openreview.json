@@ -1,0 +1,95 @@
+{
+  "pdfname": "kVojSLUcvS",
+  "content": {
+    "summary": {
+      "value": "This paper proposes GlowQ, a group-shared low-rank approximation for quantized large language models (LLMs). Existing post-training quantization methods often degrade accuracy when using low-bit representations. GlowQ addresses this limitation by learning a single shared right factor per input-sharing group and restoring only the groups or layers that yield the highest accuracy benefit. The approach reduces parameter and memory overhead while retaining the expressivity of layer-specific corrections. GlowQ and its selective variant, GlowQ-S, consistently improve efficiency and accuracy over strong baselines. The methods reduce time-to-first-byte (TTFB) by 5.6% and increase throughput by 9.6% on average, while reducing perplexity on WikiText-2 by 0.17% and increasing downstream accuracy by 0.42 percentage points. GlowQ-S further reduces latency, cutting TTFB by 23.4% and increasing throughput by 37.4%, while maintaining accuracy within 0.2 percentage points."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Novel Approach**: The paper proposes a novel group-shared low-rank approximation method, GlowQ, which addresses the limitations of existing post-training quantization methods for large language models (LLMs). This approach is a creative combination of existing ideas, specifically learning a single shared right factor per input-sharing group.\n\n2. **Theoretical Soundness**: The authors provide a thorough theoretical analysis of the GlowQ method, including its formulation, a detailed description of the QR-reduced randomized SVD routine, and a clear connection to the covariance-aligned objective. This sound theoretical foundation supports the claims made about the method's effectiveness.\n\n3. **Extensive Experimental Validation**: The paper presents extensive experimental results across various model families, benchmarks, and quantization settings. These experiments demonstrate significant improvements in efficiency and accuracy over strong baselines, including perplexity, zero-shot accuracy, latency, and throughput evaluations.\n\n4. **Practical Deployment Path**: The authors implement a deployment path that caches the right-side projection once per group and activates only important groups/layers, translating algorithmic savings into latency/throughput gains. This practical approach enhances the method's applicability.\n\n5. **Architecture-Agnostic and Complementary**: GlowQ is architecture-agnostic, drop-in at inference, and complementary to existing post-training quantization (PTQ) pipelines. This makes it a valuable addition to the research area, as it can be applied to a wide range of models and settings.\n\n6. **Scalability and Efficiency**: The paper demonstrates that GlowQ can be applied to large models with a small calibration set (N ≈ 32-64), which is efficient and scalable. The method also shows stability under varying calibration sizes and hyperparameters.\n\n7. **Improved Accuracy-Latency Trade-offs**: The selective variant, GlowQ-S, offers improved efficiency trade-offs, reducing latency while maintaining accuracy within a small margin of the full GlowQ method. This provides a flexible accuracy-latency knob for practical applications.\n\n## Conclusion\n\nThe paper's strengths lie in its novel approach, theoretical soundness, extensive experimental validation, practical deployment path, architecture-agnostic and complementary nature, scalability, and improved accuracy-latency trade-offs. These aspects collectively make GlowQ a significant contribution to the field of post-training quantization and low-rank approximation for LLMs."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Analysis of Hyperparameter Sensitivity**: The paper primarily focuses on the performance of GlowQ and GlowQ-S under various model families and benchmarks. However, a more comprehensive analysis of hyperparameter sensitivity, especially for the covariance alignment and selective restoration components, would provide deeper insights into the method's robustness.\n\n2. **Comparison to Recent Advances**: While the paper compares GlowQ with existing post-training quantization and low-rank approximation methods, it would be beneficial to include comparisons with very recent advances in the field, such as rotation-based saliency-aware PTQ and KV-cache compression frameworks. This would help position GlowQ in the context of the latest developments.\n\n3. **Detailed Exploration of Calibration Costs**: The paper mentions that small calibration sets (N ≈ 32-64) yield stable performance. A more detailed exploration of the trade-offs between calibration set size, computational cost, and model performance would help practitioners understand the practical implications of GlowQ's calibration requirements.\n\n4. **Quantitative Analysis of Memory Footprint Reduction**: While the paper discusses the qualitative benefits of GlowQ in terms of memory overhead reduction, a more quantitative analysis of the memory footprint reduction, especially in comparison to layer-wise restoration methods, would strengthen the claims about GlowQ's efficiency.\n\n5. **Generalization to Other Quantization-aware Training Methods**: The paper primarily focuses on post-training quantization methods. Exploring how GlowQ can be adapted or applied to other quantization-aware training methods, such as Quantization-aware Training (QAT) or semi-supervised learning scenarios, could broaden its applicability and impact.\n\n## Conclusion\n\nThe paper's weaknesses lie in its limited analysis of hyperparameter sensitivity, comparison to very recent advances, detailed exploration of calibration costs, quantitative analysis of memory footprint reduction, and generalization to other quantization-aware training methods. Addressing these aspects could further strengthen the paper's contributions and provide a more comprehensive understanding of GlowQ's benefits and limitations."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Theorem 2 and Theorem 3 Novelty**: The reviewer is unclear if Theorem 2 and Theorem 3 are both being stated as novel results. It would be beneficial to provide more details on the novelty of these theorems, especially in relation to existing work such as \"Randomized Linear Programming Solves the Discounted Markov Decision Problem in Nearly-Linear Running Time\".\n\n2. **Assumptions on Function Class for Value Functions**: The reviewer notes that the paper seems to assume that the value function is required to be able to represent the true value function, which can be restrictive. Further clarification on the conditions for eta_v and its impact on the optimal solution would be illuminating.\n\n3. **Verification of Theorem Proof**: The reviewer has trouble verifying one step in the theorem proof on Page 18, specifically how the squared term is removed for the difference between U and Upi. A detailed explanation or clarification of this step would be helpful.\n\n4. **Additional Experimental Comparisons**: The reviewer suggests that additional experimental comparisons would be beneficial, such as:\n\t* Showing performance graphs with and without improvements for multiple domains.\n\t* Empirically demonstrating how increasing k (the multi-step parameter) affects performance gains.\n\t* Discussing the computational cost of increasing k and how long dual-AC takes to converge in comparison to other algorithms.\n\n5. **Impact of Regularization Parameter on Performance**: The reviewer asks for more discussion on how changing the regularization parameter affects performance in terms of reward maximization. It would be helpful to see empirical results on this.\n\n6. **Code Implementation and Reproducibility**: The reviewer inquires about the code implementation and reproducibility of the results. Providing access to the code or more details on the implementation would be beneficial.\n\n7. **Applicability to Other Quantization-aware Training Methods**: The reviewer suggests exploring how GlowQ can be adapted or applied to other quantization-aware training methods, such as Quantization-aware Training (QAT) or semi-supervised learning scenarios.\n\n8. **Detailed Exploration of Calibration Costs**: The reviewer recommends a more detailed exploration of the trade-offs between calibration set size, computational cost, and model performance.\n\n9. **Quantitative Analysis of Memory Footprint Reduction**: The reviewer suggests providing a more quantitative analysis of the memory footprint reduction, especially in comparison to layer-wise restoration methods.\n\nBy addressing these questions and suggestions, the authors can provide further clarification, address potential limitations, and strengthen the paper's contributions."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "GLOWQ: GROUP-SHARED LOW-RANK APPROXIMATION FOR QUANTIZED LLMS",
+    "Selim An",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 METHOD: GLOWQ",
+    "3.1 GROUPING QUANTIZATION-ERROR CORRECTION MODULES",
+    "3.1.1 UNWEIGHTED BASELINE: STACKED SVD",
+    "3.1.2 DATA-AWARE COVARIANCE ALIGNMENT",
+    "3.2 SCALABLE IMPLEMENTATION VIA QR-REDUCED RANDOMIZED SVD",
+    "3.2.1 ALGORITHM &amp; COMPLEXITY",
+    "3.3 CACHING AND SELECTIVE RESTORE",
+    "4 EXPERIMENTS",
+    "4.1 EXPERIMENTAL SETUP",
+    "4.2 MAIN RESULTS: PERPLEXITY AND ZERO-SHOT ACCURACY",
+    "4.3 LATENCY AND THROUGHPUT BENEFITS FROM CACHING AND SELECTIVE RESTORE",
+    "4.4 MEMORY OVERHEAD AND EFFICIENCY ANALYSIS",
+    "4.5 COMPATIBILITY WITH PTQ METHODS AND GENERALIZATION TO MOE",
+    "4.6 BEHAVIOR OF SELECTIVE RESTORATION ACROSS MODEL FAMILIES",
+    "4.7 IMPACT OF COVARIANCE ALIGNMENT ON ACCURACY",
+    "5 CONCLUSIONS",
+    "A APPENDIX",
+    "A.0 NOTATION &amp; SHAPES",
+    "A.1 STACKED SVD: SHARED RIGHT SUBSPACE AND GLOBAL OPTIMUM (PROOF)",
+    "Problem (Unweighted Frobenius Approximation).",
+    "A.2 COVARIANCE-ALIGNED OBJECTIVE: BRIDGE EQUIVALENCE AND GLOBAL MINIMIZER (PROOF)",
+    "A.3 QR REDUCTION: SMALL-CORE EQUIVALENCE AND GLOBAL SOLUTION (PROOF)",
+    "A.4 RSVD ACCURACY GUARANTEES",
+    "ALGORITHM A.4.1 - RSVD ON THE CORE M .",
+    "Procedure.",
+    "B EFFECT OF RIGHT-WEIGHTED SHARED B",
+    "B.1 GROUP-CACHED (WEIGHTED STACKED RSVD) VS. LAYER-WISE (WEIGHTED RSVD)",
+    "(a) MLP gate: no whiten",
+    "(b) MLP gate: whiten",
+    "(a) MLP gate: no whiten",
+    "(b) MLP gate: whiten",
+    "C TTFB &amp; THROUGHPUT AROUND OTHER MODELS",
+    "D HYPERPARAMETER CHANGE",
+    "D.1 CALIBRATION DIFFERENCE",
+    "D.1.1 SHRINK ALPHA DIFFERENCE",
+    "D.1.2 MEMORY USAGE",
+    "D.2 RANK DIFFERENCE",
+    "D.3 RANDOMIZED SVD PARAMETERS",
+    "D.3.1 PROOF OF QR REDUCTION &amp; RANDOMIZED SVD",
+    "D.3.2 POWER ITERATION &amp; OVERSAMPLING DIFFERENCE",
+    "E COMPATIBILITY ACROSS QUANTIZATION DATATYPES",
+    "F LONGBENCH RESULTS",
+    "G SELECTIVE RESTORATION ACROSS MODEL FAMILY",
+    "LLM USAGE DISCLOSURE",
+    "WRITING POLISH",
+    "RETRIEVAL AND DISCOVERY"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

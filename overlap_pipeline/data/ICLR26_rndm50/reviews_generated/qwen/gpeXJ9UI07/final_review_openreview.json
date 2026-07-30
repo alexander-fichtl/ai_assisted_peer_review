@@ -1,0 +1,80 @@
+{
+  "pdfname": "gpeXJ9UI07",
+  "content": {
+    "summary": {
+      "value": "The paper introduces LOTION (Low-precision Optimization via Stochastic-noise Smoothing), a novel framework for optimizing neural networks with quantized objectives. The authors address the fundamental challenge that quantized loss functions are piece-wise constant with zero gradients almost everywhere by replacing the raw quantized loss with its expectation under randomized rounding noise. This smoothing approach creates a continuous, differentiable objective that preserves all global minima of the original quantized problem while providing theoretical convergence guarantees. The authors derive a closed-form second-order approximation of the smoothed loss, showing it functions as a curvature-aware regularizer that penalizes quantization in sharp directions of the loss landscape. They demonstrate LOTION's effectiveness on synthetic testbeds and 150M- and 300M-parameter language models, showing consistent improvements over standard QAT and PTQ methods at INT4, INT8, and FP4 precision. The approach is parameter-free, applicable to various rounding schemes, and requires minimal implementation changes to existing training pipelines. Experimental results show particularly significant gains at lower bit-widths where traditional methods struggle with instability. The framework bridges theoretical guarantees with practical performance improvements for low-precision neural network training."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths Assessment\n\n1. **Theoretical guarantees for quantized training**: The paper provides the first framework with formal convergence guarantees for quantized neural network training. Unlike heuristic STE-based approaches that \"provide no theoretical guarantees\" (p. 46), LOTION proves that the smoothed loss is continuous (Lemma 1) and preserves all global minima of the original quantized problem (Lemma 2), addressing a fundamental limitation in the field.\n\n2. **Curvature-aware regularization interpretation**: The authors derive a closed-form expression (Equation 3) showing that randomized rounding introduces an implicit diagonal regularizer whose strength depends on both the Gauss-Newton component of the Hessian and the rounding error variance. This theoretical insight explains why \"randomized rounding penalizes quantization in sharp directions\" (p. 282), providing a principled foundation for what was previously an empirical observation.\n\n3. **Demonstrated effectiveness across diverse precision formats**: The method's superiority is consistently shown not only on standard integer quantization (INT4/INT8) but also on modern FP4 format (Figure 5), where \"LOTION grants performance gains over QAT even with this modern precision format\" (p. 430). This breadth demonstrates the framework's adaptability beyond traditional quantization schemes.\n\n4. **Scalability to production-relevant models**: The paper validates LOTION on 150M and 300M parameter language models (Figures 9-12), showing consistent improvements over baselines at scale where \"decoding latency is dominated by memory traffic\" (p. 37). The results on 300M models (Table 2) show meaningful validation loss improvements (e.g., INT4 RR: 3.1772 vs QAT's 3.223), confirming practical relevance for real-world deployment scenarios.\n\n5. **Clear theoretical connection to randomized rounding**: The framework formalizes how randomized rounding noise transforms the discontinuous loss landscape into a continuous one while maintaining the global minima property. This provides a unified theoretical explanation for why randomized rounding techniques have shown empirical benefits in prior work, moving beyond ad-hoc implementations to a principled optimization framework."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses Assessment\n\n1. **Limited comparison with recent advanced quantization techniques**: While the paper positions LOTION against basic QAT and PTQ methods, it misses direct comparisons with more sophisticated recent approaches like NIPQ (Shin et al., 2023) and LSQ+ (Esser et al., 2020) that also address STE instability. The related work section acknowledges NIPQ as a \"noise-based proxy\" but doesn't empirically evaluate whether LOTION provides advantages over this specific contemporary approach. Since both methods use noise for quantization stability, a direct comparison would better establish LOTION's unique value beyond \"naive identity-based STEs\" (p. 46).\n\n2. **Exclusive focus on weight quantization without activation quantization analysis**: The paper acknowledges activation quantization as \"another promising direction\" (p. 479) but provides no preliminary results or discussion of how LOTION might handle this critical component of full quantization. For practical deployment, activation quantization often presents greater challenges than weight quantization due to dynamic range issues, and the interaction between weight and activation quantization can significantly impact performance. The authors should at least include preliminary results on how LOTION performs when extended to activation quantization, even if limited to a subset of layers.\n\n3. **Lack of systematic hyperparameter sensitivity analysis**: The paper introduces λ as a regularization coefficient but provides no ablation study showing how performance depends on this parameter (Section A.5.3 lists values tested but doesn't show results). Without understanding the method's sensitivity to λ, readers cannot assess its robustness or determine appropriate values for new architectures. The paper states they \"weight the regularization term by a hyperparameter, λ\" (p. 431) but doesn't provide guidance on selection criteria or expected performance variance across the tested range (3,000-100,000).\n\n4. **Missing practical deployment metrics**: Despite emphasizing that \"the primary bottleneck is streaming billions of parameters along the memory hierarchy\" (p. 37), the paper measures only validation loss without reporting actual inference latency, throughput, or memory footprint reductions. The authors claim quantization addresses \"decoding latency\" (p. 37), yet no experiments measure whether the improved validation loss translates to faster inference. Including metrics like tokens/second or memory usage would better demonstrate if the theoretical improvements yield practical benefits for the stated deployment goals."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **Comparison with contemporary noise-based methods**: While the paper discusses NIPQ (Shin et al., 2023) in related work as \"a noise-based proxy,\" it lacks empirical comparison with this specific contemporary approach. Since both methods use noise for quantization, could you provide direct experimental comparisons showing where LOTION offers advantages over NIPQ in terms of performance, stability, or theoretical guarantees? This would help contextualize LOTION's novelty more precisely.\n\n2. **Computational overhead quantification**: The paper states LOTION \"can run on any modern hardware\" (Section 4), but doesn't quantify the computational cost of the smoothing approach compared to standard QAT. Could you provide specific timing comparisons or FLOPs analysis showing how much additional computation the randomized rounding and expectation calculation require? For instance, does the regularization term in Equation 3 add significant backpropagation overhead at scale?\n\n3. **Practical impact of non-smooth boundaries**: The paper acknowledges that \"when using randomized rounding, the loss surface is still not completely smooth due to the undefined derivatives at the quantization bin boundaries\" (Section 5). Could you empirically quantify how often optimization encounters these boundaries during training? For example, what percentage of optimization steps occur near bin boundaries in your 300M-parameter experiments, and how does this affect convergence behavior compared to the fully smooth loss surfaces from alternative noise distributions?\n\n4. **Hyperparameter sensitivity analysis**: The regularization coefficient λ appears to be a critical hyperparameter (Section 4.3), yet the paper doesn't analyze its sensitivity. Could you provide evidence showing how performance varies with λ across different model sizes and precision formats? A figure showing validation loss versus λ values would help practitioners understand how to select this parameter effectively.\n\n5. **Empirical Fisher implementation details**: For the large language model experiments, you mention using \"the empirical Fisher approximation as we would with Adam\" (Section 4.3). Could you clarify the exact implementation: How did you compute the diagonal terms in practice? Did you use running averages of squared gradients as in Adam, or a different approach? How did you balance computational efficiency with approximation quality?\n\n6. **Activation quantization extension**: The discussion mentions extending LOTION to activation quantization as future work. Do you have preliminary results or theoretical insights suggesting whether the same smoothing framework would apply to activation quantization? Specifically, would the unbiased randomized rounding property (Definition 1) still hold when applied to activations that change dynamically during forward passes?\n\n7. **Ablation on noise distribution**: The paper focuses on randomized rounding noise, but other noise distributions could also smooth the loss. Could you provide a brief ablation showing why randomized rounding is particularly effective compared to, say, Gaussian noise with similar variance? This would strengthen the justification for your specific noise choice.\n\n8. **Generalization across architectures**: All language model experiments use OLMo architecture. Would you expect LOTION to perform differently on other architectures like Mamba or mixture-of-experts models? Are there architectural characteristics that might limit LOTION's effectiveness, or is the approach truly architecture-agnostic as suggested in Section 4?"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "LOTION: SMOOTHING THE OPTIMIZATION LANDSCAPE FOR QUANTIZED TRAINING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "1.1 RELATED WORK",
+    "2 PROBLEM SETTING",
+    "2.1 FINE-GRAINED SHARED-SCALE INTEGER QUANTIZATION",
+    "3 LOTION: SMOOTHING THE LOSS",
+    "3.1 RANDOMIZED ROUNDING",
+    "3.2 WARM-UP: QUADRATIC LOSSES",
+    "3.3 GENERAL CASE AND A GAUSS-NEWTON REGULARIZER",
+    "4 EXPERIMENTS",
+    "4.1 QUADRATIC LOSS",
+    "4.2 LINEAR NETWORK",
+    "4.3 LARGE LANGUAGE MODELS",
+    "4.3.1 150M MODELS",
+    "4.3.2 300M MODELS",
+    "4.3.3 FP4 QUANTIZATION",
+    "5 DISCUSSION AND LIMITATIONS",
+    "A APPENDIX",
+    "A.1 VISUALIZATION OF LOTION",
+    "A.2 ADDITIONAL DETAILS ON RANDOMIZED ROUNDING",
+    "A.2.1 PROOF FOR LEMMA 1",
+    "700 A.2.2 PROOF FOR LEMMA 2",
+    "A.2.3 PROOF FOR LEMMA 3",
+    "A.2.4 EXAMPLE: SHARED-SCALE INTEGER ROUNDING",
+    "A.3 ADDITIONAL RESULTS FOR SYNTHETIC EXPERIMENTS",
+    "A.4 ADDITIONAL RESULTS FOR LARGE LANGUAGE MODEL EXPERIMENTS",
+    "A.4.1 150M-PARAMETER MODEL",
+    "A.4.2 300M-PARAMETER MODEL",
+    "A.4.3 FP4 QUANTIZATION",
+    "A.5 HYPERPARAMETERS",
+    "A.5.1 LINEAR REGRESSION",
+    "A.5.2 TWO LAYER NETWORK",
+    "A.5.3 LANGUAGE MODEL"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

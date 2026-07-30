@@ -1,0 +1,196 @@
+<!doctype html>
+<html><head>
+<meta charset='utf-8'><title>Review – BZ1SSMS7L6</title>
+<style>
+body{font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.5;margin:40px;color:#111}
+h1{font-size:1.6rem;margin-bottom:0.5rem}
+h2{font-size:1.1rem;margin-top:1.6rem;margin-bottom:0.3rem;color:#333}
+.q{border:1px solid #e5e7eb;border-radius:10px;padding:14px;margin:14px 0;background:#fafafa}
+.qh{font-weight:600;color:#111;margin-bottom:0.3rem}
+.qt{color:#444;margin-bottom:0.6rem}
+.ans{white-space:pre-wrap}
+</style>
+</head><body>
+<h1>Review – BZ1SSMS7L6</h1>
+<div class='q'>
+<div class='qh'>Q1 (Summary):</div>
+<div class='qt'>Briefly summarize the paper and its contributions. Do not critique the paper here. The authors should agree with a well-written summary. Typical range: 3-8 sentences.</div>
+<div class='ans'>The paper proposes Q-learning Penalized Transformer (QPT) for safe offline reinforcement learning, addressing the joint challenges of behavior regularization, reward maximization, and constraint satisfaction. QPT is a conditional sequence model that predicts actions conditioned on history, return-to-go, and cost-to-go (Section 3.2), and integrates double Q-learning for reward and cost with n-step targets; the policy objective adds a reward-Q bonus and a cost-Q penalty normalized across datasets (Eqs. 6–10; Eq. 8 in Section 3.3). To cope with infeasible target pairs and improve stitching, it augments data by relabeling to the safest high-reward trajectories (Eqs. 11–12; Algorithm 2) and uses an ensemble inference that samples multiple RTG/CTG pairs and selects actions via the learned Q-networks (Eqs. 13–14; Algorithm 1; Section 3.4). Theoretically, Theorem 3.1 shows that, under return/cost coverage and near-determinism, the penalized objective aligns the learned policy with near-optimal reward while bounding costs. Empirically, across 38 DSRL tasks spanning Safety-Gymnasium, Bullet-Safety-Gym, and MetaDrive, QPT consistently attains safe behavior with strong rewards and outperforms state-of-the-art baselines (Table 1), with ablations confirming the roles of each component and hyperparameters (Table 2, Figure 1). QPT further enables zero-shot adaptation to different cost thresholds through conditioning, surpassing CDT in safe regimes (Figure 2).</div>
+</div>
+<div class='q'>
+<div class='qh'>Q2 (Soundness):</div>
+<div class='qt'>Please assign the paper a numerical rating on the following scale to indicate the soundness of the technical claims, experimental and research methodology and on whether the central claims of the paper are adequately supported with evidence: 4 excellent, 3 good, 2 fair, 1 poor.</div>
+<div class='ans'>The technical design is well specified and standard components are used appropriately: the policy objective clearly integrates reward and cost Q-penalties with double Q-learning and n-step targets (Eqs. 6–10; Eq. 8), and training/inference procedures are explicit (Algorithm 1). Evidence is strong: comprehensive results over 38 tasks with 3 seeds (Table 1), component ablations and sensitivity studies (Table 2, Figure 1, Table 5), and zero-shot adaptation curves (Figure 2) support the main claims. The main caveat is theoretical support hinging on restrictive assumptions (binary signals, near-determinism, and selection-probability conditions; Theorem 3.1, Remark B.4), which limits generality, plus some presentation issues in Table 2. Overall, the methodology is sound and the empirical backing is convincing.
+
+Rating: 3</div>
+</div>
+<div class='q'>
+<div class='qh'>Q3 (Presentation):</div>
+<div class='qt'>Please assign the paper a numerical rating on the following scale to indicate the quality of the presentation. This should take into account the writing style and clarity, as well as contextualization relative to prior work: 4 excellent, 3 good, 2 fair, 1 poor.</div>
+<div class='ans'>The paper is generally clear and well organized. The methodology is presented concretely with explicit objectives and training/inference procedures (Section 3.2–3.4; Eq. 8; Algorithm 1). Prior work is contextualized thoughtfully, contrasting with CDT, TREBI, and FISOR and motivating the design choices (Section 2). Results are comprehensively summarized (Table 1) with auxiliary ablations and sensitivity plots aiding interpretation (Table 5; Figure 1; Figure 2). 
+
+However, the presentation suffers from notable formatting and typographical issues that hinder readability: mid-paragraph headers and artifacts in the Introduction (lines 053–067), garbled or incomplete entries in Table 2, broken notation and stray “̸” symbols in Theorem 3.1 and Appendix B, and some cluttered pseudocode/comments in Algorithm 1. A few sentences are awkward, and some notation in Eq. 6–7 and Eq. 8 could be streamlined for clarity.
+
+Overall, strong structure and context with avoidable formatting problems.
+
+Rating: 3</div>
+</div>
+<div class='q'>
+<div class='qh'>Q4 (Contribution):</div>
+<div class='qt'>Please assign the paper a numerical rating on the following scale to indicate the quality of the overall contribution this paper makes to the research area being studied. Are the questions being asked important? Does the paper bring a significant originality of ideas and/or execution? Are the results valuable to share with the broader NeurIPS community? 4 excellent, 3 good, 2 fair, 1 poor.</div>
+<div class='ans'>The paper targets an important problem—safe offline RL—and offers a coherent, moderately original integration of conditional sequence modeling with reward/cost Q-learning penalization, plus practical components (data augmentation and ensemble inference). The objective is explicit and actionable (Eq. 8 in Section 3.3), and the added mechanisms are well-motivated (Eqs. 11–12; 13–14; Algorithm 1 in Section 3.4). Results are compelling and broad: consistent safety with strong rewards across 38 DSRL tasks (Table 1), clear component ablations (Table 2), sensitivity to η1/η2 (Figure 1), ensemble size study (Table 5), and zero-shot adaptation advantages over CDT in safe regimes (Figure 2). Theoretical support exists (Theorem 3.1; Appendix B) but rests on restrictive assumptions (binary signals, near-determinism, and selection-probability conditions; Remark B.4). Presentation issues (e.g., artifacts in Section 1 and Table 2 formatting) slightly detract. Overall, the contribution is valuable and timely for the NeurIPS community.
+
+Rating: 3</div>
+</div>
+<div class='q'>
+<div class='qh'>Q5 (Strengths):</div>
+<div class='qt'>Please give a substantive assessment of the strengths of the paper. Be specific, avoid generic remarks. This can, for example, include quality, clarity (e.g. well written), or significance, originality (e.g. a new definition or problem formulation, creative combinations of existing ideas, application to a new domain, or removing limitations from prior results.) If you have many, only list the least generic ones.</div>
+<div class='ans'>1. Clear, controllable objective that unifies the trilogy. The policy loss in Eq. 8 (Section 3.3) cleanly composes behavior regularization (DT MSE) with a reward-Q bonus and a cost-Q penalty, with dataset-scale–aware normalization (Eqs. 9–10). This explicit formulation makes the reward–safety trade-off tunable and portable across datasets—an advantage over Lagrangian schemes discussed in Section 3.1.
+
+2. Principled value-learning backend tailored to sequence models. The reward and cost Q-functions are trained with double Q-learning and n-step targets (Eqs. 6–7), matching the K-step context of the conditional Transformer (Section 3.2). This closes the “stitching” gap of pure sequence modeling by injecting evaluative signals that prefer high-return/low-cost actions during learning.
+
+3. Practical solution to infeasible target pairs without discarding data. The data augmentation that relabels to the “safest max-reward” trajectory for a target (ρ, κ) (Eqs. 11–12; Algorithm 2; Appendix C.2) is a targeted way to retain high-reward information while enforcing safety priorities, addressing the safe/unsafe data mixture problem noted in Section 3.1.
+
+4. Efficient, parallelizable ensemble inference. The multi-pair RTG/CTG sampling with Q-guided selection (Eqs. 13–14; Section 3.4; Algorithm 1) removes manual target tuning typical of CSM methods, is GPU-parallelizable, and demonstrably helps (Table 2, Exp 5–8; Table 5).
+
+5. Zero-shot adaptation across constraint thresholds with empirical validation. The method adapts to varying cost thresholds at deployment via conditioning (Section 3.4), with clear evidence that QPT maintains or improves safety while raising reward when feasible and outperforming CDT in safe regimes (Figure 2).
+
+6. Theoretical alignment beyond standard CSM guarantees. Theorem 3.1 (Section 3.5; Appendix B) extends alignment-style results to the reward–cost setting, showing near-optimal reward and bounded cost under coverage and near-determinism, with improvement terms (±Hσ) over the DT-style baseline (Remark B.5).
+
+7. Strong, broad empirical evidence with safety-first evaluation. Results span 38 tasks across three suites with consistent protocols (Section 4), and QPT is the only approach that stays safe across all tasks while achieving competitive or best returns (Table 1). This breadth and the safety emphasis (Equations 15–16; fixed κ = 10) substantiate the central claims.
+
+8. Component-wise causality of gains. The ablations isolate contributions of reward-Q, cost-Q, data augmentation, and ensemble (Table 2), and the η1/η2 sweeps (Figure 1) expose interpretable reward–cost trade-offs, indicating the method’s knobs map meaningfully to behavior.
+
+9. Robustness to dataset/value-scale differences. The normalization of Q penalties (Eqs. 9–10) is a simple but impactful design choice that stabilizes training across diverse tasks (Section 3.3), aiding reproducibility and deployment on heterogeneous datasets.
+
+10. Reproducibility and clarity of pipeline. The paper provides full training and inference pseudocode (Algorithm 1), task coverage summaries (Table 3; Section D.1), hyperparameters (Table 4), and ensemble-size sensitivity (Table 5), making the approach straightforward to implement and tune.
+
+11. Addresses key limitations of offline Lagrangian methods. By decoupling training from a fixed κ and supporting post-hoc constraint selection (Section 3.1), QPT removes the need to retrain for every new threshold—important for real-world deployment settings with variable safety budgets.
+
+12. Sound architectural match to the problem. Using a conditional Transformer with return-to-go and cost-to-go tokens (Section 3.2) leverages behavioral regularization from sequence modeling while the Q-penalization resolves the optimization conflict between safety and utility, yielding the consistent safe-high-reward behavior seen in Table 1.</div>
+</div>
+<div class='q'>
+<div class='qh'>Q6 (Weaknesses):</div>
+<div class='qt'>Please give a substantive assessment of the weaknesses of the paper. Focus on constructive and actionable insights on how the work could improve towards its stated goals. Be specific, avoid generic remarks. For example, if you believe the contribution lacks novelty, provide references and an explanation as evidence; if you believe experiments are insufficient, explain why and exactly what is missing, etc. Unclarities are adressed later, so only list real weaknesses. If you have many, only list the least generic ones.</div>
+<div class='ans'>1. Theoretical support hinges on restrictive and partly exogenous assumptions.
+- Evidence: Theorem 3.1 assumes binary rewards/costs, near-deterministic dynamics, and time-consistent conditioning functions (Section 3.5; Assumptions 1–3). It further requires action-selection probability improvements σr, σc that are postulated, not derived from Eq. 8 (Remark B.4).
+- Why it matters: Binary signals and near-determinism seldom hold in the evaluated domains; σr/σc are not controlled by the algorithm, so the bounds do not certify the behavior of QPT in the settings it is tested on.
+- Actionable: (a) Generalize the analysis to bounded real-valued rewards/costs and stochastic transitions; even a high-level finite-sample error bound relating performance to Q-function estimation error and the penalty weights (η1, η2 in Eqs. 9–10) would make the result informative for practice. (b) Replace the σr/σc assumptions with quantities tied to Eq. 8, e.g., lower bounds on the advantage under Qr and upper bounds on Qc error, to show when the penalization provably changes selection probabilities. (c) Empirically stress-test the assumptions by injecting controlled transition stochasticity and non-binary costs and reporting degradation relative to the bound’s predictions.
+
+2. Safety is not guaranteed under function approximation and Q-bias, yet the method enforces constraints via learned Qc only at training and inference.
+- Evidence: Constraint handling is via a cost-Q penalty in the policy loss (Eq. 8) and a hard Qc filter at inference (Eqs. 13–14; Section 3.4); no robustness mechanism or uncertainty calibration is used.
+- Why it matters: Offline Q-learning is known to be biased outside the dataset support; violating safety in deployment due to optimistic Qc is a central risk in safe offline RL.
+- Actionable: (a) Calibrate the cost filter by using ensembles or quantiles of Qc (you already train double Q; extend to an uncertainty-aware selection) and report safety–reward curves. (b) Add reliability diagnostics for Qc: constraint satisfaction vs. predicted Qc thresholds (reliability plots) and violation rates at high-confidence settings. (c) Include ablations where you deliberately perturb the dataset support to test robustness of constraint satisfaction.
+
+3. Data augmentation could distort target conditioning and Pareto structure and is evaluated too narrowly.
+- Evidence: The augmentation relabels RTG/CTG by shifting the returns of the “safest max-reward” trajectory τ* for a target (ρ, κ) (Eqs. 11–12; Algorithm 2; Appendix C.2). Component benefits are shown on only two tasks (Table 2).
+- Why it matters: Element-wise relabeling changes conditioning tokens without changing the state–action sequence, which may create infeasible conditioning distributions; the RF(κ, D) reliance presumes good safe coverage near each κ; and computational cost of repeatedly finding τ* is unclear.
+- Actionable: (a) Expand ablations to the full benchmark (or a representative subset per suite) to quantify when augmentation helps/hurts. (b) Report computational overhead of building augmented sets and sensitivity to the number N in Algorithm 2. (c) Validate that augmentation does not degrade support alignment: show density-ratio or nearest-neighbor distances between augmented and original conditioning distributions, and a sweep over augmentation strength (fraction of augmented samples).
+
+4. Ensemble inference fairness, scalability, and sensitivity are under-characterized.
+- Evidence: Inference samples many RTG/CTG pairs and selects actions via Qr/Qc (Section 3.4; Eqs. 13–14). Sensitivity to ensemble size is reported only for MetaDrive-harddense (Table 5). Baselines like CDT rely on manual target selection, whereas QPT benefits from parallel candidate sampling and Q-guided selection.
+- Why it matters: Gains may partly stem from extra search compute at inference; fairness and deployability depend on compute budgets and latency.
+- Actionable: (a) Report wall-clock training and inference latency and FLOPs for QPT versus baselines at the settings used in Table 1, including candidate counts. (b) Provide ensemble-size sweeps on several tasks per benchmark (not just one) to establish robustness. (c) For fairness, give CDT a comparable target-pair ensemble (without Q selection, use evaluation rollouts or a simple heuristic) and report results under matched inference budgets.
+
+5. Novelty over closely related Q-regularized sequence models is incremental and could be clarified with stronger baselines.
+- Evidence: The main training objective adds a reward-Q bonus and a cost-Q penalty to DT (Eq. 8), building on Q-value regularization for Transformers (Hu et al., 2024a) and cost conditioning in CDT (Liu et al., 2023b). The new ingredients are the explicit cost-Q term and the specific augmentation/ensemble pipeline (Sections 3.3–3.4).
+- Why it matters: To establish distinct contribution, comparisons should isolate what QPT adds beyond prior Q-regularized DTs and beyond CDT.
+- Actionable: (a) Include a “QDT+cost-conditioning” baseline (reward-Q regularization as in Hu et al., 2024a plus cost-to-go token, but without your augmentation/ensemble) to quantify the net gain of your additions. (b) Add a Lagrangian-DT baseline (reward–λ·cost penalty in the loss with learned λ) to show why your two-Q formulation outperforms standard constrained training for CSM.
+
+6. Empirical claims would be stronger with broader statistical reporting and protocol transparency for baselines.
+- Evidence: Table 1 reports means over 3 seeds and 20 episodes but no variances/confidence intervals; Table 2 contains corrupted entries, and the setup for target conditioning in CDT is not fully specified beyond a qualitative remark (Section 4; Section 3.4).
+- Why it matters: Safety conclusions rely on small seed counts and may be sensitive to target-conditioning choices in sequence models.
+- Actionable: (a) Add standard deviations or 95% CIs to Table 1 and report per-task “safe episode rate” in addition to average normalized cost. (b) Increase seeds for a subset of tasks that drive conclusions (e.g., where QPT is uniquely safe). (c) Document the target-conditioning protocol for CDT and other sequence-model baselines, including any sweeps performed, to ensure tuning parity.
+
+7. Limited exploration of dataset composition effects and distributional shift.
+- Evidence: The paper motivates mixed safe/unsafe datasets (Section 3.1), but experiments do not vary the fraction of unsafe trajectories or OOD coverage.
+- Why it matters: The core promise—stitching high-reward and low-cost segments—should be most challenged when unsafe data dominate or support is sparse.
+- Actionable: Construct controlled datasets per task with varying safe/unsafe proportions and reduced coverage, then report how QPT and baselines scale in reward and violations. Include ablations of the normalization scheme for α1/α2 (Eqs. 9–10) to establish its role under scale shifts.
+
+8. Offline Q-learning component lacks explicit OOD conservatism, which could limit robustness.
+- Evidence: Qr/Qc are fit with n-step targets and double Q (Eqs. 6–7) but without conservative corrections typical in offline Q-learning (Section 3.3). The method relies on DT’s behavioral regularization to mitigate shift.
+- Why it matters: If the policy drifts from the dataset support (especially with large η1), Q overestimation can drive unsafe or brittle behavior.
+- Actionable: Add a variant with a modest conservative term during Q training (e.g., a dataset-action value preference) and report its effect on safety and reward; alternatively, restrict η1 adaptively based on an OOD score (measured by model likelihood on (s, a)) and include the ablation.
+
+Collectively, addressing these points—especially tightening the link between theory and practice, expanding fairness and sensitivity analyses for the augmentation/ensemble choices, and strengthening baseline parity—would substantially reinforce the paper’s claims and its practical relevance for safe offline RL.</div>
+</div>
+<div class='q'>
+<div class='qh'>Q7 (Suggestions)</div>
+<div class='qt'>Please list and carefully describe any questions and suggestions for the authors. Think of the things where a response from the author can change your opinion, clarify a confusion or address a limitation. This is important for a productive rebuttal and discussion phase with the authors. Do not simply repeat all the weaknesses.</div>
+<div class='ans'>1. Theory: scope and link to the algorithm
+- Theorem 3.1 assumes binary rewards/costs, near-deterministic dynamics, and additional action-selection probability improvements σr, σc (Section 3.5; Remark B.4). Can you (i) relax binary signals to bounded real-valued rewards/costs and (ii) replace σr/σc by quantities tied to Eq. 8 (e.g., lower bounds on Qr-advantages and upper bounds on Qc errors) so the guarantee depends on controllable/estimable terms?
+- How do you estimate/justify the coverage constants αfr, αfc in practice? Could you add an empirical stress test varying transition stochasticity and cost/reward granularity to probe where the theory still tracks behavior?
+
+2. Q-learning updates and use in the policy loss
+- In Eqs. 6–7, the n-step target for each m bootstraps only at time t with Q( st, ât ). Why not at m+n (classical n-step TD)? Please clarify the indexing, treatment of terminals, and why a single bootstrap point at t is preferred.
+- Eq. 8 uses Qrϕ and Qcψ without specifying which head is fed into the penalization (min/mean across double critics?). Please specify and, if not “min,” provide a comparison.
+- How are α1, α2 (Eqs. 9–10) computed during training—once at initialization or recomputed online as Q evolves? Please report whether this choice affects stability and results.
+
+3. Conditioning of the target policy in Bellman backups
+- In Eqs. 6–7 you sample ât ∼ πθ′ conditioned on a sequence (RTG/CTG, states, actions). How are the target RTG/CTG chosen during critic training, and are they consistent with the conditioning used for the actor updates and inference? A short schematic/example would help.
+
+4. Data augmentation details and feasibility
+- There is a mismatch between RF(κ, D) defined with equality in Eq. 39 and the ≤ κ constraint used in Eq. 11 and Algorithm 2 Step 8. What happens when κ is not exactly achievable (continuous costs)? How do you compute/use RF(κ, D) in Step 6 of Algorithm 2 in that case?
+- What is the augmentation budget N (Algorithm 2) relative to |D| per task, and what is the wall-clock overhead? Please provide sensitivity to N and to the fraction of augmented samples in the loader.
+- Could you verify that augmented conditioning tokens (Eq. 12) remain “on-support”? For example, report nearest-neighbor distances or likelihoods of augmented vs. original conditioning sequences on a subset of tasks.
+
+5. Inference-time ensemble
+- Appendix C.3 perturbs RTG while holding CTG fixed and then enforces Qc(s, â) ≤ ĉ (Eqs. 13–14). What is the fallback when all candidates violate Eq. 14? Do you pick the minimum-Qc action or fall back to the baseline pair?
+- Table 5 shows non-monotone behavior w.r.t. candidate count on one task. Can you add 2–3 more tasks per suite to establish robustness and identify a compute-efficient default?
+- For fairness, could you provide matched-inference-budget comparisons (wall-clock/FLOPs) to CDT by giving CDT an equal number of candidate pairs (even without Q-guided selection) and reporting results?
+
+6. Safety evaluation protocol
+- Section 4 states κ = 10 for all tasks, whereas Table 1 says “cost threshold is 1”; Eq. 16 defines a normalized cost. Please confirm: are all tables/figures reporting normalized cost (≤1 safe)? What ε did you use and is any clipping applied? Some entries show 0.00 or large values (e.g., 25.94) in Table 1—are these due to normalization or rounding?
+- Beyond averages, can you report “safe-episode rate” (fraction of episodes with cost ≤ threshold) for a representative subset to quantify tail risks?
+
+7. Hyperparameter tuning and transfer
+- How were η1, η2 (Eq. 8) selected per task/suite? Did you use a single pair across tasks or tune per environment family? Please list the chosen values used in Table 1 and the tuning budget. Figure 1 shows sensitivity; a concise protocol would help reproducibility.
+- K (context length) is fixed at 10 (Table 4). Did you try other K and align it with the n-step target horizon? Any notable trade-offs in compute vs. performance?
+
+8. Zero-shot adaptation details
+- In Figure 2, how do you map a target “cost threshold” to CTG tokens at inference? Do you change CTG directly to the desired (discounted) cost budget, or still hold CTG constant as in Appendix C.3? Please provide the exact mapping and units (normalized vs. raw).
+- Do you also adapt RTG as the cost threshold changes (Figure 2 notes “with corresponding adjustments made to the target reward”)? Please specify the rule for adjusting RTG jointly with CTG.
+
+9. Robustness to dataset composition and OOD shift
+- Since Section 3.1 motivates mixed safe/unsafe datasets, can you create controlled variants (e.g., different unsafe proportions or reduced support) and report how QPT’s reward and violations scale? This would illuminate the stitching benefit claimed for Eq. 8 and the augmentation in Eq. 12.
+- Have you considered uncertainty-aware constraint handling at inference (e.g., using the maximum of the two Qc heads, a lower confidence bound, or an ensemble beyond double Q) to improve safety robustness? A small ablation would strengthen the safety claim.
+
+10. Baseline parity and ablations
+- To isolate your contributions beyond prior Q-regularized sequence models, could you add a “QDT + cost-to-go” baseline (reward-Q regularization as in Hu et al., 2024a, plus CTG, but without your augmentation and ensemble)? This would quantify the net gain of Eq. 8 and Section 3.4.
+- Similarly, a Lagrangian-DT baseline (reward − λ·cost with a learned λ) would clarify why the two-Q penalization is preferable in the CSM setting.
+
+11. Compute profile
+- Please provide training/inference wall-clock times, GPU type, parameter counts, and memory for QPT versus CDT/FISOR/CPQ at the settings used in Table 1. The ensemble adds inference compute; practical deployment would benefit from a cost–performance plot.
+
+12. Clarifications and minor fixes
+- Table 2 appears corrupted (missing/merged cells). Could you provide the clean table and confirm the exact configurations of Exp 1–8?
+- Algorithm 1 contains EMA-like updates with “ρ” but the notation is garbled. Please clarify the target network update rule and the value of ρ.
+- Eq. 6–7 expectations: clarify over which indices the inner expectation E(si, ai)∼τt is taken in Eq. 8; is it the K-step window or full sequence? Consistent notation would help.</div>
+</div>
+<div class='q'>
+<div class='qh'>Q8 (Ethics):</div>
+<div class='qt'>If there are ethical issues with this paper, please flag the paper for an ethics review and select area of expertise that the ethics reviewer should to have. Choose one of the following options: No ethics review needed, Ethics review needed: Discrimination / Bias / Fairness Concerns, Ethics review needed: Inadequate Data and Algorithm Evaluation, Ethics review needed: Inappropriate Potential Applications &amp; Impact  (e.g., human rights concerns), Ethics review needed: Privacy and Security (e.g., consent, surveillance, data storage concern), Ethics review needed: Compliance (e.g., GDPR, copyright, license, terms of use), Ethics review needed: Research Integrity Issues (e.g., plagiarism), Ethics review needed: Responsible Research Practice (e.g., IRB, documentation, research ethics), Ethics review needed: Failure to comply with NeurIPS Code of Ethics (lack of required documentation, safeguards, disclosure, licenses, legal compliance)</div>
+<div class='ans'>No ethics review needed.
+
+Rationale: The work uses only simulated benchmarks (Safety-Gymnasium, Bullet-Safety-Gym, MetaDrive) as stated in Section 4 and Appendix D.1, with no human subjects or personal data. LLM usage is limited to writing refinement and disclosed in Appendix A. No deployment, surveillance, or sensitive data concerns are indicated, and licenses/compliance issues are not raised.</div>
+</div>
+<div class='q'>
+<div class='qh'>Q9 (Overall):</div>
+<div class='qt'>Please provide an 'overall score' for the paper: 10: Award quality: Technically flawless paper with groundbreaking impact, with exceptionally strong evaluation, reproducibility, and resources, and no unaddressed ethical considerations. 9: Very Strong Accept: Technically flawless paper with groundbreaking impact on at least one area of AI/ML and excellent impact on multiple areas of AI/ML, with flawless evaluation, resources, and reproducibility, and no unaddressed ethical considerations. 8: Strong Accept: Technically strong paper, with novel ideas, excellent impact on at least one area, or high-to-excellent impact on multiple areas, with excellent evaluation, resources, and reproducibility, and no unaddressed ethical considerations. 7: Accept: Technically solid paper, with high impact on at least one sub-area, or moderate-to-high impact on more than one areas, with good-to-excellent evaluation, resources, reproducibility, and no unaddressed ethical considerations. 6: Weak Accept: Technically solid, moderate-to-high impact paper, with no major concerns with respect to evaluation, resources, reproducibility, ethical considerations. 5: Borderline accept: Technically solid paper where reasons to accept outweigh reasons to reject, e.g., limited evaluation. Please use sparingly. 4: Borderline reject: Technically solid paper where reasons to reject, e.g., limited evaluation, outweigh reasons to accept, e.g., good evaluation. Please use sparingly. 3: Reject: For instance, a paper with technical flaws, weak evaluation, inadequate reproducibility and incompletely addressed ethical considerations. 2: Strong Reject: For instance, a paper with major technical flaws, and/or poor evaluation, limited impact, poor reproducibility and mostly unaddressed ethical considerations. 1: Very Strong Reject: For instance, a paper with trivial results or unaddressed ethical considerations.</div>
+<div class='ans'>The paper offers a clear, controllable objective that unifies behavior regularization with reward maximization and cost minimization (Eq. 8) on top of a conditional Transformer and double n-step Q-learning (Eqs. 6–7; Sections 3.2–3.4). Empirical evidence is broad and convincing: consistent safety with strong rewards across 38 tasks (Table 1), zero-shot adaptation (Figure 2), and component/sensitivity analyses (Table 2, Figure 1, Table 5). Main reservations are the restrictive assumptions in the theory (Theorem 3.1; Remark B.4), some presentation/formatting glitches (e.g., Table 2 artifacts), and under-characterized compute/fairness and safety calibration of the Qc-based inference filter (Section 3.4). Overall, a technically solid contribution with high impact for safe offline RL.
+
+Rating: 7</div>
+</div>
+<div class='q'>
+<div class='qh'>Q10 (Confidence):</div>
+<div class='qt'>Please provide a 'confidence score' for your assessment of this submission to indicate how confident you are in your evaluation. Give at most two brief sentences of justification, then exactly: 'Rating: &lt;1–5&gt;' with the following grounding: 5: You are absolutely certain about your assessment. You are very familiar with the related work and checked the math/other details carefully. 4: You are confident in your assessment, but not absolutely certain. It is unlikely, but not impossible, that you did not understand some parts of the submission or that you are unfamiliar with some pieces of related work. 3: You are fairly confident in your assessment. It is possible that you did not understand some parts of the submission or that you are unfamiliar with some pieces of related work. Math/other details were not carefully checked. 2: You are willing to defend your assessment, but it is quite likely that you did not understand the central parts of the submission or that you are unfamiliar with some pieces of related work. Math/other details were not carefully checked. 1: Your assessment is an educated guess. The submission is not in your area or the submission was difficult to understand. Math/other details were not carefully checked.</div>
+<div class='ans'>I’m familiar with offline/safe RL and sequence-model-based approaches and carefully reviewed the methodology and experiments (Sections 3–4; Eq. 8; Table 1). I did not verify the Appendix B proof line-by-line and some formatting artifacts introduce minor ambiguity.
+
+Rating: 3</div>
+</div>
+<div class='q'>
+<div class='qh'>Q11 (Conduct):</div>
+<div class='qt'>If there are no violations of the Code of Conduct with this paper, please respond with NO. Otherwise, if this paper violates the Code of Conduct, please indicate the relevant section(s) from the following options: 'Yes, Harassment, bullying, or discrimination based on personal characteristics', 'Yes, Inappropriate physical contact, sexual harassment, or unwelcome sexual attention', 'Yes, Offensive comments related to gender, race, religion, or other protected characteristics', 'Yes, Disruption of talks or other events, or behavior interfering with participation', 'Yes, Inappropriate use of imagery, language, or personal attacks in virtual interactions</div>
+<div class='ans'>NO</div>
+</div>
+</body></html>

@@ -1,0 +1,65 @@
+{
+  "pdfname": "aQia5HdgBY",
+  "content": {
+    "summary": {
+      "value": "This paper introduces Persistent Shared Memory (PSM), a mechanism that enables embodied agents to accumulate and share semantic knowledge across multiple zero-shot object navigation (ZSON) tasks and among multiple agents, addressing the inefficiency of conventional stateless ZSON approaches that reset memory after each task. The authors propose a Temporally Consistent Semantic Map (TCSM) with confidence-weighted updates to build robust scene representations over time, and a beyond-line-of-sight (BLOS) navigation strategy that leverages this persistent memory to plan efficient paths to occluded targets. Their approach eliminates redundant exploration by allowing later tasks to benefit from prior observations, as demonstrated in both single-agent continuous operation and multi-agent collaborative scenarios. Experimental results on HM3D and MP3D benchmarks show state-of-the-art performance, with significant improvements in navigation efficiency metrics, particularly as the memory accumulates more knowledge from previous tasks."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. **Novel problem formulation for persistent navigation**: The paper identifies and formalizes a critical limitation in current ZSON approaches—the stateless paradigm that resets memory after each task—creating a fundamental mismatch with practical long-term deployment scenarios. The Persistent Shared Memory (PSM) mechanism reframes ZSON from isolated single-task execution to continuous, collaborative learning, addressing a previously overlooked efficiency gap in embodied navigation systems.\n\n2. **Confidence-weighted update mechanism in TCSM**: The paper introduces a principled weighted update approach (Section 3.3, Eq. 2) that specifically combats semantic drift by reinforcing high-confidence semantic features while filtering out transient noise from segmentation predictions. Unlike naive mapping approaches that treat each VLM prediction as ground truth, this mechanism allows the map to accumulate evidence over time, making it robust to prediction uncertainty.\n\n3. **BLOS navigation strategy with line-of-sight verification**: The paper develops a novel beyond-line-of-sight navigation strategy that enables agents to reason about and plan efficient paths toward occluded targets. The line-of-sight region computation (Section 3.4, Eq. 6) and broadcasted value map construction (Eq. 8) provide a mathematically grounded method for leveraging global memory knowledge when targets are not directly visible, addressing a capability fundamentally absent in traditional ZSON agents.\n\n4. **Empirical validation of memory scaling effects**: The paper provides compelling evidence (Figure 3) showing how navigation performance scales with accumulated knowledge, demonstrating that a more comprehensive initial map allows agents to reduce exploration and achieve higher success rates. This validates the core premise that persistent memory improves navigation efficiency in a quantifiable manner.\n\n5. **Multi-agent collaboration analysis with trade-off insights**: The paper extends beyond single-agent scenarios to analyze how multiple agents can share memory (Section 4.4), revealing the nuanced trade-off between higher task throughput and the per-task benefit of a more mature memory. The finding that 4-agent collaboration shows slightly lower per-task performance than single-agent sequential execution (+18.2% vs +20.9% SR) provides valuable insights for practical deployment scenarios."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Lack of evaluation in dynamic environments**: While the paper positions PSM for practical applications like home robotics where environments change (e.g., objects moved, doors opened), all experiments are conducted on static HM3D and MP3D datasets. The limitation section (Section A) acknowledges this but provides no empirical validation of how TCSM handles dynamics. To strengthen the work, the authors should create a modified benchmark with controlled environmental changes (e.g., object repositioning, door state changes) and measure how TCSM's confidence-weighted update mechanism copes with such dynamics, potentially incorporating change detection as suggested in their limitations.\n\n2. **Inconclusive multi-agent performance analysis**: Table 2 shows SR decreasing from 73.5% (1 agent) to 70.8% (4 agents), contradicting the expectation that more agents would accelerate knowledge accumulation. The paper attributes this to \"parallel versus sequential execution\" but doesn't investigate whether this is a fundamental limitation of the framework or solvable through better coordination protocols. A more thorough analysis of inter-agent communication patterns and knowledge transfer efficiency would strengthen the multi-agent claims.\n\n3. **No direct metrics for redundant exploration reduction**: The paper's core contribution is eliminating redundant exploration, yet standard metrics (SR, SPL, SuccSPL) don't directly measure this. For instance, Figure 3 shows performance gains with larger memory, but doesn't quantify how many fewer steps were taken due to memory reuse. The authors should introduce metrics like \"redundant exploration ratio\" (steps taken to re-explore already-mapped areas) to directly validate their central claim.\n\n4. **Insufficient isolation of BLOS navigation benefits**: The ablation study (Table 3) shows the BLOS strategy slightly decreases SR while improving SPL/SuccSPL, but lacks specific examples demonstrating when it provides value. The paper should include qualitative case studies showing navigation trajectories with/without BLOS in challenging scenarios (e.g., goals behind walls), with explicit metrics on how many extra steps were saved by leveraging BLOS information.\n\n5. **Limited comparison to prior memory-sharing approaches**: While Section 2 mentions related work on shared memory (VLMaps, ConceptGraphs, HOV-SG), the paper doesn't evaluate these in the PSM setting for fair comparison. The authors should either extend existing methods to support persistent memory across tasks or explain why they're incompatible with the PSM paradigm, strengthening the novelty claim through direct comparison."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions for Rebuttal\n\n1. **Dynamic environment handling**: The paper acknowledges the static environment assumption as a limitation (Section A) but all experiments use static HM3D/MP3D datasets. Could you provide evidence of how TCSM handles controlled environmental changes (e.g., moved objects, opened doors) in simulation? Specifically, how does the weighted update mechanism respond to changes—does it gradually overwrite old information, or are there mechanisms to detect and prioritize recent changes? This would significantly strengthen claims about real-world applicability for home robotics where environments are dynamic.\n\n2. **Conflicting information resolution**: In multi-agent scenarios, different agents might provide conflicting semantic information about the same location (e.g., one labels a region as \"chair\" while another identifies it as \"table\"). How does the confidence-weighted update mechanism resolve such conflicts? Does it simply favor the most recent observation, or does it have mechanisms to detect persistent inconsistencies and potentially trigger re-evaluation? The current formulation (Eq. 2) suggests confidence accumulation but doesn't specify how contradictory high-confidence observations are handled.\n\n3. **Robustness to initial errors**: The memory size experiments (Fig. 3) show performance improvements with more pre-existing knowledge, but what happens when the initial TCSM contains significant errors? Could you share results from experiments where the initial map has, for example, 10-30% mislabeled objects? This would help assess whether the weighted update mechanism can correct initial mistakes or if errors become entrenched, which is critical for practical deployment where initial maps may be imperfect.\n\n4. **Parameter sensitivity explanation**: The paper sets γ = 0.2 (Section 4.1), yet Table 4 shows substantially better performance with γ = 0.8 (82.1% SR vs 83.1% SR). Could you explain this discrepancy and provide analysis of how γ affects the trade-off between memory stability and adaptability across different environments? This would clarify whether the paper's implementation used suboptimal parameters or if there are other factors influencing this difference.\n\n## Constructive Suggestions\n\n1. **Failure mode analysis**: While the paper reports success rates, a more detailed analysis of failure cases would be valuable. Specifically, comparing failure types between PSM and stateless approaches (e.g., \"redundant exploration\" vs. \"BLOS misjudgment\") would strengthen claims about the practical benefits of persistent memory.\n\n2. **Long-term memory management**: The computation analysis (Table 5) shows linear scaling with voxel count, but doesn't address how the system would handle memory growth over extended deployments. Could you discuss potential strategies for memory compression or selective retention while preserving navigation utility? This would enhance the practical deployment roadmap.\n\n3. **Real-world validation pathway**: Given the simulation-only evaluation, could you outline specific steps for real-world testing (e.g., using the Habitat-Matterport3D dataset with physical robots) and identify the most significant challenges you anticipate in bridging the sim-to-real gap? This would strengthen the connection between the theoretical framework and practical applications."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "REMEMBER BEFORE YOU EXPLORE: PERSISTENT SHARED MEMORY FOR ZERO-SHOT OBJECT NAVIGATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "3 METHODOLOGY",
+    "3.1 PROBLEM FORMULATION",
+    "2 RELATED WORKS",
+    "3.2 METHOD OVERVIEW",
+    "3.3 TEMPORALLY CONSISTENT SEMANTIC MAP",
+    "3.4 BLOS-AWARE NAVIGATION STRATEGY",
+    "4 EXPERIMENTS",
+    "4.1 BENCHMARKS AND IMPLEMENTATION DETAILS",
+    "Table 1: Object Navigation results on HM3D and MP3D.",
+    "4.2 COMPARATIVE ANALYSIS",
+    "4.3 IMPACT OF PRE-EXISTING MEMORY SIZE",
+    "4.4 MULTI-AGENT COLLABORATION WITH TCSM",
+    "4.5 ABLATION STUDIES",
+    "4.6 COMPUTATION COST ANALYSIS",
+    "5 CONCLUSION",
+    "Under review as a conference paper at ICLR 2026"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

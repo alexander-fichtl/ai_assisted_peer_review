@@ -1,0 +1,41 @@
+ICLR final_answer shorter than 30 chars (likely rating-only / stub)
+
+=== gpt ===
+  Q2: 0/50 rating-only answers
+  Q3: 0/50 rating-only answers
+  Q4: 0/50 rating-only answers
+  Q9: 0/50 rating-only answers
+
+=== qwen ===
+  Q2: 0/50 rating-only answers
+  Q3: 0/50 rating-only answers
+  Q4: 0/50 rating-only answers
+  Q9: 0/50 rating-only answers
+
+=== llama ===
+  Q2: 8/50 rating-only answers
+    - 084SvT55yk: 'Rating: 4'
+    - 1RrwTXSU4c: 'Rating: 4'
+    - 8uZ5UdIul2: 'Rating: 4'
+    - EFOMez9cBW: 'Rating: 4'
+    - nBta7psl5J: 'Rating: 4'
+    ... and 3 more
+  Q3: 6/50 rating-only answers
+    - 084SvT55yk: 'Rating: 4'
+    - 1RrwTXSU4c: 'Rating: 3'
+    - 8uZ5UdIul2: 'Rating: 4'
+    - EFOMez9cBW: 'Rating: 4'
+    - nBta7psl5J: 'Rating: 4'
+    ... and 1 more
+  Q4: 3/50 rating-only answers
+    - 084SvT55yk: 'Rating: 4'
+    - EFOMez9cBW: 'Rating: 4'
+    - nBta7psl5J: 'Rating: 4'
+  Q9: 32/50 rating-only answers
+    - 084SvT55yk: 'Rating: 8'
+    - 1RrwTXSU4c: '8'
+    - 5IqvMNQaUg: 'Rating: 8'
+    - 6K08FPo2cf: 'Rating: 8'
+    - 7y11BdJIOp: '8'
+    ... and 27 more
+

@@ -1,0 +1,70 @@
+{
+  "pdfname": "BZ1SSMS7L6",
+  "content": {
+    "summary": {
+      "value": "This paper introduces QPT (Q-learning Penalized Transformer), a novel framework for safe offline reinforcement learning that addresses the \"trilogy challenge\" of simultaneously satisfying safety constraints, maximizing rewards, and maintaining behavior regularization from offline datasets. QPT combines sequence modeling with Q-learning penalization, learning action distributions conditioned on historical trajectories and target returns while optimizing policies through weighted combinations of reward maximization and cost minimization objectives. The theoretical analysis demonstrates the framework's advantages under mild assumptions, showing alignment with optimal policies. Extensive experiments across 38 diverse tasks from the DSRL benchmark demonstrate QPT's consistent superiority over state-of-the-art baselines in learning safe, robust, and high-reward policies. A key contribution is QPT's ability to retain zero-shot adaptation capabilities to varying constraint thresholds without requiring retraining, making it particularly suitable for real-world applications where safety requirements may need dynamic adjustment. The framework effectively addresses limitations of existing approaches that either fail to satisfy safety requirements or produce overly conservative policies, while providing comprehensive ablation studies validating each component's importance."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. **Novel \"trilogy challenge\" formulation** precisely identifies the three competing objectives in safe offline RL (satisfying safety constraints, maximizing rewards, and maintaining behavior regularization) that prior work has struggled to balance. This conceptual framework (Section 1) provides clear structure for understanding the fundamental tension in safe offline RL, moving beyond the typical dual-objective framing to capture the complexity of real-world deployment scenarios.\n\n2. **Innovative Q-learning penalization mechanism** (Equation 8) explicitly formulates the competing objectives as controllable loss terms, allowing the policy to directly optimize for high rewards while minimizing costs. Unlike Lagrange-based methods that require fixed constraint thresholds during training, this approach enables the policy to learn adaptive behavior through the weighted combination of MSE loss, reward maximization, and cost minimization terms.\n\n3. **Theoretical guarantees with practical relevance** (Theorem 3.1) demonstrate that QPT can recover near-optimal policies under mild assumptions about return coverage and near-determinism. The proof shows improvement over standard sequence modeling by an additional Hσ_r and Hσ_c (Appendix B), providing formal justification for the method's effectiveness in addressing the trilogy challenge.\n\n4. **Effective data augmentation technique** (Algorithm 2) solves the critical problem of infeasible target pairs by \"stitching\" safe and high-reward trajectories. When a desired (ρ,κ) target pair is infeasible, the method relabels the most rewarding safe trajectory τ* to match the target, enabling learning from constrained datasets without excluding high-reward transitions.\n\n5. **Zero-shot adaptation to varying constraint thresholds** is demonstrated in Figure 2, showing QPT's ability to dynamically adjust to different cost constraints without retraining. This addresses a key limitation of Lagrange-based methods and makes the approach particularly suitable for real-world applications where safety requirements may change post-deployment.\n\n6. **Comprehensive empirical validation across 38 diverse tasks** demonstrates consistent superiority. As shown in Table 1, QPT is the only method to simultaneously satisfy safety constraints (normalized cost ≤ 1) while achieving the highest rewards across all SafetyGym, BulletGym, and MetaDrive benchmarks, with particularly strong results in challenging environments like HalfCheetahVelocity where it achieves 1.01 normalized reward with only 0.03 cost."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Overly restrictive theoretical assumptions**: Theorem 3.1 relies on a near-deterministic environment (Section 3.5), which rarely holds in real-world RL applications. While the authors acknowledge this limitation in Section A, they don't provide practical guidance for when these assumptions might reasonably hold or how to adapt the method when they're violated. The theory assumes binary rewards/costs while experiments use continuous values, creating a disconnect between theoretical guarantees and implementation. The authors could strengthen their contribution by either relaxing these assumptions in the analysis or providing empirical validation of how performance degrades as environments become more stochastic.\n\n2. **Lack of real-world validation**: Despite emphasizing real-world applicability (Abstract, Introduction), all 38 experiments are conducted in simulation (Section 4). For a method targeting safety-critical domains like autonomous driving (cited in Section 1), real-world validation on physical systems would significantly strengthen the claims. The authors should include at least one real-world case study or collaborate with domain experts to test on physical safety-critical systems to demonstrate practical viability.\n\n3. **Inadequate hyperparameter sensitivity analysis**: While Figure 1 shows η₁/η₂ effects on two tasks, the paper lacks systematic guidance for selecting these critical hyperparameters across diverse environments. The ablation (Table 2) shows performance varies significantly with these values, but no methodology is provided for practitioners to tune them. The authors could develop an adaptive mechanism for setting η₁/η₂ based on dataset characteristics or provide empirical guidelines derived from their 38-task evaluation.\n\n4. **Unquantified computational overhead**: The ensemble inference (sampling 50 candidate actions) likely imposes substantial computational costs, especially for real-time applications. Table 5 shows diminishing returns beyond 30 candidates, but the paper doesn't report inference time or memory requirements. For safety-critical applications where latency matters, the authors should characterize the computational trade-offs and potentially develop methods to reduce the ensemble size while maintaining performance.\n\n5. **Incomplete comparison with recent baselines**: The paper compares with methods up to 2024 (e.g., FISOR, CDT), but misses very recent approaches like CUP (2024) or other state-of-the-art safe offline RL methods that may have emerged during the review cycle. Given the rapid evolution of this field, the authors should incorporate these newer baselines to ensure their claims of \"significant margin\" improvements remain valid against the current state-of-the-art."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions\n\n1. **Theoretical Applicability in Practice**: Theorem 3.1 assumes near-deterministic environments with binary rewards/costs, while experiments use continuous values in complex stochastic environments. Could you provide practical metrics or heuristics for determining when these theoretical assumptions approximately hold in real-world scenarios? For instance, are there specific characteristics of offline datasets (e.g., coverage metrics, variance in state transitions) that indicate QPT will perform well despite the theoretical limitations?\n\n2. **Zero-shot Adaptation Limits**: Figure 2 demonstrates strong zero-shot adaptation across different cost thresholds, but performance degrades in some environments (e.g., Walker2dVelocity) when thresholds become very restrictive. Could you characterize the practical limits of this capability? What is the minimum threshold range where QPT maintains reliable safety-performance trade-offs without retraining, and how does this vary across different environment types?\n\n3. **Ensemble Computational Impact**: Table 5 shows 50 candidate actions as the optimal ensemble size. Could you quantify the real-world inference time impact of this ensemble approach compared to single-action methods? For deployment scenarios with strict latency requirements (e.g., autonomous driving), what techniques might reduce computational overhead while preserving performance?\n\n4. **Lagrange Method Comparison**: The paper states that Lagrange-based methods \"require the threshold must remain fixed during training\" (Section 3.1). Have you explored or tested any variants of Lagrange methods (e.g., adaptive dual variables, meta-learning approaches) that might allow threshold adaptation without full retraining? If so, what fundamental limitations prevent these from matching QPT's zero-shot capability?\n\n## Constructive Suggestions\n\n1. **Data Augmentation Analysis**: The relabeling technique (Algorithm 2) creates new trajectories by modifying existing ones to match infeasible (ρ,κ) pairs. Consider adding analysis of how this affects the training data distribution—specifically whether it introduces bias toward certain trajectory types or changes the relative frequency of safe/unsafe transitions. This would strengthen understanding of why QPT outperforms CDT in safety-critical tasks.\n\n2. **Failure Mode Characterization**: While QPT achieves safe performance across all tasks (Table 1), it would be valuable to characterize scenarios where performance degrades most significantly (e.g., extremely tight cost constraints). A brief analysis of failure modes could help practitioners understand QPT's operational boundaries and inform potential extensions.\n\n3. **Practical Deployment Guidance**: Consider adding a section on practical deployment considerations, particularly addressing the trade-off between ensemble size (Table 5) and computational constraints. A simple guideline for selecting ensemble size based on available compute resources would enhance the paper's practical utility for real-world implementation.\n\nThese points focus on areas where author responses could significantly enhance understanding of the method's practical applicability, address limitations constructively, and provide valuable guidance for practitioners—rather than merely highlighting weaknesses already noted in the review."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Q-LEARNING PENALIZED TRANSFORMER FOR SAFE OFFLINE REINFORCEMENT LEARNING",
+    "Anonymous authors",
+    "2 RELATED WORK",
+    "3 METHODOLOGY",
+    "3.1 PROBLEM SETUP",
+    "3.2 CONDITIONAL TRANSFORMER POLICY",
+    "3.3 Q-LEARNING PENALIZATION",
+    "3.4 DATA AUGMENTATION AND ENSEMBLE",
+    "3.5 THEORETICAL ANALYSIS",
+    "4 EXPERIMENT",
+    "4.1 ABLATION",
+    "5 CONCLUSION",
+    "A ADDITIONAL STATEMENT",
+    "B PROOF OF THEOREM 3.1",
+    "Algorithm 1 QPT: Q-learning Penalized Transformer",
+    "for t = 1 to H do",
+    "end for .",
+    "end for .",
+    "repeat",
+    "D EXPERIMENT DETAILS",
+    "D.1 ENVIRONMENT DESCRIPTIONS",
+    "D.2 HYPERPARAMETERS",
+    "D.3 ABLATION OF THE NUMBER OF CANDIDATE ACTIONS IN ENSEMBLE"
+  ],
+  "images_used": 4,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

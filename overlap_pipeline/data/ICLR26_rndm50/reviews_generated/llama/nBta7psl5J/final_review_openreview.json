@@ -1,0 +1,126 @@
+{
+  "pdfname": "nBta7psl5J",
+  "content": {
+    "summary": {
+      "value": "This paper introduces a new problem setting: competing attacks in Retrieval-Augmented Generation (RAG) systems, where multiple attackers attempt to manipulate the same query toward different target outcomes. The authors formalize this threat model and propose a metric, competitive effectiveness, to quantify an attacker's advantage under competition. They conduct a series of controlled experiments comparing seven poisoning methods under both single- and multi-attacker settings, revealing that many state-of-the-art methods degrade significantly in the multi-attacker setting. The authors present PoisonArena, a standardized framework and benchmark for evaluating poisoning attacks and defenses under realistic, multi-adversary conditions. The paper provides empirical insights into the performance of various attack methods, highlighting performance inversions and degradation under competition. The authors also propose a new evaluation perspective, measuring an attack method in both single-attacker and multi-attacker settings. Overall, the paper sheds light on the limitations of current evaluation approaches and calls for multi-dimensional evaluations that account for cost, access, and stealth in assessing poisoning attacks."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Novel Problem Formulation**: The paper introduces a new problem setting called \"competing attacks\" in Retrieval-Augmented Generation (RAG) systems, where multiple attackers attempt to manipulate the same query toward different target outcomes. This formulation addresses a realistic and previously overlooked threat model.\n\n2. **Formalization and Metrics**: The authors formalize the threat model of competing attacks and propose a metric called \"competitive effectiveness\" to quantify an attacker's advantage under competition. They also introduce additional metrics such as m-ASR, m-F1, and competitive coefficient to evaluate attack performance in multi-attacker settings.\n\n3. **Comprehensive Experiments**: The paper presents a series of controlled experiments comparing seven poisoning methods under both single- and multi-attacker settings. The experiments are conducted on two widely used datasets: Natural Questions (NQ) and MS MARCO.\n\n4. **Empirical Insights**: The study reveals surprising findings, including performance inversions and degradation of state-of-the-art methods under competition. The results highlight the limitations of current evaluation approaches and the need for multi-dimensional evaluations.\n\n5. **Benchmark and Evaluation Framework**: The authors introduce PoisonArena, a standardized framework and benchmark for evaluating poisoning attacks and defenses under realistic, multi-adversary conditions. This framework provides a valuable resource for future research on attack development and defense design.\n\n6. **Clarity and Writing Quality**: The paper is well-written and clearly organized, making it easy to follow and understand the problem formulation, methodology, and experimental results.\n\n7. **Significance and Originality**: The paper brings significant originality to the research area by introducing a new problem setting, formalizing the threat model, and proposing new evaluation metrics. The results and insights have valuable implications for the broader NeurIPS community."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Evaluation of Defenses**: The paper primarily focuses on evaluating attack methods under single- and multi-attacker settings. While it mentions the importance of defenses, the evaluation of defense mechanisms is relatively limited. A more comprehensive assessment of various defense strategies and their effectiveness against competing attacks would strengthen the paper.\n\n2. **Dependence on Specific Models and Datasets**: The experiments are conducted using specific large language models (e.g., LLaMA-3-8B-Instruct, GPT-4o) and datasets (e.g., Natural Questions, MS MARCO). The results might not generalize to other models or datasets with different characteristics. Additional experiments on a broader range of models and datasets would increase the paper's robustness and applicability.\n\n3. **Lack of Real-World Data Experiments**: The paper primarily uses publicly available datasets for evaluation. While these datasets are widely used, experiments on real-world data or scenarios could provide more insights into the practical effectiveness of competing attacks and the proposed metrics.\n\n4. **Optimization Complexity and Computational Resources**: The paper mentions that some attack methods, like ContentPoison, are computationally intensive. A more detailed discussion on the optimization complexity and required computational resources for each method could help readers understand their practical feasibility.\n\n5. **Potential for Misuse**: The paper acknowledges the potential for misuse of the proposed methodologies for harmful or manipulative content. While it emphasizes the use of the benchmark and experiments for academic and defensive purposes, additional discussions on safeguards and responsible disclosure practices could mitigate these risks.\n\n6. **Scalability of PoisonArena**: The introduction of PoisonArena as a benchmark is a significant contribution. However, a more detailed analysis of its scalability, particularly in terms of handling a large number of queries, attackers, and poisoned documents, would be beneficial.\n\n7. **Generalizability to Other Retrieval-Based Systems**: The paper focuses on Retrieval-Augmented Generation (RAG) systems. Exploring the applicability of the proposed threat model, metrics, and benchmark to other retrieval-based systems or domains (e.g., search engines, recommendation systems) could broaden the paper's impact and relevance.\n\n8. **Further Analysis of Attack Tax**: The paper introduces the concept of \"attack tax\" to evaluate the practicality of attack methods. A more in-depth analysis of how different dimensions of attack tax (e.g., access, computation cost, similarity of poison documents) interplay and affect the overall assessment of attack methods could provide valuable insights.\n\nBy addressing these weaknesses, the paper could further strengthen its contributions and provide a more comprehensive evaluation of competing attacks in RAG systems."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Defense Mechanisms**: The paper mentions the importance of defenses but provides a relatively limited evaluation of defense strategies. Could the authors provide a more comprehensive assessment of various defense mechanisms, such as InstructRAG, RobustRAG, and TrustRAG, under both single- and multi-attacker settings?\n\n2. **Generalizability to Other Models and Datasets**: The experiments are primarily conducted using specific large language models (e.g., LLaMA-3-8B-Instruct, GPT-4o) and datasets (e.g., Natural Questions, MS MARCO). How do the authors plan to address the generalizability of their findings to other models or datasets with different characteristics?\n\n3. **Real-World Data Experiments**: The paper primarily uses publicly available datasets for evaluation. Could the authors consider conducting experiments on real-world data or scenarios to provide more insights into the practical effectiveness of competing attacks and the proposed metrics?\n\n4. **Optimization Complexity and Computational Resources**: The paper mentions that some attack methods, like ContentPoison, are computationally intensive. Could the authors provide a more detailed discussion on the optimization complexity and required computational resources for each method, including potential optimizations or approximations that could make these methods more practical?\n\n5. **Mitigating Potential Misuse**: The paper acknowledges the potential for misuse of the proposed methodologies for harmful or manipulative content. What specific safeguards or responsible disclosure practices do the authors propose to mitigate these risks, and how can the research community ensure that PoisonArena is used responsibly?\n\n6. **Scalability of PoisonArena**: The introduction of PoisonArena as a benchmark is a significant contribution. Could the authors provide a more detailed analysis of its scalability, particularly in terms of handling a large number of queries, attackers, and poisoned documents, and how they plan to maintain and update this benchmark in the future?\n\n7. **Applicability to Other Retrieval-Based Systems**: The paper focuses on Retrieval-Augmented Generation (RAG) systems. How do the authors envision the applicability of their proposed threat model, metrics, and benchmark to other retrieval-based systems or domains, such as search engines or recommendation systems?\n\n8. **Further Analysis of Attack Tax**: The paper introduces the concept of \"attack tax\" to evaluate the practicality of attack methods. Could the authors provide a more in-depth analysis of how different dimensions of attack tax (e.g., access, computation cost, similarity of poison documents) interplay and affect the overall assessment of attack methods, and how this concept can be used to guide future research on attack development and defense design?\n\n9. **Comparison with Other Attack Methods**: The paper evaluates seven representative poisoning methods. Could the authors consider comparing their approach with other state-of-the-art attack methods, such as those that might have been developed concurrently or very recently, to further validate the effectiveness of PoisonArena and the proposed metrics?\n\n10. **Visualization and Interpretation of Results**: Some of the experimental results are visualized in figures. Could the authors provide more detailed explanations or interpretations of these visualizations, particularly for readers who might not be familiar with the specific metrics or methodologies used?"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "## Ethics Review Needed\n\nThe paper introduces a new problem setting called \"competing attacks\" in Retrieval-Augmented Generation (RAG) systems",
+        "where multiple attackers attempt to manipulate the same query toward different target outcomes. The authors propose a benchmark and evaluation framework for assessing poisoning attacks under realistic",
+        "multi-adversary conditions. However",
+        "the paper also discusses potential vulnerabilities and misuse of RAG systems",
+        "including election manipulation and misinformation dissemination.\n\nGiven the potential implications of this research",
+        "I recommend an ethics review to ensure that the authors have adequately considered the responsible use of their proposed methodologies and benchmark.\n\n### Area of Expertise for Ethics Reviewer\n\nThe area of expertise for the ethics reviewer should be **Ethics review needed: Inappropriate Potential Applications & Impact  (e.g.",
+        "human rights concerns)**.\n\n### Reasoning\n\nThe paper's focus on competing attacks in RAG systems raises concerns about the potential for misuse",
+        "particularly in high-stakes domains such as elections",
+        "healthcare",
+        "and finance. The authors' discussion of case studies in real-world scenarios",
+        "including politics",
+        "e-commerce",
+        "and meme-stock markets",
+        "highlights the potential for their research to be applied in ways that could have significant societal impacts.\n\nAn ethics review is necessary to ensure that the authors have carefully considered these potential implications and have taken steps to mitigate any risks associated with the misuse of their research. The ethics reviewer should have expertise in evaluating the potential applications and impacts of AI research",
+        "particularly in areas related to human rights",
+        "fairness",
+        "and societal well-being.\n\n### Specific Questions for the Ethics Reviewer\n\n1. Have the authors adequately considered the potential risks and implications of their research",
+        "particularly in high-stakes domains such as elections and healthcare?\n2. Are there any potential biases or unfairness concerns related to the proposed methodologies or benchmark?\n3. Have the authors provided sufficient documentation and safeguards to ensure that their research is used responsibly and for defensive purposes only?\n\nBy addressing these questions",
+        "the ethics reviewer can help ensure that the authors' research is conducted in an ethical and responsible manner",
+        "and that the potential benefits of their work are realized while minimizing any potential risks or harms."
+      ]
+    },
+    "rating": {
+      "value": "8"
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "UNCOVERING COMPETING POISONING ATTACKS IN RETRIEVAL-AUGMENTED GENERATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCE",
+    "2 THREAT MODEL",
+    "3 EVALUATING FROM A COMPETITIVE PERSPECTIVE",
+    "3.1 M-ASR AND M-F1",
+    "3.2 COMPETITIVE COEFFICIENT",
+    "3.3 ESTIMATING COMPETITIVE COEFFICIENTS VIA SIMULATION",
+    "3.4 OPTIMIZATION AND CONVERGENCE",
+    "Update the θ :",
+    "4 EXPERIMENTS",
+    "4.1 EXPERIMENTAL SETUP",
+    "4.2 SINGLE-ATTACKER SETTING",
+    "4.3 MULTI-ATTACKER SETTING",
+    "5 DISCUSSION",
+    "5.1 WHY COMPETING ATTACKS MATTER: DO THEY REFLECT REAL-WORLD SCENARIOS?",
+    "5.2 DEFENSE",
+    "5.3 DYNAMIC ATTACK ANALYSIS",
+    "5.4 INFLUENCE OF MODELS, CORPUS AND HYPERPARAMETERS",
+    "5.5 ATTACK TAX: EVALUATION FROM MULTIPLE PERSPECTIVES",
+    "6 CONCLUSION",
+    "540 REFERENCES",
+    "A PROBLEM FORMULATION",
+    "A.1 RETRIEVAL-AUGMENTED GENERATION (RAG)",
+    "A.2 POISONING ATTACK",
+    "Prompt for Incorrect Answers Generation",
+    "### Example:",
+    "### Input:",
+    "### Output Format:",
+    "B.2 LLMS AND RETRIEVER",
+    "Prompt for Incorrect Answers Generation",
+    "### TASK:",
+    "### Example:",
+    "### Input:",
+    "### Output Format:",
+    "B.4 EVALUATION",
+    "B.4.1 METRICS",
+    "2 · Precision · Recall",
+    "1019 1020 B.4.2 JUDGE",
+    "1063 B.5 IMPLEMENT DETAILS",
+    "C.3 QUERY-BASED ATTACK AND KNOWLEDGE-BASED ATTACK",
+    "Prompt for Inference",
+    "C DETAILED EXPERIMENTS RESULTS",
+    "C.1 SINGLE-ATTACKER RESULTS",
+    "C.2 MULTI-ATTACKER RESULTS",
+    "Prompt for Paraphrase Query",
+    "### Task:",
+    "### Example:",
+    "### Input:",
+    "### Output Format:",
+    "C.4 DEFENSE",
+    "C.5 ATTACK ORDER",
+    "1454 C.6 TRIGGER OR CONTENT?",
+    "C.7 HYPERPARAMETER INFLUENCE",
+    "C.8 TESTING ON BROADER MODELS",
+    "C.9 TESTING ON OTHER LANGUAGES CORPORA",
+    "D ATTACK TAX",
+    "5. Local services/Maps",
+    "6. Music streaming",
+    "7. Public-health info",
+    "1884 H THE USE OF LARGE LANGUAGE MODELS"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

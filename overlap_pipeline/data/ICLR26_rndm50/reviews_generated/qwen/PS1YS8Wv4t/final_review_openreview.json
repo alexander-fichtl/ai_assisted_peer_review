@@ -1,0 +1,72 @@
+{
+  "pdfname": "PS1YS8Wv4t",
+  "content": {
+    "summary": {
+      "value": "The paper introduces HELM (Hamiltonian-trained Electronic-structure Learning for Molecules), a scalable model that predicts Hamiltonian matrices from molecular structures, bridging electronic structure prediction with machine-learned interatomic potentials. The authors curate OMol CSH 58k, a dataset of Hamiltonian matrices featuring unprecedented diversity across 58 elements, molecular sizes up to 150 atoms, and large basis sets including diffuse functions. They propose \"Hamiltonian pretraining\" as a method to extract meaningful atomic environment descriptors from limited structural data, which can be repurposed for energy prediction. This approach demonstrates up to 2× improvement in energy prediction accuracy in low-data regimes compared to direct training on energy labels. HELM achieves state-of-the-art performance on existing Hamiltonian matrix prediction benchmarks while scaling to structures with 100+ atoms and high elemental diversity. The work establishes electronic structure data as a rich and transferable source for representing chemical space, providing a recipe for integrating orbital interaction data into atomic property prediction pipelines. The authors release both the HELM model and OMol CSH 58k dataset to advance research in electronic structure learning."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Novel utilization of underexploited data source**: The paper identifies a critical gap in MLIP development—while DFT calculations generate vast Hamiltonian matrix data alongside energy/force labels, this rich electronic structure information has been largely ignored. The authors demonstrate that this data, available at no additional computational cost, contains transferable representations that improve energy prediction by up to 2× in low-data regimes (Table 3), an improvement that would otherwise require more than an order of magnitude more DFT calculations.\n\n2. **Unprecedented dataset scale and diversity**: OMol CSH 58k represents a significant advancement in electronic structure datasets by spanning 58 atomic elements (all first 83 excluding first-row transition metals and lanthanides), molecules up to 150 atoms, and basis sets with diffuse functions (def2-TZVPD). This exceeds previous benchmarks like ∇²DFT (limited to 8 elements) by orders of magnitude in elemental diversity while maintaining realistic molecular complexity (Fig. 2).\n\n3. **Targeted architectural innovations**: HELM introduces specific technical solutions to previously unaddressed challenges in electronic structure prediction. The node parity expansion for diagonal blocks and l=0 component scaling (Table 9) directly address the disproportionate impact of diagonal Hamiltonian elements on energy computation, reducing energy errors from >300,000 meV to 706 meV—a 400× improvement that previous models couldn't achieve.\n\n4. **Compelling evidence of representation learning**: The UMAP visualizations (Fig. 4) provide concrete evidence that Hamiltonian pretraining learns more discriminative atomic environment representations, particularly for underrepresented heavy elements. The \"pretrained-frozen\" model shows distinct clustering for elements like Rhodium (Z=45) and Tungsten (Z=74) that the \"direct\" model completely fails to distinguish, demonstrating fine-grained understanding of electronic environments.\n\n5. **Practical significance for data-constrained scenarios**: The controlled experiments on ∇²DFT's Train-2k split (8,097 molecules) show that Hamiltonian pretraining reduces test energy error by 66% compared to direct training (266 meV vs. 791 meV), directly addressing the critical bottleneck in MLIP development where further dataset scaling becomes computationally infeasible despite \"current largest models [already] trained on over 10 billion core hours worth of DFT data.\""
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Practical applicability gap in energy prediction**: While the paper demonstrates up to 2× improvement in energy prediction accuracy in low-data regimes (Table 3), it fails to show results at the scale needed for practical MLIP applications. The authors acknowledge this limitation: \"finetuning the pretrained HELM backbone models on a larger fraction of the energy data available in OMol25 is the next step towards achieving practically usable energy accuracies comparable with current MLIPs.\" To strengthen the contribution, the authors should demonstrate performance on a larger energy dataset (e.g., OMol25's full energy labels) and compare against state-of-the-art MLIPs like UMA (Wood et al., 2025) to establish whether the approach reaches practically useful accuracy levels.\n\n2. **Heavy element performance limitations**: The paper shows significantly degraded performance on heavy elements (Table 4: OMol all 5k test error of 5,976 meV vs. OMol common 1k's 3,632 meV). While the authors note this stems from \"variation in matrix element magnitudes,\" they don't propose targeted solutions. Given that heavy elements are critical for applications like catalysis and materials science, the authors should explore element-specific normalization techniques beyond their current scalar referencing (Section B.3) or investigate adaptive architectures that better handle the wide dynamic range of heavy element interactions (as visualized in Fig. 7).\n\n3. **Lack of comparison with alternative pretraining strategies**: The paper demonstrates Hamiltonian pretraining improves energy prediction but doesn't compare it against other potential pretraining approaches that might yield similar or better benefits with less computational cost. For instance, pretraining on electron density (a lower-dimensional target than the full Hamiltonian) or on simpler electronic properties could provide comparable representation learning with reduced memory requirements. A systematic comparison would strengthen the claim that Hamiltonian pretraining is the optimal approach.\n\n4. **No validation on molecular dynamics simulations**: A primary application of MLIPs is molecular dynamics (MD), yet the paper doesn't validate whether improved energy predictions translate to stable, accurate MD simulations. The authors should include MD trajectory comparisons (e.g., phonon spectra, diffusion coefficients) between models with and without Hamiltonian pretraining to demonstrate practical utility beyond static energy prediction.\n\n5. **Scalability constraints not adequately addressed**: The paper acknowledges memory limitations for larger systems (\"the number of required edge-labels and basis set size grow\"), but doesn't explore concrete solutions. Given the authors' focus on \"universal\" MLIPs, they should investigate techniques like sparse tensor representations or adaptive basis selection to maintain performance while reducing memory footprint for systems with 200+ atoms, which would better align with the paper's stated goal of bridging electronic structure prediction with practical MLIP applications."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions for Rebuttal\n\n1. **Practical scalability to production MLIPs**: The paper demonstrates up to 2× improvement in energy prediction accuracy in low-data regimes, but doesn't show results at the scale needed for practical MLIP applications. Could you provide estimates or preliminary results on how much energy data would be needed with Hamiltonian pretraining to reach practical accuracy levels (<1 meV/atom)? How does this compare to the data requirements without pretraining? This is critical for assessing whether the approach represents a meaningful advance toward practical MLIP development.\n\n2. **Computational cost trade-offs**: Hamiltonian matrices have O(N²) elements versus O(N) for energy prediction. What is the actual computational cost difference between training on Hamiltonian matrices versus traditional energy/force prediction? Does the benefit in data efficiency (2× improvement) outweigh the increased computational cost per training example? Section C.2 mentions training on OMol CSH 58k required \"1,408k graph edges per batch\" - how does this compare to typical MLIP training costs?\n\n3. **Matrix error to energy error relationship**: Figure 10 shows that small matrix element errors (60 µEₕ) lead to significant energy errors (hundreds of meV). Could you provide more detailed analysis of this non-linear relationship? Specifically, which matrix components (diagonal vs. off-diagonal, specific orbital types) most impact energy accuracy? The paper mentions issues with nearly-degenerate eigenvalues causing inconsistent occupation patterns - is this the primary bottleneck, and if so, how might it be addressed?\n\n4. **Force prediction capabilities**: The paper focuses on energy prediction but MLIPs require accurate forces for MD simulations. Could you demonstrate whether forces computed from your predicted energies (via finite differences) achieve comparable improvements to energy prediction? Section 4.2 mentions \"gradient-based force prediction\" but doesn't provide quantitative results on force accuracy.\n\n5. **Generalization to unseen elements**: The OMol CSH 58k dataset includes 58 elements, but practical MLIP applications often encounter elements not seen during training. Could you test HELM's ability to generalize to completely unseen elements (e.g., by training on a subset of elements and testing on held-out elements)? This would better demonstrate the transferability of the learned representations.\n\n## Constructive Suggestions\n\n1. **Basis set analysis**: The paper uses def2-TZVPD basis sets, but many practical applications use smaller basis sets. Could you include an ablation study showing how the benefits of Hamiltonian pretraining vary with basis set size? This would help practitioners understand the approach's applicability across different computational budgets.\n\n2. **Long-range interaction analysis**: Figure 11 shows that HELM captures decay in orbital interactions up to 15Å. Could you provide more specific analysis comparing how HELM handles long-range interactions versus traditional MLIPs? The paper mentions this is a strength but doesn't quantify the improvement over existing approaches.\n\n3. **Periodic system extension**: While the current work focuses on molecules, many MLIP applications target materials. Could you discuss the architectural modifications needed to extend HELM to periodic systems, and whether you've observed preliminary success with such extensions? This would strengthen the paper's relevance to the broader MLIP community.\n\n4. **Pretraining alternative comparison**: The paper compares direct training versus Hamiltonian pretraining but doesn't compare with"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "LEARNING FROM THE ELECTRONIC STRUCTURE OF MOLECULES ACROSS THE PERIODIC TABLE",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 BACKGROUND AND PREVIOUS WORK",
+    "3 METHODS",
+    "3.1 OMOL CLOSED-SHELL 58K",
+    "4 RESULTS",
+    "4.1 HAMILTONIAN MATRIX BENCHMARKS",
+    "4.2 HAMILTONIAN PRETRAINING",
+    "5 CONCLUSION",
+    "REPRODUCIBILITY STATEMENT",
+    "A BACKGROUND",
+    "A.1 THE ELECTRONIC STRUCTURE PROBLEM IN DFT",
+    "A.2 EXTRACTING ATOMIC-LEVEL OBSERVABLES FROM THE HAMILTONIAN MATRIX",
+    "B HAMILTONIAN DATA PROCESSING",
+    "B.1 PROCESSING THE HAMILTONIAN MATRIX INTO LEARNING TARGETS",
+    "B.2 DECAY OF ORBITAL INTERACTIONS WITH INTER-ATOMIC DISTANCE",
+    "B.3 NORMALIZING SCALAR NODE BLOCK IRREPS",
+    "C MODEL &amp; TRAINING",
+    "C.1 MODEL PARAMETERS",
+    "C.2 TRAINING PARAMETERS",
+    "C.3 ABLATIONS ON NODE-PARITY EXPANSION AND l = 0 SCALING",
+    "D ADDITIONAL RESULTS",
+    "D.1 HAMILTONIAN MATRIX ERROR ANALYSIS -∇ 2 DFT",
+    "D.2 OMOL CSH 58K HAMILTONIAN PREDICTIONS",
+    "D.3 ENERGY PREDICTION ON DIFFERENT CONFORMERS SPLITS -∇ 2 DFT",
+    "D.4 EXTENDED UMAP EMBEDDING ANALYSIS",
+    "E USE OF LLMS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

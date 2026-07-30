@@ -1,0 +1,100 @@
+#####----- Server side ------------------------------------------------------------------------------------#####
+nvidia-smi
+df -h / /workspace
+python -c "import torch; print('torch', torch.__version__, 'cuda', torch.version.cuda)"
+python -c "import vllm; print('vllm', vllm.__version__)" || echo "no vllm"
+
+
+export HF_HOME=/workspace/hf-cache
+export HF_HUB_CACHE=/workspace/hf-cache/hub
+export TMPDIR=/workspace/hf-cache/tmp
+mkdir -p "$HF_HOME" "$HF_HUB_CACHE" "$TMPDIR"
+
+unset HF_HUB_ENABLE_HF_TRANSFER
+export HF_HUB_DISABLE_XET=1
+
+export VLLM_WORKER_MULTIPROC_METHOD=spawn
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+
+export HF_TOKEN="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"
+export HUGGINGFACE_HUB_TOKEN="$HF_TOKEN"
+
+
+pip install -U "vllm==0.14.0"
+python -c "import vllm; print(vllm.__version__)"
+
+
+python - <<'PY'
+import torch
+print("cuda devices:", torch.cuda.device_count())
+for i in range(torch.cuda.device_count()):
+    print(i, torch.cuda.get_device_name(i))
+PY
+
+
+unset PYTORCH_CUDA_ALLOC_CONF
+export PYTORCH_ALLOC_CONF=expandable_segments:True
+
+pkill -f "vllm" || true
+pkill -f "python" || true
+sleep 2
+pkill -f "vllm serve" || true
+
+vllm serve "meta-llama/Llama-4-Scout-17B-16E-Instruct" \
+  --host 0.0.0.0 --port 8000 \
+  --tensor-parallel-size 4 \
+  --gpu-memory-utilization 0.90 \
+  --max-model-len 64000
+#####------------------------------------------------------------------------------------------------------#####
+
+
+
+#####----- Client side (Optional test)---------------------------------------------------------------------#####
+curl -s http://127.0.0.1:8000/v1/models | head
+curl -s http://127.0.0.1:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model":"meta-llama/Llama-4-Scout-17B-16E-Instruct",
+    "messages":[{"role":"user","content":"Reply with OK only."}],
+    "temperature":0
+  }' | head -c 400
+#####------------------------------------------------------------------------------------------------------#####
+
+
+
+#####----- Upload files -----------------------------------------------------------------------------------#####
+"runpodctl.exe" config --apiKey "rpa_abc"
+
+runpodctl send "...\zips\processed_pdfs_natureCom.zip"
+
+cd workspace
+runpod receive ...
+mkdir processed_pdfs_natureCom
+unzip processed_pdfs_natureCom.zip -d processed_pdfs_natureCom
+
+runpodctl send "...\zips\context_natureCom.zip"
+
+cd workspace
+runpod receive ...
+mkdir context
+unzip context_natureCom.zip -d context
+
+runpodctl send "...\zips\reviewer_llama_natureCom.py"
+
+cd /workspace
+python reviewer_llama_natureCom.py
+
+
+...
+
+cd /workspace
+zip -r reviews_llama_natureCom.zip reviews_llama_natureCom
+runpodctl send /workspace/reviews_llama_natureCom.zip
+
+#On my PC:
+cd "downloads"
+runpodctl receive /workspace/reviews_llama_natureCom.zip
+
+"runpodctl.exe" receive ...
+
+#####------------------------------------------------------------------------------------------------------#####

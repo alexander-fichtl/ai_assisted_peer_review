@@ -1,0 +1,77 @@
+{
+  "pdfname": "koIbbsfKSf",
+  "content": {
+    "summary": {
+      "value": "This paper proposes a learning-based two-stage approach, DEcoupled discrete-Continuous optimization with Service-time-guided Trajectory (DeCoST), for solving the Orienteering Problem with Time Windows and Variable Profits (OPTWVP). OPTWVP is a complex variant of the Vehicle Routing Problem, involving both discrete routing decisions and continuous service-time allocations under a fixed time budget. DeCoST decomposes OPTWVP into a routing problem and a service time allocation problem, effectively decoupling the searching process while enabling efficient and learnable coordination. The first stage employs a parallel decoder to predict the path and initial service time allocation, while the second stage optimizes service times through a linear programming formulation. The authors prove the global optimality of the second-stage solution and demonstrate that DeCoST outperforms state-of-the-art constructive solvers and meta-heuristic algorithms in terms of solution quality and computational efficiency. The proposed framework is compatible with various constructive solvers and consistently enhances solution quality for OPTWVP. The approach achieves up to 6.6x inference speedup on instances with fewer than 500 nodes."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Novel Two-Stage Approach**: The paper proposes a novel learning-based two-stage approach, DEcoupled discrete-Continuous optimization with Service-time-guided Trajectory (DeCoST), for solving the Orienteering Problem with Time Windows and Variable Profits (OPTWVP). This approach effectively decouples discrete routing decisions from continuous service-time allocations.\n\n2. **Global Optimality Proof**: The authors provide a rigorous proof of the global optimality of the second-stage service time optimization solution. This is a significant contribution, as it ensures that the proposed approach can achieve high-quality solutions.\n\n3. **Superior Performance**: The paper demonstrates that DeCoST outperforms state-of-the-art constructive solvers and meta-heuristic algorithms in terms of solution quality and computational efficiency. This is evident from the experimental results on OPTWVP benchmark instances.\n\n4. **Compatibility with Constructive Solvers**: The proposed framework is compatible with various constructive solvers and consistently enhances solution quality for OPTWVP. This makes DeCoST a versatile and effective approach for solving complex optimization problems.\n\n5. **Clear and Concise Presentation**: The paper is well-written, with a clear and concise presentation of the approach. The use of figures and diagrams helps to illustrate the problem and the proposed solution, making the paper more accessible to readers.\n\n6. **Significant Originality**: The paper brings significant originality to the research area through its two-stage approach, which decouples the searching process and enables efficient coordination between discrete routing decisions and continuous service-time allocations.\n\n7. **Practical Implications**: The paper addresses a significant and complex variant of the Vehicle Routing Problem, which has substantial practical implications in various fields such as factory scheduling, logistics transportation, and robotic planning. The results are valuable to share with the broader NeurIPS community."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Comparison to State-of-the-Art Methods**: Although the paper compares DeCoST to several state-of-the-art methods, including Gurobi, Greedy-PRS, ILS, GFACS, and POMO, the comparison could be more comprehensive. For instance, the paper could include comparisons to other recent neural combinatorial optimization (NCO) methods, such as those using reinforcement learning or graph neural networks.\n\n2. **Lack of Theoretical Analysis on the First Stage**: While the paper provides a rigorous proof of global optimality for the second-stage service time optimization solution, the first stage's solution quality and optimality are not thoroughly analyzed. Providing a more detailed theoretical analysis of the first stage's performance guarantees could strengthen the paper.\n\n3. **Dependence on Annotated Data**: The paper mentions that most MIP problem studies rely on annotated data, which limits their applications. However, it is not clear how DeCoST handles cases where annotated data is not available. A more detailed discussion on the limitations of DeCoST in such scenarios and potential future directions for improvement would be beneficial.\n\n4. **Scalability to Larger Instances**: Although the paper demonstrates the effectiveness of DeCoST on instances with up to 500 nodes, it would be interesting to see how the method scales to even larger instances. Providing results on larger instances or discussing potential limitations and future directions for scaling up DeCoST would be valuable.\n\n5. **Interpretability of the pTAR Metric**: The paper introduces the profit-weighted time allocation ratio (pTAR) metric to evaluate the quality of service time allocations. However, it would be helpful to provide more insights into the interpretability of this metric and its relationship to the overall solution quality.\n\n6. **Ablation Study on the Supervised Loss**: The paper presents an ablation study on the components of DeCoST, including the spatial encoder, STO module, and supervised loss. However, it would be interesting to see a more detailed analysis of the impact of the supervised loss on the performance of DeCoST.\n\n7. **Generalizability to Other Vehicle Routing Problems**: While the paper demonstrates the effectiveness of DeCoST on OPTWVP instances, it would be valuable to discuss potential applications and extensions of DeCoST to other vehicle routing problems, such as the Vehicle Routing Problem with Time Windows (VRPTW) or the Capacitated Vehicle Routing Problem (CVRP)."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Annotated Data Dependence**: The paper mentions that most MIP problem studies rely on annotated data, which limits their applications. Can the authors provide more details on how DeCoST handles cases where annotated data is not available? Are there any potential future directions for improvement in such scenarios?\n\n2. **Theoretical Analysis of the First Stage**: While the paper provides a rigorous proof of global optimality for the second-stage service time optimization solution, the first stage's solution quality and optimality are not thoroughly analyzed. Can the authors provide a more detailed theoretical analysis of the first stage's performance guarantees?\n\n3. **Scalability to Larger Instances**: Although the paper demonstrates the effectiveness of DeCoST on instances with up to 500 nodes, it would be interesting to see how the method scales to even larger instances. Can the authors provide results on larger instances or discuss potential limitations and future directions for scaling up DeCoST?\n\n4. **Interpretability of the pTAR Metric**: The paper introduces the profit-weighted time allocation ratio (pTAR) metric to evaluate the quality of service time allocations. Can the authors provide more insights into the interpretability of this metric and its relationship to the overall solution quality?\n\n5. **Ablation Study on the Supervised Loss**: The paper presents an ablation study on the components of DeCoST, including the spatial encoder, STO module, and supervised loss. Can the authors provide a more detailed analysis of the impact of the supervised loss on the performance of DeCoST?\n\n6. **Generalizability to Other Vehicle Routing Problems**: While the paper demonstrates the effectiveness of DeCoST on OPTWVP instances, can the authors discuss potential applications and extensions of DeCoST to other vehicle routing problems, such as the Vehicle Routing Problem with Time Windows (VRPTW) or the Capacitated Vehicle Routing Problem (CVRP)?\n\n7. **Comparison to Other Recent NCO Methods**: Although the paper compares DeCoST to several state-of-the-art methods, can the authors include comparisons to other recent neural combinatorial optimization (NCO) methods, such as those using reinforcement learning or graph neural networks?\n\n8. **Addressing Potential Biases**: The paper mentions that the proposed approach is compatible with various constructive solvers and consistently enhances solution quality for OPTWVP. Can the authors discuss potential biases in the proposed approach and how they are addressed?\n\n9. **Additional Experimental Results**: Can the authors provide additional experimental results on other benchmark instances or real-world datasets to further validate the effectiveness of DeCoST?\n\n10. **Future Work Directions**: Can the authors discuss potential future work directions, such as improving computational efficiency in settings with limited batch processing or extending the framework to more general vehicle routing scenarios?"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "LEARNING TO SOLVE ORIENTEERING PROBLEM WITH TIME WINDOWS AND VARIABLE PROFITS",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 PRELIMINARIES",
+    "4 METHODOLOGY",
+    "4.1 TWO-STAGE OPTIMIZATION",
+    "Algorithm 1 Service time optimization algorithm",
+    "4.2 SUPERVISED LEARNING OF SERVICE TIME DECODER",
+    "5 EXPERIMENTS",
+    "5.1 PERFORMANCE ON SOLVING OPS WITH TIME CONSTRAINTS",
+    "5.2 PERFORMANCE ON DECOST WITH MODULE ABLATIONS",
+    "5.3 PERFORMANCE ON SOLOMON100",
+    "6 CONCLUSION AND FUTURE WORK",
+    "ACKNOWLEDGMENTS",
+    "ETHICS STATEMENT",
+    "REPRODUCIBILITY STATEMENT",
+    "LLM USAGE DISCLOSURE",
+    "A PROOF OF THEOREM 4.1",
+    "B SUPPLEMENTARY EXPERIMENTS",
+    "B.1 RESULTS ON RUNNING THE ILS FOR LONGER THAN 10 SECONDS",
+    "B.3 EXTENSION ON TEAM OPTWVP",
+    "B.4 SENSITIVITY ANALYSIS",
+    "B.5 PERFORMANCE EVALUATION OF THE INITIAL SERVICE TIME",
+    "B.6 EFFICIENCY ANALYSIS OF PTAR LOSS",
+    "C MATHEMATICAL FORMULATION OF OPTWVP",
+    "D NETWORK ARCHITECTURE OF DECOST",
+    "D.1 INPUT REPRESENTATION",
+    "D.2 ENCODER",
+    "D.3 DECODERS",
+    "E EXPERIMENT DETAILS",
+    "E.1 BASELINES",
+    "E.2 HYPERPARAMETERS"
+  ],
+  "images_used": 4,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

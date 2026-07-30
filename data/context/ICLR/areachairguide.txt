@@ -1,0 +1,133 @@
+Area Chair Guidelines
+Area Chairs play a critical role in curating the technical programme for ICLR. Use this as a resource for any questions related to your role as an Area Chair. Thank you for your contribution!  
+
+If you have questions that are not answered by the info below, please first contact your senior area chair. If you still need help, you can contact the program chairs at: program-chairs@iclr.cc
+
+Here are the key dates, focused on AC duties, that we expect to work towards for ICLR 2024 (Please allow possibility of small last-minute adjustments):
+
+Sep 27: Abstract submission
+Oct 01: Paper submission
+Oct 04: Assign Papers to ACs/SACs/Reviewers
+Oct 08: Reviewer Negative Bids Due
+Oct 11: AC confirming/adjusting reviewer-paper assignments
+Oct 14 - Nov 02: Review period
+Nov 03 - Nov 11: Chasing late reviews
+Nov 12: Paper review released to authors
+Nov 12 - Nov 26: Author/Reviewer/AC Discussion. Note: Reviewers cannot comment after Nov 26, but authors can update their papers until Nov 27
+Nov 27 - Dec 10: Reviewer/AC Discussions (slightly overlaps with NeurIPS)
+Dec 10 - Dec 20: Discuss Meta-review with SAC
+Dec 20: Meta review due
+Jan 22: Author notification
+Code of Ethics
+This year, ICLR continues to practice the Code of Ethics which needs to be acknowledged and adhered to by all participants including authors and reviewers. If any submission, review, or discussion comments raise ethical concerns, please flag the problematic content and contact the Program Chairs.
+
+Discussion Period
+Following the previous year’s format, we do not have a multi-stage discussion. There is only one stage (Nov 12-26, 2024) and then no changes to the papers are allowed and the AC/reviewers discussions start afterwards. Similarly to last year, we encourage Reviewer/AC virtual meetings (only for borderline papers). The ACs are required to organize a virtual AC/Reviewer meeting for each borderline paper. The AC is expected to summarize discussions from the meeting and post it in openreview. ACs are also encouraged to discuss their meta reviews with SACs via virtual meetings for cases they are unsure of. Meta reviews are due at the end of this stage.
+
+Your Roles and Action Items
+Reviewing Process Manager
+Your first role is to help the Program Chairs manage the reviewing process for the thousands of submissions we expect to receive. When you are assigned a batch of papers to handle based on your research profile , please recommend a set of appropriate reviewers (you may skip this, and the reviewers will be assigned based on their research profiles only ), and when some of those reviewers are delinquent or not responsive, please help us assign alternate reviewers in a timely manner so that every submission gets a chance to be judged fairly and expertly. We will be looking for 3 quality reviews per paper.
+
+Vet and recommend reviewer assignments
+Identify delinquent reviewers and assign alternate reviewers
+Decision Maker
+From the moment all papers are submitted, perhaps the most important role as AC is making decisions for the ICLR program. For every submission that goes through the reviewing process, please recommend whether it should be accepted or rejected. The recommendation should be accompanied by a metareview summarizing the reviews and the three stages of discussion, optionally adding your own view of the merits and limitations of the paper. If there is any disagreement among reviewers, the virtual meetings for those borderline papers should provide solid ground for resolving any disagreement. The Senior Area Chairs and Program Chairs will actively engage in this decision making and help with the metareviews, so please do not hesitate to contact your SAC or the PCs if you find the need to discuss any submission assigned to you.
+
+Flag papers for desk reject
+Watch out for reviewers’ flags for Code of Ethics violations. For all papers flagged, collect information, make an informed recommendation, and provide any evidence obtained (e.g., from the paper, discussion with author and/or reviewers). Please note the AC recommendation will be non-binding, and any of the flagged papers may be passed to the Ethics board for further review
+Engage in discussion with the reviewers to ultimately help you reach an informed decision (see next section)
+Organize virtual Reviewer/AC meetings only for borderline papers
+Write metareviews with recommendations for accept/reject
+Among the important responsibilities of ACs is to ensure reviewers’ judgments are in line with the new ICLR 2025 reviewer guidelines at https://iclr.cc/Conferences/2025/ReviewerGuide . Especially pay attention to the FAQs ( https://iclr.cc/Conferences/2025/ReviewerGuide#faq ) for questions such as the definition of contemporaneous work for the purpose of citations and empirical comparisons.
+
+Also, it is important to make sure that the language used in the reviews (including ACs’ own metareviews) are constructive and polite. Here are useful advice to review:
+
+Emtiyaz Khan, A few tips for Area Chairs of ML conferences
+Daniel Dennet, Criticizing with Kindness
+Views from multiple reviewers: Last minute reviewing advice
+Discussion Moderator
+Each submission is considered a forum on its own, and you as an AC have full responsibility in encouraging and moderating active discussions. When a submission does not receive enough attention that it deserves or requires, you should actively engage with the assigned reviewers as well as the authors and ask for clarification or argument. You should also “moderate” discussion by discouraging the participation in any discussion that is irrelevant to scientific claims and merits of a submission.
+
+Encourage reviewers to respond to author rebuttals
+Moderate the discussions so that they are not toxic and focus on the scientific merits, limitations, and clarifications
+Identify any violations of Code of Ethics during the discussion phase
+Discussion Participant
+We have invited you to serve as an AC because of your expertise and reputation. In other words, your assessment of a submission is a critical factor behind the entire decision-making process, and we ask you to actively participate in discussions not only as a moderator but also as a scientific expert. You are encouraged to ask authors (as well as any other commentator of the submission including assigned reviewers) for clarification. In other words, please be an active participant in discussion.
+
+Participate in discussions with your own view of the paper
+Ask authors for clarifications when needed to understand and judge the contributions fairly
+For more advices please see the AC FAQ ( https://iclr.cc/Conferences/2025/ACGuide#faq )
+Meta-Review Guideline
+As an AC, we trust you to make an informed recommendation based on sufficient knowledge and justified analysis of the paper and to clearly and thoroughly convey this recommendation and reasoning behind it to the authors. To this end, you have full freedom in writing your meta-reviews, although we list below a few items that have been found useful by authors when they were presented with meta-reviews. Aim to write a meta-review of at least 60 words.
+
+1. A concise description of the submission’s main content (scientific claims and findings) based on your own reading and reviewers’ characterization, including the paper’s strengths and weaknesses. Ideally this description should contain both what is discussed in the submission and what is missing from the submission.
+2. A concise summary of discussion. Unlike other conferences in which there is only a single round of back-and-forth between reviewers and authors, ICLR distinguishes itself by providing many weeks of discussion. These weeks of discussion and meetings not only serve the purpose of decision making but also to contribute scientifically to improve the submission. We thus encourage the AC to summarize the discussion in the meta-review. In particular, it is advised that the AC lists the points that were raised by the reviewers, how each of these points was addressed by the authors and whether you as the AC found each point worth consideration in decision making.
+3. Your recommendation and justification. The meta-review should end with a clear indication of your recommendation. Your recommendation must be justified based on the content and discussion of the submission (i.e., the points you described above.)
+
+FAQ for ICLR 2025 Area Chairs
+Q. What is the borderline paper meeting between AC and reviewers about?
+A. This year we require ACs to meet with reviewers for all borderline papers (defined below).  The goal of these meetings is to encourage more discussions and better deal with “tricky” cases. There will be one meeting per each borderline paper. Historically, this will be 3-4 papers in your stack, thus, 3-4 meetings.
+
+ 
+
+Q: What are the borderline papers?
+A: Once we receive all reviews, we will let you know which papers fall into the borderline papers bucket. We’ll primarily use the review scores and the spread. While the scores aren’t the perfect measure of borderline-ness, it is a good proxy to catch most of the borderline papers among a few thousand submissions. As an AC, you also have the right to organize meetings for any other papers that you consider as borderline/worth discussing.
+
+ 
+
+Q: For borderline papers, how should I organize online meetings?
+A: First you will collect reviewer emails that are visible on openreview. Then use a scheduling tool and propose potential dates to your reviewers, e.g. doodle . Please consider that reviewers may come from different time zones, plan accordingly. Provide an online tool to your reviewers, eg. Jitsi  and ask them to be prepared for the discussion.
+
+ 
+
+Q: What if a majority of my reviewers do not attend the meeting?
+A: All reviewers agreed to participate in reviewer-AC meetings when they accepted the reviewer invitations. ACs are expected to encourage all reviewers to participate in the meeting.
+
+If a reviewer does not respond to meeting requests, the AC should try sending reminders. In case everything fails, contact SACs for further help. If a reviewer does not respond at all after 2-3 reminders, please go ahead with the meeting with other reviewers.  Note that we will be marking reviewers who failed to attend meetings for future reference (excluding cases of emergencies).
+The AC may downweight the review of reviewers who refuse to attend the meeting.
+ 
+
+Q. Are my meta reviews going to be publically available and shared with authors?
+A. Yes.
+
+ 
+
+Q: How do the reviewers and ACs deal with the revisions of the paper  during the discussion period?
+A: The authors may revise their submission up until November 27, one week before the end of the discussion period. The final decision and meta-review should take the revisions into account; however, ACs reserve the right to ignore this revision if it is substantially different from the original version.
+ 
+
+Q: When do we seek emergency/additional reviewers ?
+A: In two cases:
+Assigned reviewers are unresponsive and the initial review deadline has passed.
+Additional reviews could improve the confidence in your recommendation. This is an important part of your responsibility, as we strive to provide timely feedback to the authors so that they can appropriately and fairly respond to the feedback.
+Especially if a review had not been submitted by the review deadline and the paper lacks 3 informed reviews, immediately start looking for and recruiting an emergency reviewer.
+
+ 
+
+Q: How do we assign emergency /additional reviewers?
+A: When you find an emergency reviewer, you will be able to assign them to the paper using the links in your AC console. If you struggle to find an emergency reviewer, please get in touch with the Senior AC paired with you as soon as possible. If all fails, reach out to the program chairs (program-committee@iclr.cc).
+
+ 
+
+Q: When authors directly message ACs via openreview, are ACs obliged to respond?
+A: Authors may leave a comment directed to their corresponding ACs using openview (shown as a comment on the paper page). This is often done to flag concerns or get help in activating discussions. ACs are expected to respond to reasonable inquiries promptly, and bring the question to corresponding SACs if the answer requires further discussions.
+
+ 
+
+Q: How do we identify and respond to potential breaches of the Code of Ethics ?
+A: All authors, reviewers, and area chairs must adhere to the Code of Ethics . If reviewers flag submissions, or if authors raise issues with reviewers/commenters, first carefully consider the facts of the situation, and if you find it is indeed problematic, please contact the program chairs (program-committee@iclr.cc).
+
+ 
+
+Q: Are authors expected to cite and discuss very recent work?
+A: We consider papers contemporaneous if they are published within the last four months.
+
+ 
+
+Q: Are authors expected to cite non peer-reviewed (e.g., ArXiv) papers?
+A: Authors are encouraged to cite and discuss all relevant papers, but they may be excused for not knowing about papers not published in peer-reviewed conference proceedings or journals.
+
+ 
+
+Q: Will the PCs share the review score distributions? How do I make a decision without knowing the curve?
+A: We do not plan to share the rating curve. The goal of ICLR is to accept quality papers, and not be constrained to the curve fitting. Please base your recommendations for accept/reject based solely on the reviews and the quality of papers. . SAC’s job is to help you calibrate if needed.

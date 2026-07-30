@@ -1,0 +1,67 @@
+{
+  "pdfname": "Ovmvu3IZAp",
+  "content": {
+    "summary": {
+      "value": "This paper addresses the challenge of text spotting in complex artistic images where specialized text spotters struggle with artistic text and multimodal large language models (MLLMs) exhibit strong recognition but weak localization capabilities. The authors introduce SupGRPO, a novel end-to-end training strategy that combines Group Relative Policy Optimization (GRPO) with matching-based online Supervised Fine-Tuning (SFT) specifically applied to coordinate tokens, resolving GRPO's reward sparsity problem and SFT's instance order dependency issue. The work makes three key contributions: it is the first academic study focused specifically on artistic text spotting, it introduces the SupGRPO framework that synergistically combines the recognition strength of GRPO with the detection precision of SFT, and it constructs ATS, a standardized dataset with 6.5k training and 2.5k testing images for artistic text spotting evaluation. The authors demonstrate that while GRPO significantly boosts recognition performance, SFT is more effective for improving detection accuracy, validating the need for their combined approach. Experiments show that SupGRPO substantially improves both text detection and end-to-end recognition across multiple benchmarks, with particularly notable gains on complex artistic text scenarios. The ATS dataset addresses the lack of appropriate evaluation resources for artistic text, providing a critical reference point for future research in this domain. The proposed method effectively leverages MLLMs' visual understanding capabilities while overcoming their localization limitations for challenging text spotting tasks."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **First application of GRPO to text spotting**: The paper pioneers the use of Group Relative Policy Optimization (GRPO) for text spotting, a significant departure from conventional approaches. As stated in Section 1, \"we adopt the GRPO training paradigm and apply it for the first time to the text spotting task,\" enabling direct optimization of non-differentiable metrics like IoU and F1-score that standard differentiable methods cannot handle.\n\n2. **Innovative matching-based online SFT for coordinate tokens**: The paper identifies and solves two critical limitations simultaneously: it resolves GRPO's reward sparsity problem for coordinate prediction while avoiding SFT's instance order dependency. The approach \"applies a more targeted, matching-based online SFT specifically to the coordinate tokens\" (Section 1), which is a technically elegant solution that leverages the strengths of both methods without their drawbacks.\n\n3. **Creation of ATS dataset for artistic text**: The authors address a critical gap in existing resources by constructing ATS, a standardized dataset specifically for artistic text spotting with 6.5k training and 2.5k testing images. Unlike scene text datasets, ATS captures challenges like \"severe overlap between text instances,\" \"irregular arrangement of characters,\" and \"complex relationships between instances\" (Section 4.1), establishing a new benchmark for this underexplored domain.\n\n4. **Empirical validation of complementary strengths**: The paper provides clear evidence that \"SFT is less effective than GRPO at enhancing recognition, while GRPO is less effective than SFT at enhancing detection\" (Section 1), which is not merely theoretical but demonstrated in Table 5 where GRPO achieves 80.0% recognition versus SFT's 77.1%, while SFT achieves 63.3% detection versus GRPO's 62.0%. This observation directly motivated their joint approach.\n\n5. **Task-specific reward design**: The authors designed four purpose-built reward functions that directly optimize for text spotting metrics rather than proxy objectives. The text reward using \"word-level F1 score\" (Section 3.2) is particularly noteworthy as it \"strictly aligns with the standard evaluation protocols for text spotting benchmarks,\" avoiding the misalignment issues that would arise from using soft rewards like ANLS."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Insufficient comparison with alternative RL approaches**: While the paper positions GRPO as the reinforcement learning method of choice for text spotting, it lacks experimental comparison with other RL methods like PPO or DPO. The paper states GRPO avoids \"estimating a value function\" unlike PPO (Section 3.1), but doesn't empirically validate whether this architectural difference is specifically beneficial for text spotting. A controlled comparison showing GRPO's superiority over other RL methods for this task would strengthen the technical claims. The authors could conduct ablation studies comparing GRPO with PPO using identical reward functions to isolate the contribution of the GRPO framework itself.\n\n2. **Limited dataset analysis for ATS**: Although the paper introduces ATS as a novel contribution, the analysis of its distinctive characteristics is superficial. The appendix provides basic statistics (Fig. 4), but fails to demonstrate how ATS specifically challenges existing methods in ways that other datasets don't. For instance, the paper doesn't quantify the degree of text overlap, irregular character arrangements, or complex scenes in ATS compared to existing benchmarks. The authors should provide a more rigorous analysis showing which specific aspects of ATS make it uniquely challenging for current methods, perhaps through targeted experiments isolating these factors.\n\n3. **Missing computational efficiency metrics**: The paper reports accuracy improvements but omits critical computational metrics. The combination of GRPO and SFT likely increases training complexity, yet there's no discussion of training time, memory requirements, or inference speed compared to standard approaches. Given that the paper positions SupGRPO as a practical solution, understanding the performance-computation trade-off is essential. The authors could add a section comparing GPU hours, memory footprint, and inference latency between SupGRPO and baseline methods.\n\n4. **No exploration of matching threshold sensitivity**: The matching mechanism requires \"text content to be identical and the IoU between the predicted and GT boxes is greater than 0\" (Section 3.3), but the paper doesn't investigate how sensitive results are to this threshold. The ablation study (Table 7) compares matching mechanisms but doesn't vary the IoU threshold parameter. A more thorough analysis exploring how performance changes with different IoU thresholds would strengthen the methodology and potentially reveal opportunities for improvement through adaptive matching criteria."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions\n\n1. **Order dependency mechanism**: The paper states that \"the fixed and unique order in which text instances are arranged within the GT creates an order prior that interferes with word-level detection and recognition\" (Section 4.4). Could you provide concrete examples of how this order prior manifests in practice? Specifically, what types of errors does standard SFT produce due to sequence ordering that your matching-based approach resolves? Understanding the specific failure modes would strengthen the justification for your design choice.\n\n2. **Matching threshold rationale**: Your matching mechanism requires \"text content [to be] identical and the IoU between the predicted and GT boxes [to be] greater than 0\" (Section 4.4). Why did you choose an IoU threshold of 0 rather than a more conventional value like 0.3 or 0.5? Did you experiment with different thresholds, and if so, how did they impact performance? This seems critical to your coordinate token supervision mechanism.\n\n3. **ATS dataset curation details**: The paper mentions ATS was curated from TextSeg and WAS with \"manual curation\" and \"correction and re-annotation of erroneous OCR labels\" (Section 4.1). Could you provide more specific details about: (a) the criteria used to identify \"artistic text\" versus regular scene text; (b) the process for verifying and correcting OCR labels; and (c) statistics on how many labels were corrected? This would help assess the dataset's reliability.\n\n4. **GRPO vs. SFT performance divergence**: The paper claims \"SFT is less effective than GRPO at enhancing recognition, while GRPO is less effective than SFT at enhancing detection\" (Section 1). Could you elaborate on the specific mechanisms that cause this divergence? For example, does GRPO's reward structure better capture semantic relationships between text content and visual elements, while SFT's token-level supervision better captures spatial relationships?\n\n## Constructive Suggestions\n\n1. **Catastrophic forgetting quantification**: While Section D mentions \"slight degradation in performance on general multimodal benchmarks,\" providing quantitative results on this degradation (e.g., performance on standard MLLM benchmarks before and after fine-tuning) would strengthen the discussion of your method's trade-offs. This could help readers understand the practical implications of your approach.\n\n2. **Comparison with alternative RL methods**: The paper positions GRPO as the optimal RL approach for text spotting but doesn't compare it with other methods like PPO or DPO. A brief ablation study comparing GRPO with one alternative RL method would strengthen the justification for your architectural choice and clarify whether GRPO's specific advantages (no value function estimation) are essential to your results.\n\n3. **Broader MLLM compatibility**: The paper focuses exclusively on Qwen variants as base models. Could you comment on whether SupGRPO would work with other MLLM architectures (e.g., LLaVA, InternVL) and what modifications might be needed? This would help readers understand the generalizability of your approach beyond the specific models tested.\n\n4. **Failure mode analysis**: While Figure 6 shows qualitative results, a more systematic analysis of failure cases (e.g., categorizing common errors in artistic text spotting) would provide valuable insights for future research. Understanding where SupGRPO still struggles would help identify remaining challenges in artistic text spotting.\n\nThese questions and suggestions focus on aspects where author responses could clarify methodological choices, strengthen the paper's contributions, and provide more actionable insights for the community. They avoid repeating generic weaknesses and instead target specific areas where additional information would enhance the paper's value."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "SUPGRPO: ENHANCING GRPO WITH MATCHINGBASED ONLINE SFT FOR TEXT SPOTTING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "2.1 TEXT SPOTTING METHODS",
+    "2.2 TEXT SPOTTING DATASETS",
+    "2.3 MULTIMODAL LARGE LANGUAGE MODELS FOR OCR",
+    "3 METHOD",
+    "3.1 PRELIMINARY",
+    "3.2 REWARD FUNCTIONS FOR TEXT SPOTTING",
+    "3.3 GRPO WITH MATCHING-BASED ONLINE SFT",
+    "4 EXPERIMENTS",
+    "4.1 ARTISTIC TEXT SPOTTING DATASET",
+    "4.2 IMPLEMENTATION DETAILS",
+    "4.3 RESULTS OF TEXT SPOTTING",
+    "4.4 ABLATION STUDY",
+    "5 CONCLUSION",
+    "A APPENDIX: DISTRIBUTION STATISTICS OF THE ATS DATASET",
+    "B APPENDIX: TRAINING CURVE COMPARISON",
+    "C APPENDIX: QUALITATIVE COMPARISON",
+    "D LIMITATION"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

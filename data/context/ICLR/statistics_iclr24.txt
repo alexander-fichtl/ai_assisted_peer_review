@@ -1,0 +1,48 @@
+ICLR 2024 – acceptance statistics
+
+Total submissions:
+- 7,304 submissions in total.
+- Overall reviewer scores across all submissions:
+  min 1.00, max 9.00, mean 5.11, std 1.26.
+
+Accepted papers (overall):
+- 2,260 accepted papers (30.94% of all submissions).
+- Reviewer score statistics for accepted papers:
+  min 3.60, max 9.00, mean 6.44, std 0.70.
+
+Poster papers:
+- 1,807 posters (24.74% of all submissions).
+- Reviewer score statistics (poster tier):
+  min 3.60, max 8.00, mean 6.25, std 0.59.
+
+Spotlight papers:
+- 367 spotlights (5.02% of all submissions).
+- Reviewer score statistics (spotlight tier):
+  min 5.40, max 8.50, mean 7.10, std 0.57.
+
+Oral papers:
+- 86 orals (1.18% of all submissions).
+- Reviewer score statistics (oral tier):
+  min 6.00, max 9.00, mean 7.57, std 0.60.
+
+Rejected papers:
+- 3,438 rejected papers (47.07% of all submissions).
+- Reviewer score statistics (reject tier):
+  min 1.00, max 8.00, mean 4.73, std 0.94.
+
+Withdrawn papers:
+- 1,655 withdrawn papers (22.66% of all submissions).
+- Reviewer score statistics (withdraw tier):
+  min 1.00, max 7.50, mean 4.02, std 0.80.
+
+Desk rejections:
+- 54 desk rejects (0.74% of all submissions).
+
+How to interpret these statistics:
+- Total = Accept + Reject + Withdraw + Desk Reject − Post-decision Withdraw (if any).
+- The rate for each status (accept, reject, withdraw, desk reject) is: count for that status / total submissions.
+- For each decision tier, reviewer scores are averaged per paper first, then we report the distribution over these per-paper averages:
+  * min: lowest average reviewer score among papers in the tier.
+  * max: highest average reviewer score in the tier.
+  * mean: average of all per-paper mean scores in the tier.
+  * std: standard deviation of those per-paper mean scores.

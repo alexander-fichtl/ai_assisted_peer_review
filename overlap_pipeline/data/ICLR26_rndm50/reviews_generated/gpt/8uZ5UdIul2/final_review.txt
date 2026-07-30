@@ -1,0 +1,180 @@
+Summary:
+The paper introduces F2D2, a joint distillation framework that enables both few-step sampling and few-step log-likelihood evaluation in continuous normalizing flow/flow-matching models by learning a single joint flow map for the coupled ODEs of state evolution and log-density change (Eq. 2.3; Sec. 3.1). The model shares a backbone and adds a divergence head to predict time-averaged divergence alongside time-averaged velocity, with validity enforced via flow-map conditions; two concrete instantiations are derived: Shortcut-F2D2 using the semigroup property (Algorithm 1; Sec. 3.2.1) and MeanFlow-F2D2 using the Eulerian condition (Sec. 3.2.2). Practical training employs Hutchinson’s trace estimator and staged warm starts, including a Shortcut-Distill-F2D2 variant that leverages a teacher for stable supervision (Sec. 3.3). As an application, the paper proposes maximum-likelihood self-guidance that optimizes the initial noise using the fast likelihood head with a single backward pass (Algorithm 2; Sec. 3.4). Experiments on CIFAR-10 and ImageNet 64×64 show calibrated NLLs close to teacher BPDs while maintaining competitive FIDs with 1–8 NFEs (Tables 1–2; Fig. 1–2), and accurate few-step likelihoods on a 2D checkerboard benchmark (Fig. 3). Notably, MeanFlow-F2D2 with self-guidance enables a 2-step model to surpass the FID of a 1024-step flow-matching teacher of the same size on CIFAR-10 (Sec. 5.3).
+
+Strengths:
+1. Clear, principled formulation of a joint flow map for sampling and log-likelihood. The paper elevates the coupled ODEs (Eq. 2.3) to a single operator with shared backbone and two heads (Eq. 3.3), then rigorously characterizes validity via Lagrangian/Eulerian/semigroup conditions (Proposition 3.3; Appendix A). This unifies disparate accelerations under a common, verifiable framework.
+
+2. Concrete, well-derived instantiations. The shortcut variant translates the semigroup into explicit self-consistency for both velocity and divergence with implementable losses (Eqs. 3.5–3.10; Algorithm 1). The MeanFlow variant directly enforces the Eulerian relation for divergence analogously to velocity (Eqs. 3.11–3.13). These are not cosmetic extensions; they mirror the core identities governing the joint system.
+
+3. New theoretical clarification for MeanFlow. Corollary B.2 proves that the MeanFlow identity enforces the Eulerian condition (Appendix B), tightening the theoretical foundation of a widely used few-step sampler.
+
+4. Minimal architectural overhead with strong modularity. The divergence head is just a lightweight scalar predictor attached to an existing flow-map backbone (Sec. 3.1, 3.3). This makes F2D2 plug-and-play with Shortcut and MeanFlow without redesigning training pipelines.
+
+5. Careful treatment of divergence supervision, a genuine pain point. The paper combines Hutchinson’s estimator, staged warm starts, and optional teacher divergence to stabilize learning (Sec. 3.3; Appendix C). The ablation on divergence scaling (Table 5) is unusually transparent and practically useful.
+
+6. Strong empirical evidence that few-step likelihoods can be calibrated while preserving sample quality. On CIFAR-10 and ImageNet 64×64, F2D2 variants convert the baselines’ invalid, large-magnitude negative NLLs into positive, calibrated BPDs while keeping competitive FIDs across 1–8 NFEs (Tables 1–2; Fig. 1–2). This directly addresses the central bottleneck the paper targets.
+
+7. Ground-truth validation beyond image benchmarks. On the 2D checkerboard with analytic likelihood, Shortcut-F2D2 accurately reconstructs the density even at 1 NFE whereas baselines collapse (Fig. 3), isolating and confirming the likelihood-accuracy claim.
+
+8. Per-sample likelihood accuracy, not just aggregate BPD. The mean absolute per-sample BPD error relative to the teacher drops by large factors for all F2D2 variants (Table 7), indicating practical reliability for likelihood-based downstream uses.
+
+9. Demonstrated new capability enabled by fast likelihood: self-guidance. The proposed maximum-likelihood self-guidance (Algorithm 2) lets a 2-step MeanFlow-F2D2 surpass a 1024-step flow-matching teacher of the same size on CIFAR-10 (Sec. 5.3; Fig. 2), showcasing immediate algorithmic utility of the added head.
+
+10. Reproducibility and transparency. The paper includes proofs (Appendices A–B), complete implementation details and hyperparameters (Appendix C; Table 3), speed/latency measurements (Table 4), ablations on key sensitivities (Appendix D; Tables 5–6), training dynamics (Fig. 5), and extensive non-cherry-picked samples (Appendix E), making the work straightforward to replicate and extend.
+
+11. Practical efficiency gains are quantified. The reported wall-clock times and per-image latencies across NFEs (Table 4) substantiate the claim of two orders of magnitude fewer NFEs for both sampling and likelihood without trading away performance.
+
+Weaknesses:
+Weaknesses (with actionable suggestions)
+
+1. Reliance on teacher calibration and supervision undermines generality
+   - Evidence: Staged Training with Warm Start and Shortcut-Distill-F2D2 use teacher velocity/divergence for supervision (Sec. 3.3; Appendix C: “pre-train a teacher flow matching model vϕ… replacing div(uθ) with div(vϕ)”). Early stopping explicitly targets the teacher BPD (“stop the training when the calibrated value of bpd is reached”, App. C).
+   - Why it matters: The central claim is fast, accurate likelihood from a distilled few-step model. If accuracy critically depends on a high-NFE teacher and tuning to its BPD, this weakens claims of teacher-free applicability and real-likelihood fidelity.
+   - Suggestions:
+     1) Provide teacher-free ablations at scale (CIFAR-10 and ImageNet 64×64) that train Dθ solely via self-consistency/Hutchinson and report NLL/FID (Tables 1–2).
+     2) Report how NLL accuracy degrades as teacher quality or teacher-NFE is reduced.
+     3) Replace “BPD match to teacher” early stopping by a validation objective independent of the teacher (e.g., path-consistency residuals from Eq. A.12/A.19, or a held-out convergence metric across Kll).
+
+2. Sensitivity to divergence scaling and early stopping threatens robustness and reproducibility
+   - Evidence: Necessity of large target scaling factors and early stopping (Sec. 3.3; App. D Table 5 shows strong sensitivity; Sec. F: “requires careful early stopping” and sensitivity to scaling).
+   - Why it matters: Heavy sensitivity suggests brittle training and risks miscalibrated NLL outside the tuned regime.
+   - Suggestions:
+     1) Normalize Dθ targets online (e.g., per-batch standardization or running-mean/var) to remove reliance on fixed scalars (App. D).
+     2) Regularize Dθ via consistency across nested intervals (additional midpoints beyond r=(t+s)/2) and multi-noise Hutchinson averaging per step to reduce variance.
+     3) Provide a schedule for λ in Eq. D.1 with validation curves to automate early stopping without teacher BPD (App. D Table 6 hints this is feasible).
+
+3. NLL calibration drifts at very small NFEs; error sources not analyzed
+   - Evidence: On CIFAR-10, MeanFlow-F2D2 at 1–2 steps yields BPD far from the teacher (e.g., 1.29 vs 3.12 at 2 steps, Table 1). Shortcut-Distill-F2D2 also deviates at 1–2 steps on ImageNet 64×64 (Table 2).
+   - Why it matters: The headline claim is “few-step” likelihood; the most compelling regime is Kll ≤ 2–4. Systematic underestimation at low K indicates residual bias in the integral approximation of ∫div(v)dt.
+   - Suggestions:
+     1) Report NLL bias vs K in log–log plots and decompose error into flow-map error (uθ) vs divergence-map error (Dθ) by plugging each into Eq. 2.4 separately.
+     2) Add losses that couple Dθ to uθ via integral constraints over random (t,s) (e.g., check Eq. A.7/A.12 over multiple s per t in one minibatch).
+     3) Evaluate alternative time parameterizations (importance-weighted sampling of (t,s)) to reduce high-curvature bias at endpoints.
+
+4. Fairness of baselines for likelihood is unclear; F2D2 adds capacity/objective absent in baselines
+   - Evidence: Baseline Shortcut/MeanFlow “can, in principle, evaluate likelihood” via uθ(x,t,t) and Hutchinson, but are shown with “invalid NLL” (App. C). They were never trained to predict divergence or to satisfy the Z-flow conditions used by F2D2 (Sec. 3.2).
+   - Why it matters: The improvement might partly come from adding and training an explicit divergence head/objective.
+   - Suggestions:
+     1) Train baselines with a divergence head but without joint flow-map constraints (no L_D terms), keeping capacity the same, to isolate the contribution of F2D2’s joint constraints.
+     2) Compare against the closest likelihood-capable few-step method you cite (e.g., Kim et al. (2023), Sec. 1/4) under matched NFE-quality/runtime, even if that method needs more Kll, to position F2D2 on the Pareto frontier.
+
+5. Limited validation of “likelihood correctness” beyond teacher agreement
+   - Evidence: On images, correctness is mainly judged by closeness to teacher BPD (Tables 1–2), plus per-sample error vs teacher (Table 7). Ground-truth validation appears only on 2D checkerboard (Fig. 3).
+   - Why it matters: Teacher likelihoods are themselves approximations. Agreement with the teacher is not proof of correctness.
+   - Suggestions:
+     1) For a subset of images, compute high-accuracy probability-flow ODE likelihoods with stringent tolerances and multiple solvers to establish a more solver-independent reference.
+     2) Report solver-sensitivity sweeps (tolerances/NFEs) for the teacher likelihoods to bound reference error.
+     3) Include calibration plots (predicted vs reference per-sample BPD; reliability curves) in addition to MAE (Table 7).
+
+6. Inference-time speed reporting excludes likelihood evaluation and joint use-cases
+   - Evidence: Table 4 reports sampling throughput only; the central contribution is fast likelihood and sampling.
+   - Why it matters: Users will often need both sample and likelihood together (e.g., RLHF-like objectives, filtering).
+   - Suggestions:
+     1) Report wall-clock for joint sample+likelihood under shared forward passes for K_samp and K_ll, including backward cost for self-guidance (Algorithm 2).
+     2) Provide a runtime–quality Pareto (FID vs time; BPD error vs time) for F2D2 vs the teacher and a strong baseline.
+
+7. Self-guidance evaluation focuses on FID improvements but omits likelihood/distributional effects
+   - Evidence: Sec. 5.3 and Fig. 2 show FID gains; no analysis of how self-guidance affects likelihood calibration or coverage.
+   - Why it matters: Optimizing x0 by maximizing model likelihood might distort generated distribution or miscalibrate Dθ.
+   - Suggestions:
+     1) Report post-guidance BPD of generated samples, compare to pre-guidance, and show whether guidance preserves/harms calibration.
+     2) Assess mode coverage metrics or diversity proxies alongside FID.
+     3) Vary the number of guidance steps and learning rates with NLL accuracy tracked (App. D Fig. 4 shows FID only).
+
+8. Scope of evaluation is narrow relative to claims of generality
+   - Evidence: Only unconditional CIFAR-10 and ImageNet 64×64 are presented; limitations acknowledge reduced model size/compute constraints (Sec. F).
+   - Why it matters: Claims of modularity and broad compatibility (Sec. 3.1–3.2) would be strengthened by breadth.
+   - Suggestions:
+     1) Add at least one conditional image benchmark (e.g., class-conditional ImageNet 64×64) to test whether Dθ remains calibrated under conditioning inputs.
+     2) Demonstrate on a non-image or higher-resolution setting, or a score-SDE probability-flow ODE, to show portability.
+
+9. Theoretical guarantees do not translate into quantitative diagnostics during training
+   - Evidence: Joint validity is characterized via Lagrangian/Eulerian/semigroup conditions (Prop. 3.3; App. A), but there are no reported diagnostics showing how well these constraints are satisfied during training/inference beyond losses (Fig. 5 shows only loss curves).
+   - Why it matters: Without constraint satisfaction diagnostics, it is hard to know if observed NLL errors stem from violating Eq. A.12/A.19 vs estimator noise.
+   - Suggestions:
+     1) Track and report residuals of Eq. A.12 and Eq. A.19 on held-out minibatches over training; correlate with BPD error vs K.
+     2) Provide qualitative examples where residuals are large and analyze failure modes.
+
+10. Occasional degradation in sample quality when maximizing NLL accuracy
+   - Evidence: On CIFAR-10, Shortcut-F2D2 achieves calibrated NLL but with worse FID than MeanFlow/Shortcut variants at small K (Table 1); on ImageNet 64×64, Shortcut-Distill-F2D2 improves NLL but FID trails Shortcut-Distill (Table 2).
+   - Why it matters: The stated goal is to maintain high sample quality while enabling fast likelihood.
+   - Suggestions:
+     1) Explore multi-objective training schedules (as hinted by App. D Table 6) and per-loss adaptive weights to balance L_VM/L_u with L_div/L_D dynamically based on validation FID and BPD error.
+     2) Investigate architectural decoupling (e.g., partial parameter sharing or FiLM conditioning) to let Dθ improve without harming uθ.
+
+Suggestions/Questions:
+1. Reference for likelihood “calibration”
+   - Tables 1–2 and Table 7 assess NLL mainly against the teacher’s BPD. Could you provide a small-scale but high-accuracy reference by integrating the probability-flow ODE with stringent tolerances and multiple solvers, then report per-sample BPD errors against that reference (calibration plots, MAE/quantiles)? This would validate that agreement is not just teacher matching (Sec. 5.2; Eq. 2.4).
+
+2. Dependence on teacher supervision and early stopping
+   - In Sec. 3.3 and Appendix C (“Staged Training with Warm Start”; “replace … div(uθ) with div(vϕ)”; “stop the training when the calibrated value of bpd is reached”), how critical are the teacher and teacher-BPD-based early stopping? Please show:
+     - Teacher-free joint training (Hutchinson only) for CIFAR-10 and ImageNet 64×64.
+     - Sensitivity to teacher quality/NFE.
+     - An alternative, teacher-free early-stopping signal (e.g., residuals of Eq. A.12/A.19 on a held-out set).
+
+3. Divergence-target scaling and robustness
+   - Appendix D (Table 5) shows strong sensitivity to the fixed scaling factor (5×10^-5, 5×10^-4, …). How were 20,000/300,000 (Appendix C) chosen, and do they generalize across resolutions/backbones? Please test simple normalizations (per-batch standardization of D targets, running mean/variance) or multi-noise Hutchinson averaging, and report NLL/FID.
+
+4. Bias at very low NFE
+   - On CIFAR-10, MeanFlow-F2D2 at 1–2 steps underestimates BPD vs teacher (Table 1), and Shortcut-Distill-F2D2 deviates at 1–2 steps on ImageNet (Table 2). Could you:
+     - Plot BPD bias vs K_ll and decompose error by fixing one head at teacher-quality (plug uθ vs Dθ separately into Eq. 2.4)?
+     - Try nonuniform time grids (importance near endpoints) and report whether low-K bias shrinks.
+
+5. Fair comparison to baselines with matched capacity
+   - Baselines labeled “invalid NLL” (Tables 1–2) were not trained with a Z-head or joint constraints. To isolate the benefit of F2D2, please add a control baseline that adds a divergence head trained only with instantaneous divergence (no L_D terms), with identical backbone, and compare NLL/FID.
+
+6. Relation to likelihood-capable few-step methods
+   - Sec. 1 and Sec. 4 mention approaches (e.g., Kim et al., 2023) that retain likelihood via full-trajectory integration. Can you include a runtime–quality Pareto (BPD error vs wall-clock, FID vs wall-clock) comparing F2D2 to such a method at its recommended K_ll, even if it uses more NFEs?
+
+7. Diagnostics for joint flow-map validity
+   - Proposition 3.3/Appendix A provide Eulerian and semigroup characterizations. Could you report held-out residuals for Eq. A.12 (Eulerian) and Eq. A.19 (semigroup) during training (beyond Fig. 5 losses), and correlate them with BPD error and FID? This would clarify which constraint most drives likelihood accuracy.
+
+8. Sign conventions and negative BPD in tables
+   - Tables 1–2 show large negative “NLL” for baselines. Appendix C notes a sign flip in implementation relative to the derivation. Please clarify the exact BPD computation for each method (including sign, discretization, and units) and why baselines yield negative magnitudes.
+
+9. Likelihood evaluation pipeline details
+   - Appendix C: “discretize the interval from 1 to 0 into equal segments.” For data x1, do you propagate x backward with Φ_X and accumulate Dθ(x,t,s) over segments, or use the joint Φ_Y directly? Is Φ_X defined/used for s<t, or do you swap (t,s)? Please detail how y=(x,z) is advanced in practice for both data and generated samples.
+
+10. Runtime for joint use-cases
+   - Table 4 reports sampling throughput only. For practical adoption, please report:
+     - Wall-clock for sample+likelihood (K_samp, K_ll) sharing forward passes.
+     - Overheads of the Z-head at train/test.
+     - Cost of the single backward pass in Algorithm 2 (Sec. 3.4) relative to forward-only sampling.
+
+11. Self-guidance side effects on likelihood and diversity
+   - Sec. 5.3/Fig. 2 focus on FID. Since Algorithm 2 maximizes model likelihood, does it preserve NLL calibration and coverage? Please report: BPD of generated samples pre/post-guidance, diversity metrics (e.g., precision/recall or coverage), and how guidance affects the per-sample NLL error relative to the teacher.
+
+12. Hutchinson estimator variance control
+   - How many Hutchinson vectors are used per step for training and for teacher divergence (Appendix C)? Please provide an ablation on the number of probes vs NLL/FID and training stability.
+
+13. Checkerboard quantitative evaluation
+   - Fig. 3 is qualitative. Could you add quantitative metrics (e.g., MSE/MAE of log p(x) on a grid) at K_ll ∈ {1,4} to support the visual claims?
+
+14. Time-grid and midpoint choices
+   - Shortcut-F2D2 uses r=(t+s)/2 (Sec. 3.2.1; Algorithm 1). Have you tried multiple midpoints or random r to reduce bias? An ablation on midpoint schemes and on nonuniform grids would help understand the trade-offs.
+
+15. Conditioning and modality generalization
+   - Claims of modularity (Sec. 3.1–3.2) are compelling. Can you comment on, or provide a small-scale experiment for, class-conditional ImageNet 64×64 or another modality (e.g., a different CNF task) to show Dθ remains calibrated under conditioning?
+
+16. Coupling between uθ and Dθ
+   - Eq. 3.3 ties Dθ to x only, not z, consistent with Eq. 2.3. In practice, does stronger coupling (e.g., auxiliary losses that require internal consistency between uθ-predicted trajectories and Dθ integrals over multiple (t,s) per minibatch) improve low-K NLL? A small ablation would be useful.
+
+17. Loss balancing beyond λ (Appendix D, Table 6)
+   - Table 6 suggests a trade-off between FID and BPD. Could you provide a simple adaptive schedule (e.g., increase λ when BPD plateaus; decrease when FID degrades) and show whether it reduces the trade-off?
+
+18. Reproducibility details
+   - To facilitate replication, please specify: exact seeds, number of NFE used for the teacher’s 1024-step likelihood integration (and tolerances), and whether the posted code will include scripts for the held-out diagnostics suggested above.
+
+Soundness: 3
+
+Presentation: 3
+
+Contribution: 3
+
+Overall: 7
+
+Confidence: 4
+
+Conduct: NO
+
+Ethics: No ethics review needed.

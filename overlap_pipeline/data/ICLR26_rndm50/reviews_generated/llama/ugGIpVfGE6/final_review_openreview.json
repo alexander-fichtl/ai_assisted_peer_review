@@ -1,0 +1,81 @@
+{
+  "pdfname": "ugGIpVfGE6",
+  "content": {
+    "summary": {
+      "value": "This paper proposes OWLEYE, a novel zero-shot graph anomaly detection (GAD) framework that learns transferable patterns of normal behavior from multiple graphs. OWLEYE addresses the limitations of existing generalist GAD models by introducing a cross-domain feature alignment module, a multi-domain multi-pattern dictionary learning module, and a truncated attention-based reconstruction module. The framework enables zero-shot anomaly detection in unseen graphs without requiring labeled data. OWLEYE achieves superior performance and generalizability compared to state-of-the-art baselines on real-world datasets. The code is available at https://github.com/zhenglecheng/ICLR-2026-OWLEYE. The proposed method has the potential to provide scalable and label-efficient anomaly detection. OWLEYE's contributions include a structured dictionary for storing representative patterns, enabling continual learning, and providing an intuitive interpretation mechanism through attention maps. The framework can be applied to various domains, enhancing public safety by detecting anomalies in graphs."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "The paper has several strengths:\n\n1. **Novel Framework**: The paper proposes a novel zero-shot graph anomaly detection framework, OWLEYE, which effectively addresses the limitations of existing generalist graph anomaly detection models.\n\n2. **Cross-Domain Feature Alignment**: The introduction of a cross-domain feature alignment module that preserves domain-specific semantics during alignment is a significant contribution.\n\n3. **Multi-Domain Multi-Pattern Dictionary Learning**: The proposal of a multi-domain multi-pattern dictionary learning module that extracts both attribute-level and structure-level patterns and stores them in a dynamic dictionary is innovative.\n\n4. **Truncated Attention-Based Reconstruction**: The design of a truncated attention-based reconstruction module that filters out potential abnormal nodes and selects the most representative nodes for reconstruction is a creative solution.\n\n5. **Extensive Experiments**: The paper presents extensive experiments on real-world datasets, demonstrating superior performance and generalizability compared to state-of-the-art baselines.\n\n6. **Interpretability**: The attention maps provide an intuitive and faithful interpretation mechanism, revealing both the reasoning behind correct predictions and the failure modes behind incorrect ones.\n\n7. **Continual Learning Capability**: The paper presents case studies that validate OWLEYE's ability to incrementally learn from new data sources in a plug-and-play fashion without fine-tuning.\n\n8. **Robustness**: The method shows robustness to different training sets and anomaly rates, and its performance is stable across various hyperparameter settings. \n\n9. **Efficiency**: The paper reports that OWLEYE achieves comparable fine-tuning time to other generalist GAD models while outperforming both unsupervised and supervised baselines in terms of efficiency."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Theoretical Analysis**: While the paper presents a comprehensive empirical evaluation, it lacks a detailed theoretical analysis of the proposed framework, OWLEYE. A more in-depth theoretical analysis could provide a better understanding of the framework's strengths and limitations.\n\n2. **Hyperparameter Sensitivity**: Although the paper conducts a sensitivity analysis of some hyperparameters, it would be beneficial to provide a more comprehensive analysis of the impact of different hyperparameters on the performance of OWLEYE.\n\n3. **Scalability**: The paper evaluates the efficiency of OWLEYE on a single dataset (ACM). To further demonstrate its scalability, it would be beneficial to evaluate OWLEYE on larger datasets or compare its performance with other scalable graph anomaly detection methods.\n\n4. **Comparison to Other Zero-Shot Methods**: The paper primarily compares OWLEYE with supervised and unsupervised methods. A more comprehensive comparison with other zero-shot graph anomaly detection methods, such as meta-learning-based approaches, could provide a better understanding of OWLEYE's strengths and limitations.\n\n5. **Handling Imbalanced Graphs**: The paper does not explicitly address the issue of imbalanced graphs, where the number of normal and anomalous nodes is significantly skewed. It would be beneficial to evaluate OWLEYE's performance on imbalanced graphs and provide strategies to handle such cases.\n\n6. **Visualization of Attention Maps**: While the paper provides some visualizations of attention maps, it would be beneficial to provide more detailed visualizations and explanations of how the attention mechanism works in OWLEYE.\n\n7. **Continual Learning**: Although the paper presents case studies on OWLEYE's continual learning capabilities, it would be beneficial to provide a more comprehensive evaluation of its performance in a continual learning setting, such as in the presence of concept drift or evolving graph structures.\n\n8. **Node Attribute Distribution**: The paper assumes that the node attribute distribution is consistent across different graphs. However, in real-world scenarios, the node attribute distribution may vary significantly across different graphs. It would be beneficial to evaluate OWLEYE's performance under different node attribute distributions.\n\n## Actionable Insights\n\n1. **Provide a more detailed theoretical analysis**: Conduct a more in-depth theoretical analysis of OWLEYE, including its strengths and limitations.\n\n2. **Evaluate scalability**: Evaluate OWLEYE's scalability on larger datasets and compare its performance with other scalable graph anomaly detection methods.\n\n3. **Compare to other zero-shot methods**: Conduct a comprehensive comparison with other zero-shot graph anomaly detection methods.\n\n4. **Address imbalanced graphs**: Evaluate OWLEYE's performance on imbalanced graphs and provide strategies to handle such cases.\n\n5. **Provide more detailed visualizations**: Provide more detailed visualizations and explanations of how the attention mechanism works in OWLEYE.\n\nBy addressing these weaknesses and providing actionable insights, the paper can be further improved to achieve its stated goals."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Theoretical Analysis of OWLEYE**: \n   - Could you provide a more detailed theoretical analysis of the proposed framework, OWLEYE, including its strengths and limitations? This would help in understanding the framework's performance and generalizability.\n\n2. **Hyperparameter Sensitivity Analysis**:\n   - It would be beneficial to provide a more comprehensive analysis of the impact of different hyperparameters on the performance of OWLEYE. This includes analyzing the sensitivity of the model to various hyperparameter settings.\n\n3. **Scalability Evaluation**:\n   - Could you evaluate the scalability of OWLEYE on larger datasets and compare its performance with other scalable graph anomaly detection methods? This would help in understanding the framework's efficiency and applicability to large-scale graphs.\n\n4. **Comparison with Zero-Shot Methods**:\n   - It would be beneficial to conduct a comprehensive comparison with other zero-shot graph anomaly detection methods, such as meta-learning-based approaches. This would provide a better understanding of OWLEYE's strengths and limitations in comparison to existing zero-shot methods.\n\n5. **Handling Imbalanced Graphs**:\n   - Could you evaluate OWLEYE's performance on imbalanced graphs, where the number of normal and anomalous nodes is significantly skewed? Providing strategies to handle such cases would enhance the framework's applicability.\n\n6. **Detailed Visualization of Attention Maps**:\n   - It would be beneficial to provide more detailed visualizations and explanations of how the attention mechanism works in OWLEYE. This would help in understanding the model's decision-making process.\n\n7. **Continual Learning Evaluation**:\n   - Could you provide a more comprehensive evaluation of OWLEYE's performance in a continual learning setting, such as in the presence of concept drift or evolving graph structures? This would help in understanding the framework's ability to adapt to changing data distributions.\n\n8. **Node Attribute Distribution**:\n   - It would be beneficial to evaluate OWLEYE's performance under different node attribute distributions. This would help in understanding the framework's robustness to variations in node attributes.\n\n## Suggestions for Improvement\n\n1. **Enhanced Theoretical Foundation**: Providing a stronger theoretical foundation for OWLEYE would enhance its credibility and help in understanding its strengths and limitations.\n\n2. **Comprehensive Hyperparameter Analysis**: Conducting a comprehensive hyperparameter sensitivity analysis would provide insights into the robustness of OWLEYE's performance.\n\n3. **Scalability and Efficiency**: Evaluating OWLEYE's scalability and efficiency on larger datasets would help in understanding its applicability to real-world scenarios.\n\n4. **Comparative Analysis with Zero-Shot Methods**: Conducting a comparative analysis with other zero-shot methods would provide a better understanding of OWLEYE's strengths and limitations.\n\n5. **Strategies for Imbalanced Graphs**: Providing strategies to handle imbalanced graphs would enhance OWLEYE's applicability in real-world scenarios.\n\n6. **Interpretability of Attention Mechanism**: Providing more detailed visualizations and explanations of the attention mechanism would enhance the interpretability of OWLEYE.\n\n7. **Continual Learning Capabilities**: Evaluating OWLEYE's continual learning capabilities in various settings would help in understanding its adaptability to changing data distributions.\n\nBy addressing these questions and suggestions, the authors can provide further clarity, address limitations, and enhance the overall quality of the paper."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "Overall Score: 8 \n\nThe paper proposes a novel zero-shot graph anomaly detection framework, OWLEYE, which effectively addresses the limitations of existing generalist graph anomaly detection models. The technical claims are sound, and the methodology is thorough and well-supported by evidence. The proposed framework's components, including cross-domain feature alignment, multi-domain multi-pattern dictionary learning, and truncated attention-based reconstruction, demonstrate innovative and effective solutions.\n\nThe extensive experiments on real-world datasets validate the superior performance and generalizability of OWLEYE compared to state-of-the-art baselines. The ablation studies, case studies, and visualizations provide additional insights into the effectiveness of OWLEYE's components and its ability to detect anomalies in unseen graphs.\n\nThe paper is well-written, clear, and concise, effectively conveying the proposed framework and its contributions. The writing style is excellent, making it easy to follow and understand the technical details. The paper provides a thorough contextualization of the proposed method relative to prior work, highlighting its advantages and innovations.\n\nThe only reasons that prevent me from giving a score of 9 are that the paper could benefit from a more detailed theoretical analysis and a more comprehensive hyperparameter sensitivity analysis. Additionally, evaluating OWLEYE's scalability on larger datasets and comparing its performance with other scalable graph anomaly detection methods would further strengthen its claims. \n\nOverall, the paper makes a strong contribution to the research area of graph anomaly detection, and its results have the potential to significantly impact the field. Therefore, I recommend a score of 8, indicating a strong accept."
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "OWLEYE: ZERO-SHOT LEARNER FOR CROSSDOMAIN GRAPH DATA ANOMALY DETECTION",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 OWLEYE: ZERO-SHOT CROSS-DOMAIN GRAPH ANOMALY DETECTOR",
+    "2.1 PRESERVING DOMAIN-SPECIFIC SEMANTICS IN CROSS-DOMAIN FEATURE ALIGNMENT",
+    "2.2 MULTI-DOMAIN MULTI-PATTERN DICTIONARY LEARNING",
+    "2.3 TRUNCATED ATTENTION-BASED FEATURE RECONSTRUCTION FOR IN-CONTEXT LEARNING AND INFERENCE",
+    "3 EXPERIMENTS",
+    "3.1 EXPERIMENTAL SETUP",
+    "3.2 EXPERIMENTAL RESULTS",
+    "3.3 VISUALIZATION OF CROSS-ATTENTION MAP ON CORA DATASETS",
+    "3.4 CASE STUDIES: ANALYSIS OF OWLEYE'S CONTINUAL LEARNING CAPABILITIES.",
+    "4 RELATED WORK",
+    "5 CONCLUSION",
+    "ACKNOWLEDGMENT",
+    "A IMPLEMENTATION DETAILS",
+    "B ADDITIONAL EXPERIMENTAL RESULTS",
+    "B.1 ADDITIONAL EFFECTIVENESS ANALYSIS",
+    "B.2 PERFORMANCE EVALUATION WITH DIFFERENT DATASET SPLIT",
+    "B.3 CAN CROSS-DOMAIN FEATURE ALIGNMENT BENEFIT OTHER METHOD?",
+    "B.4 EXPERIMENTS ON HIGH ANOMALY RATE DATASET",
+    "B.5 EXPERIMENT RESULTS ABOUT SIGNIFICANT DOMAIN SHIFT",
+    "B.6 EFFECTIVENESS OF STRUCTURAL REPRESENTATION",
+    "B.7 EFFECTIVENESS OF DIFFERENT FEATURE REDUCTION METHODS",
+    "B.8 PATTERNS FROM ONE GRAPH VS MULTIPLE GRAPHS",
+    "B.9 MEDIAN OPERATION VS MEAN OPERATION IN FEATURE NORMALIZATION",
+    "B.10 ATYPICAL TRAINING DOMAIN EXPERIMENT",
+    "B.11 MORE EFFICIENCY ANALYSIS RESULTS",
+    "B.12 PARAMETER SENSITIVITY ANALYSIS",
+    "B.13 IMPACT OF DIFFERENT VALUES OF k",
+    "C VISUALIZATION",
+    "C.1 ADDITIONAL FEATURE PREPROCESSING COMPARISON",
+    "C.2 GRAPH SIMILARITY MEASUREMENT",
+    "C.3 TRAINING LOSS VS EPOCHS",
+    "C.4 ADDITIONAL ATTENTION MAP VISUALIZATION ON AMAZON DATASET",
+    "D FUTURE DIRECTIONS",
+    "E BROADER IMPACT"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

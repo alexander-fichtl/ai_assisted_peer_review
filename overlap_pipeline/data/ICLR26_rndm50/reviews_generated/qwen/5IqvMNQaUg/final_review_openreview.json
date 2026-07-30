@@ -1,0 +1,75 @@
+{
+  "pdfname": "5IqvMNQaUg",
+  "content": {
+    "summary": {
+      "value": "The paper introduces SOPS (Sparse tOpology Pairwise Scoring), a scalable communication framework for large-scale multi-agent reinforcement learning that addresses the challenges of communication efficiency and adaptability across different population sizes. SOPS combines an exponential graph backbone for global reachability with a differentiable pairwise scoring mechanism that dynamically selects sparse communication links based on agent states and edge embeddings. Using Gumbel-Sigmoid reparameterization, the framework enables end-to-end training of the discrete communication topology while maintaining near-linear communication complexity. The method demonstrates superior performance across various cooperative benchmarks, consistently achieving higher rewards and faster convergence compared to existing state-of-the-art approaches. SOPS also exhibits robust zero-shot transfer capabilities, allowing models trained on smaller agent populations to effectively scale to larger scenarios without retraining. The approach maintains high communication efficiency with a small and slowly growing per-agent neighbor budget, making it practical for very large-scale MARL applications. The authors validate their method through extensive experiments on MAgent and IMP benchmarks with agent populations ranging from 20 to 121, showing consistent advantages across different scales and scenarios."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. **Innovative architectural separation of concerns**: The paper makes a compelling conceptual contribution by separating global reachability (handled by the exponential backbone) from task-adaptive communication selection (handled by the pairwise scoring mechanism). This design choice directly addresses the two key challenges identified in large-scale MARL communication—scalability and adaptability—rather than treating them as a single monolithic problem. The exponential backbone ensures logarithmic diameter while maintaining near-linear communication cost, while the differentiable pairwise scoring enables dynamic adaptation to task requirements without redesigning the topology.\n\n2. **Practical zero-shot transfer capability**: Unlike prior methods (e.g., GACG) that tie communication structures to specific population sizes, SOPS demonstrates robust zero-shot transfer from smaller to larger agent populations without retraining. The paper provides thorough empirical validation (Figure 4 and Tables 6-7), showing that the learned communication patterns maintain high coverage and edge persistence even when the population size changes by 2-5x, with the top 10% most frequently used edges showing 67-88% Jaccard overlap across resize settings.\n\n3. **Effective application of differentiable discrete optimization to MARL communication**: The paper makes a significant methodological contribution by adapting Gumbel-Sigmoid reparameterization specifically for communication topology selection. The ablation study (Figure 5c) demonstrates that this approach substantially outperforms alternative gradient estimators (SFE, ARM), with the linear temperature annealing schedule proving critical for both exploration and convergence—providing concrete insights into how to train discrete communication structures in MARL.\n\n4. **Rigorous theoretical justification for topology choice**: Rather than using the exponential graph as a heuristic, the paper provides formal analysis (Figure 1) comparing its broadcast coverage against Erdős–Rényi and Torus topologies. This demonstrates that the exponential graph achieves near-complete coverage with minimal rounds across all population sizes, while alternatives degrade significantly as scale increases—a crucial insight for large-scale MARL that prior work often overlooked.\n\n5. **Comprehensive system-level profiling**: The paper goes beyond standard performance metrics to analyze practical scalability (Table 8), showing that SOPS maintains a constant per-agent neighbor budget (3-4.5) across all scales while keeping computational overhead within the same order of magnitude as non-communicating baselines. This demonstrates the method's practical viability for real-world deployment, unlike approaches like GACG that exhibit quadratic complexity."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Lack of heterogeneous agent validation**: While the paper claims in Section C.3.3 that \"SOPS itself does not rely on agent homogeneity,\" it provides no experimental evidence to support this assertion. The authors should implement and evaluate SOPS in explicitly heterogeneous scenarios (e.g., agents with different observation spaces, action capabilities, or roles) to validate their claim about broad applicability. This would strengthen the \"adaptability across various scales\" contribution by demonstrating robustness to agent diversity, which is common in real-world applications like autonomous driving where vehicles have different sensors and capabilities.\n\n2. **Incomplete comparison with recent large-scale MARL approaches**: The paper omits comparisons with two relevant state-of-the-art methods specifically designed for large-scale MARL: GAT-MF (Hao et al., 2023) and mix-attention approximations (Shike et al., 2023). These methods address the same scalability challenges as SOPS but through different architectural approaches. Including them as baselines would better establish SOPS's novelty and relative advantages, particularly since the paper claims to \"significantly"
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **Actor-critic compatibility**: While the paper demonstrates SOPS works well with value-based methods (QMIX, QPLEX, SHAQ), the \"plug-and-play\" claim would be strengthened by evidence of compatibility with actor-critic frameworks like MADDPG or MAPPO. The architecture differences (e.g., policy networks vs. Q-value networks) might affect how communication benefits are realized. Could you provide insights or preliminary results on how SOPS would integrate with actor-critic methods, particularly regarding whether the pairwise scoring mechanism would need adaptation for policy gradient optimization?\n\n2. **Theoretical basis for zero-shot transfer**: The zero-shot transfer results (Figure 4) are impressive, but a deeper theoretical explanation would strengthen the contribution. The paper suggests the separation of global reachability (exponential backbone) from task-adaptive selection enables this transfer, but what specific properties of this design allow the model to maintain coordination when scaling from N=42 to N=121? Is there a mathematical basis for why the learned pairwise scoring generalizes across population sizes, or is this an empirical observation without formal guarantees?\n\n3. **Heterogeneous agent validation**: Section C.3.3 states \"SOPS itself does not rely on agent homogeneity\" but provides no experimental evidence. To validate this claim, could you share preliminary results from heterogeneous scenarios where agents have different observation spaces, action capabilities, or roles? For instance, how would SOPS handle scenarios where some agents have restricted communication capabilities or specialized functions?\n\n4. **Gumbel temperature annealing rationale**: The ablation study (Figure 5a) shows linear annealing outperforms other schedules, but the paper doesn't explain why this specific schedule works best for communication learning. What properties of the communication optimization landscape make linear decay particularly effective compared to exponential or fixed temperature approaches? Does the linear schedule better balance exploration-exploitation during the critical early training phase when communication patterns are being established?\n\n5. **Communication bandwidth quantification**: While Table 8 shows SOPS maintains a small out-degree (3-4.5), the actual bandwidth savings compared to dense methods would strengthen the \"communication efficiency\" claim. Could you provide concrete metrics on the bandwidth reduction factor? For example, if a dense method requires O(N²) bandwidth and SOPS requires O(N log N), what is the practical constant factor in your implementation, and how does this translate to real-world communication cost reductions?\n\n6. **Mixed cooperative-competitive adaptation**: The paper focuses exclusively on cooperative scenarios, but many real-world applications involve mixed cooperative-competitive dynamics. How might SOPS need to be modified for settings where some communication links should be suppressed or where agents have conflicting objectives? Would the pairwise scoring mechanism require opponent modeling or adversarial components to function effectively in such environments?\n\n7. **Edge budget sensitivity**: The ablation in Figure 5b shows performance with different fixed K values, but it's unclear how sensitive SOPS is to the edge budget parameter. Does the optimal K value depend on the specific task or scale, or does the learned pairwise scoring automatically adapt to maintain an effective communication density regardless of the maximum allowed budget? Understanding this would help practitioners determine appropriate hyperparameters for new applications."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "SPARSE TOPOLOGY PAIRWISE SCORING FOR LARGESCALE MULTI-AGENT REINFORCEMENT LEARNING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 PRELIMINARIES",
+    "3.1 COOPERATIVE MARL PROBLEMS FORMULATION",
+    "3.2 EXPONENTIAL TOPOLOGIES FOR SCALABLE COMMUNICATION",
+    "4 METHODOLOGY",
+    "4.1 SPARSE TOPOLOGY CONSTRAINED DIFFERENTIABLE PAIRWISE SELECTION",
+    "4.2 MESSAGE AGGREGATION AND DECISION MAKING.",
+    "4.3 TRAINING OBJECTIVE AND AUXILIARY TASK",
+    "5 EXPERIMENTS",
+    "5.1 SETUP",
+    "5.2 MAIN RESULTS",
+    "5.3 ANALYSIS",
+    "5.4 ABLATIONS",
+    "6 CONCLUSION",
+    "Under review as a conference paper at ICLR 2026",
+    "A SOURCE CODE",
+    "B THE USE OF LARGE LANGUAGE MODELS (LLMS)",
+    "C ADDITIONAL DETAILS OF EXPERIMENTS",
+    "C.1 HYPERPARAMETERS",
+    "C.2 BENCHMARKS AND SCENARIOS",
+    "C.3 ADDITIONAL RESULTS AND DISCUSSION",
+    "C.3.1 FOR MAGENT BENCHMARK",
+    "C.3.2 ROBUSTNESS TO AGENT FAILURES AND TOPOLOGY DISRUPTIONS",
+    "C.3.3 LIMITATIONS AND FUTURE EXTENSIONS",
+    "C.3.4 LEARNED-GRAPH DIAGNOSTICS",
+    "C.3.5 SYSTEM-LEVEL PROFILING"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

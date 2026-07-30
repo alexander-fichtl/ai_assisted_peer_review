@@ -1,0 +1,89 @@
+{
+  "pdfname": "084SvT55yk",
+  "content": {
+    "summary": {
+      "value": "This paper proposes NEXCO, a Native Adaptive Expansion framework for combinatorial optimization problems, which fundamentally rethinks adaptive expansion as an intrinsic decoding principle of a generative model. \n\nThe proposed framework integrates feasibility, global awareness, and adaptivity directly into the generative process, achieving the efficiency of global prediction, the feasibility of local construction, and the adaptivity of adaptive expansion in a unified framework.\n\nNEXCO uses a CO-specific masked diffusion framework that turns adaptive expansion into the model's own iterative unmasking process.\n\nExtensive experiments on representative CO problems, including the Maximum Independent Set (MIS), Traveling Salesman Problem (TSP), and Capacitated Vehicle Routing Problem (CVRP), show that NEXCO achieves approximately 50% improvement in solution quality and up to 4 × faster inference compared to prior state-of-the-art solvers.\n\nThe contributions of this paper include: \n1) revisiting the Adaptive Expansion (AE) paradigm and pointing out that existing implementations are merely wrappers around GP predictors, \n2) proposing NEXCO, a masked diffusion framework that natively realizes the AE paradigm, \n3) conducting extensive experiments on representative CO problems to show that NEXCO consistently surpasses prior state-of-the-art solvers in both solution quality and inference efficiency.\n\nNEXCO provides a more principled foundation for scalable and effective neural solvers in discrete optimization, and is expected to benefit the broader research community. \n\nThe proposed method does not involve sensitive personal data, human subjects, or applications with immediate ethical risks. \n\nThe work is aligned with the ethical standards of the ML community. \n\nAll source code, preprocessed datasets, and pretrained checkpoints will be publicly released upon publication to ensure full reproducibility."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Native Integration of Adaptive Expansion**: The paper proposes a novel approach, NEXCO, which natively integrates adaptive expansion into a generative model for combinatorial optimization problems. This native integration is a significant departure from existing methods that rely on external wrappers around global prediction backbones.\n\n2. **CO-Specific Masked Diffusion Framework**: NEXCO introduces a CO-specific masked diffusion framework that fundamentally rethinks adaptive expansion as an intrinsic decoding principle. This approach allows for efficient, feasible solution construction and provides meaningful intermediate states.\n\n3. **Time-Agnostic GNN Denoiser**: The use of a time-agnostic GNN denoiser, which depends only on the corrupted state and the graph instance, eliminates the need for timestep embeddings. This design choice enables schedule-free training and improves generalization across different noise levels.\n\n4. **Optimization Consistency Principle**: The paper introduces a new optimization consistency principle, which enforces that all corrupted states of an instance consistently map to the same optimum. This principle improves the one-step prediction quality and ties denoising directly to the optimization goal.\n\n5. **Extensive Experimental Validation**: The authors provide extensive experiments on representative CO problems (MIS, TSP, CVRP), demonstrating that NEXCO consistently surpasses prior state-of-the-art solvers in both solution quality and inference efficiency.\n\n6. **Scalability and Generalization**: NEXCO shows strong cross-scale generalization compared to existing diffusion-based solvers, achieving competitive or superior solver performance on various problem instances.\n\n7. **Efficient and Principled Approach**: The proposed Native Adaptive Expansion (NAE) strategy offers a deterministic expansion procedure that reuses the denoiser once per stage and enforces feasibility at each step, achieving O(Ts) complexity while making full constructive use of the entire trajectory.\n\n8. **Improved Adaptivity and Flexibility**: NEXCO allows practitioners to flexibly adjust inference cost, and it remains superior to strong baselines even under reduced step budgets. The optimal range of hyperparameters, such as the candidate threshold α, is largely shared across all sizes and distributions within each task.\n\n## Conclusion\n\nThe paper presents a significant contribution to the field of neural combinatorial optimization, offering a novel approach that natively integrates adaptive expansion into a generative model. The proposed framework, NEXCO, demonstrates improved solution quality, inference efficiency, scalability, and generalization compared to prior state-of-the-art solvers. The work provides a more principled foundation for scalable and effective neural solvers in discrete optimization, making it a valuable addition to the broader research community."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Comparison to Very Recent Work**: The paper could benefit from a more comprehensive comparison to very recent work in the field of neural combinatorial optimization. Specifically, it would be valuable to compare NEXCO with methods like LEHD (Luo et al., 2023) and SymNCO (Kim et al., 2022) in terms of solution quality and inference efficiency.\n\n2. **Ablation Study on Hyperparameters**: While the paper analyzes the effect of the number of expansion steps and the candidate threshold α, a more detailed ablation study on other hyperparameters, such as the confidence threshold and the expansion schedule, would provide additional insights into the robustness of NEXCO.\n\n3. **Generalization to Non-Benchmark Instances**: The paper primarily focuses on synthetic and benchmark instances. Evaluating NEXCO on real-world instances with complex constraints and diverse characteristics would further validate its effectiveness and generalizability.\n\n4. **Theoretical Analysis of CO-Specific Corruption**: Although the paper introduces a CO-specific corruption mechanism, a more rigorous theoretical analysis of its properties and implications would strengthen the paper. This could include proving that the proposed corruption process preserves the feasible manifold of solutions.\n\n5. **Runtime Analysis for Large-Scale Instances**: While the paper provides a runtime breakdown for various tasks and instance sizes, a more detailed analysis of the scalability of NEXCO for extremely large-scale instances (>10,000 nodes) would be valuable. This could involve comparing the runtime of NEXCO with other efficient solvers like GLOP (Ye et al., 2024).\n\n## Conclusion\n\nThe paper presents a significant contribution to neural combinatorial optimization with the proposal of NEXCO, a native adaptive expansion framework. However, addressing the identified weaknesses would further enhance the paper's impact and provide a more comprehensive understanding of NEXCO's strengths and limitations. Specifically, expanding the comparison to very recent work, conducting a detailed ablation study on hyperparameters, evaluating generalization to non-benchmark instances, providing a theoretical analysis of CO-specific corruption, and analyzing runtime for large-scale instances would offer actionable insights for improvement."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Theorem 2 and Theorem 3**: The paper mentions that Theorem 2 has already been shown in \"Randomized Linear Programming Solves the Discounted Markov Decision Problem in Nearly-Linear Running Time\". Could the authors provide a clear explanation of how Theorem 2 and Theorem 3 are novel results, especially in relation to existing work?\n\n2. **Conditions on eta_v**: The paper assumes that eta_v must be chosen to ensure that it does not affect (constrain) the optimal solution. Could the authors provide more details on the conditions for eta_v and how it is chosen in practice?\n\n3. **Verification of Theorem Proof**: There is a step in the theorem proof on Page 18 where the squared term is removed for the difference between U and Upi. Could the authors clarify how this step is derived?\n\n4. **Additional Experimental Domains**: The experiments focus on TSP, MIS, and CVRP. Could the authors provide results on other representative CO problems, such as Vehicle Routing Problems (VRPs) or Scheduling Problems, to further validate the generality of NEXCO?\n\n5. **Comparison to LEHD and SymNCO**: While the paper compares NEXCO with several baselines, it would be valuable to include comparisons with LEHD (Luo et al., 2023) and SymNCO (Kim et al., 2022) in terms of solution quality and inference efficiency.\n\n6. **Ablation Study on Hyperparameters**: The paper analyzes the effect of the number of expansion steps and the candidate threshold α. Could the authors provide a more detailed ablation study on other hyperparameters, such as the confidence threshold and the expansion schedule?\n\n7. **Theoretical Analysis of CO-Specific Corruption**: Although the paper introduces a CO-specific corruption mechanism, a more rigorous theoretical analysis of its properties and implications would strengthen the paper. Could the authors provide a theoretical analysis of how the proposed corruption process preserves the feasible manifold of solutions?\n\n8. **Runtime Analysis for Large-Scale Instances**: The paper provides a runtime breakdown for various tasks and instance sizes. Could the authors provide a more detailed analysis of the scalability of NEXCO for extremely large-scale instances (>10,000 nodes)?\n\n## Conclusion\n\nThe authors have proposed a novel approach, NEXCO, which natively integrates adaptive expansion into a generative model for combinatorial optimization problems. Addressing the identified questions and suggestions would further enhance the paper's impact and provide a more comprehensive understanding of NEXCO's strengths and limitations. Specifically, clarifying the novelty of theorems, providing conditions for eta_v, verifying theorem proofs, and conducting additional experiments and ablation studies would offer actionable insights for improvement."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "NATIVE ADAPTIVE SOLUTION EXPANSION FOR DIFFUSION-BASED COMBINATORIAL OPTIMIZATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 PRELIMINARIES AND RELATED WORK",
+    "2.1 COMBINATORIAL OPTIMIZATION ON GRAPHS",
+    "2.2 DIFFUSION SOLVERS FOR CO",
+    "2.3 MASKED DIFFUSION",
+    "3 METHOD",
+    "3.1 FORWARD PROCESS: CO-SPECIFIC CORRUPTION",
+    "3.2 TIME-AGNOSTIC DENOISER",
+    "3.3 TRAINING OBJECTIVE: TIME-AGNOSTIC OPTIMIZATION CONSISTENCY",
+    "3.4 INFERENCE PROCESS: NATIVE ADAPTIVE EXPANSION (NAE)",
+    "Algorithm 1: Native Adaptive Expansion (NAE)",
+    "4 EXPERIMENTS",
+    "4.1 EXPERIMENTS ON TSP",
+    "4.2 EXPERIMENTS ON MIS.",
+    "4.3 EXPERIMENTS ON CVRP",
+    "4.4 HYPERPARAMETER STUDY",
+    "5 CONCLUSION",
+    "ETHICS STATEMENT",
+    "REPRODUCIBILITY STATEMENT",
+    "756 APPENDIX",
+    "758 759 A ADDITIONAL RELATED WORKS",
+    "760 761 A.1 LEARNING-BASED COMBINATORIAL OPTIMIZATION",
+    "A.2 MASK DIFFUSION MODEL",
+    "B ADDITIONAL EXPERIMENTS",
+    "B.1 CROSS-DISTRIBUTION AND CROSS-SCALE GENERALIZATION ON MIS",
+    "B.2 SCALABILITY ON TSP-10K",
+    "B.3 EVALUATION ON REAL-WORLD INSTANCES",
+    "B.5 ABLATION STUDY ON THE ADAPTIVE EXPANSION",
+    "B.7 RUNTIME BREAKDOWN OF NAE INFERENCE",
+    "C MODEL ARCHITECTURE DETAILS",
+    "C.1 INPUT EMBEDDING LAYER",
+    "C.2 GRAPH CONVOLUTION LAYER",
+    "1080 C.3",
+    "OUTPUT LAYER",
+    "C.4 MODEL PARAMETERS",
+    "D EXPERIMENTAL SETUP",
+    "D.1 HARDWARE",
+    "D.2 TRAINING SETUP",
+    "E LICENSES",
+    "F LLM USAGE",
+    "Table 15: Licenses for codes used in this work"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

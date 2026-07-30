@@ -1,0 +1,63 @@
+{
+  "pdfname": "Ba0RlUn0TR",
+  "content": {
+    "summary": {
+      "value": "This paper introduces Partition-Losses Fine-Tuning (PL), a novel defense against poisoning-based backdoor attacks that addresses the critical limitation of existing fine-tuning methods requiring perfectly clean tuning data. PL leverages both mostly-clean and flagged mostly-malicious samples by jointly minimizing benign loss while maximizing target-class loss on the malicious pool, directly unlearning the trigger-to-target association without architectural modifications. The method requires only a minor computational overhead (one additional forward pass per iteration) while using significantly fewer clean samples than existing approaches. Extensive experiments across multiple datasets and attack types demonstrate that PL consistently achieves near-zero attack success rates while maintaining competitive clean accuracy, even under realistic contamination of both tuning pools. The paper shows PL outperforms clean-only fine-tuning methods using 2-2.5× fewer clean samples, maintains robustness across hyperparameter choices, and generalizes to unseen attack types. Theoretical analysis provides guarantees for PL's effectiveness under imperfect data partitioning, and ablation studies confirm its stability across varying data budgets and contamination levels. This work broadens the practical design space for backdoor defenses by effectively utilizing quarantined malicious samples rather than discarding them."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "The paper's most significant strengths lie in its precise problem formulation and practical innovation:\n\n1. **Realistic problem reframing**: The authors correctly identify that the assumption of perfectly clean fine-tuning data in existing defenses is fundamentally flawed in practice, where operational pipelines can flag suspicious inputs with known target classes. This reframing addresses a critical gap between academic assumptions and real-world security practices, where monitoring systems routinely detect potential threats.\n\n2. **First defense leveraging flagged malicious samples**: PL is the first fine-tuning defense that directly incorporates flagged malicious samples with known target labels in a joint objective (minimizing benign loss while maximizing target-class loss), rather than discarding these valuable signals as all prior methods do. This represents a conceptual shift from \"clean-only\" approaches to \"partition-aware\" defenses.\n\n3. **Theoretically grounded approach**: Theorem 1 provides rigorous mathematical justification showing that with just a strict majority of true triggers in the malicious pool (ϵ_m < 0.5), PL strictly decreases the surrogate attack success rate more effectively than clean-only fine-tuning for any α > 0. The complete proof in Appendix A establishes a solid theoretical foundation rather than relying solely on empirical observations.\n\n4. **Resource efficiency with superior performance**: PL achieves near-zero attack success rates while using 2-2.5× fewer clean samples than state-of-the-art methods (e.g., 2% vs 5% training data in PL-2 regime), making it significantly more data-efficient without sacrificing clean accuracy. This efficiency is particularly valuable in security contexts where clean data may be scarce.\n\n5. **Robustness to realistic contamination**: The comprehensive evaluation demonstrates PL's effectiveness even when both tuning pools contain contamination (up to 10% false positives/negatives), which is critical for practical deployment where perfect data partitioning is unattainable. This robustness is shown across multiple datasets, attacks, and contamination scenarios in Tables 2-3.\n\n6. **Generalization to unseen attacks**: The cross-attack results (Tables 4-5) show PL maintains strong performance even when fine-tuned on one attack type but evaluated on different, unseen backdoor attacks, often matching or exceeding models fine-tuned directly on the target attack. This generalization capability significantly enhances practical utility."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses Assessment\n\n1. **Lack of evaluation against adaptive attacks**: The paper thoroughly evaluates PL against standard backdoor attacks but fails to consider adaptive attackers who could specifically target the PL mechanism. Since PL explicitly maximizes loss on the target class, a sophisticated attacker could design triggers that cause the model to output a different class when the loss is maximized (e.g., by creating triggers that make the model output a third class rather than the target class). The paper positions PL as a practical defense for real-world deployment, yet without evaluating against such adaptive strategies, the true robustness remains unproven. The authors should conduct experiments with attacks specifically designed to bypass PL's dual-objective approach, perhaps by creating triggers that maintain the backdoor behavior even when loss maximization is applied.\n\n2. **Insufficient guidance for α parameter selection**: While Figure 2 demonstrates PL's stability across α values, the paper provides no principled method for selecting α in practice. The authors consistently use α=0.2 without justification for why this value works well across different contamination levels and attack types. Given that α controls the critical trade-off between safety and utility, a more systematic approach—such as recommending α based on estimated contamination rates (e.g., higher α for higher malicious pool contamination)—would significantly enhance practical deployment. The authors could add a simple heuristic or empirical rule for α selection based on their contamination analysis.\n\n3. **Unvalidated theoretical assumptions**: Theorem 1 relies on the key assumption that ∥g_clean∥ ≤ ∥g_trig∥ (the gradient magnitude from clean samples is less than from triggered samples), but the paper provides no empirical validation of whether this holds across different attacks and datasets. Without verifying this assumption, the theoretical guarantee may not apply to real-world scenarios. The authors should measure and report these gradient magnitudes across their experimental conditions to confirm whether the theoretical conditions are met in practice.\n\n4. **Limited evaluation on multi-target scenarios**: The paper assumes a single known target class t, but real-world attacks might involve multiple target classes or dynamic targets. The authors don't explore how PL would handle cases where the defender doesn't know the exact target class or when attacks use multiple targets. Given the paper's emphasis on practical deployment, testing with multi-target attacks (e.g., where different triggers map to different target classes) would strengthen the claims about real-world applicability. The authors could extend their framework to handle multiple target classes by applying the loss maximization to all suspected target classes."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **Adaptive attack resilience**: Your method explicitly maximizes loss on the target class for malicious samples, which could potentially be exploited by adaptive attackers. Could you elaborate on whether you've considered scenarios where attackers design triggers that cause the model to output a *third class* (rather than the target class) when loss is maximized? Theoretical analysis or preliminary experiments on such adaptive attacks would significantly strengthen the practical security claims.\n\n2. **Theorem 1 assumption validity**: The theoretical guarantee in Theorem 1 relies on the assumption that ∥g_clean∥ ≤ ∥g_trig∥. Could you provide empirical evidence across your tested architectures/datasets showing this assumption generally holds? If this condition doesn't hold in certain scenarios (e.g., specific attack types or architectures), how would PL's performance be affected, and would any modifications be needed?\n\n3. **Practical implementation details**: While the paper states that \"operational pipelines often include steps such as monitoring and incident response\" that flag suspicious inputs, I'd appreciate more concrete details about how this would work in practice. What types of monitoring systems would generate these flags with known target classes in real deployments? Could you share expected accuracy rates of such systems based on existing literature or your own observations?\n\n4. **Optimal α determination**: Figure 2 shows PL is relatively stable across α values, but I'm curious whether the optimal α might vary significantly for different attack types in realistic settings. Could you provide guidance for practitioners on how to determine an appropriate α value *without prior knowledge* of the attack type? Would a simple grid search on a small validation set be sufficient?\n\n5. **Computational overhead quantification**: While you mention PL adds \"only one additional forward pass,\" could you provide concrete timing measurements comparing PL to clean-only fine-tuning with equivalent total data? For instance, what's the actual training time increase when using PL with 2% tuning data versus clean-only with 4.25% data (as in your PL-2 regime)?\n\n6. **Generalization limits**: Table 5 demonstrates PL generalizes to unknown attacks, but are there specific attack characteristics (beyond those tested) that would fundamentally undermine PL's effectiveness? For example, would attacks with multiple target classes or dynamic triggers require significant method modifications?\n\n7. **Practical pool sizing guidance**: In real-world deployment with unknown contamination rates, what would be your recommendation for the ratio between benign and malicious pool sizes? The paper shows effectiveness across various contamination scenarios, but practitioners would benefit from specific guidance on how to allocate limited tuning resources between the two pools.\n\nThese questions focus on aspects where your responses could significantly enhance the paper's practical relevance and strengthen the security claims, particularly regarding real-world deployment considerations that would be valuable for practitioners."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "000 001 002 PARTITION-LOSSES FINE-TUNING: CONTAMINATION-ROBUST BACKDOOR UNLEARNING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "3 PARTITION-LOSSES FINE-TUNING (PL)",
+    "Algorithm 1: Partition-Losses Fine-Tuning (PL)",
+    "for i = 1 to I do",
+    "return f θ ( I )",
+    "4 EXPERIMENTS",
+    "4.1 PL CAN EFFECTIVELY DEFEND AGAINST BACKDOOR ATTACKS",
+    "4.3.2 SENSITIVITY ANALYSIS ON TUNING DATASET SIZE",
+    "5 CONCLUSION",
+    "Under review as a conference paper at ICLR 2026",
+    "A PROOF FOR THEOREM 1",
+    "B EXPERIMENTAL SETUP",
+    "C PERFORMANCE UNDER CONTAMINATED PARTITION OF TUNING SETS.",
+    "D ADDITIONAL ABLATION: SENSITIVITY TO PARTITION CONTAMINATION",
+    "E ADDITIONAL ABLATION: GENERALIZATION TO UNKNOWN ATTACKS",
+    "F USE OF LLMS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

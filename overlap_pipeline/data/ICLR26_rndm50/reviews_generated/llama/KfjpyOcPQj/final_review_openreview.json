@@ -1,0 +1,82 @@
+{
+  "pdfname": "KfjpyOcPQj",
+  "content": {
+    "summary": {
+      "value": "The paper proposes a method called Margin Regularization for performance disparity Reduction (MR2) to address class-wise performance disparities in deep neural networks. MR2 dynamically adjusts margins in both logit and representation spaces during training. The authors derive a novel margin-based, class-sensitive generalization bound that connects per-class feature variability and margin design. Guided by this bound, MR2 optimizes per-class logit margins proportional to feature spread and penalizes excessive representation margins. The proposed method is evaluated on seven datasets, including ImageNet, and diverse pre-trained backbones, such as MAE, MoCov2, and CLIP. The results demonstrate that MR2 improves overall accuracy and significantly boosts 'hard' class performance without trading off 'easy' classes, thus reducing performance disparity. The code is available at https://github.com/BeierZhu/MR2."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Theoretically Principled Approach**: The paper presents a novel margin-based, class-sensitive generalization bound that connects per-class feature variability and margin design. This theoretical foundation is a significant contribution to the field, providing a new perspective on addressing class-wise performance disparities.\n\n2. **Originality of Ideas**: The proposed method, Margin Regularization for performance disparity Reduction (MR2), dynamically adjusts margins in both logit and representation spaces during training. This approach is original and addresses the limitations of existing methods that often focus on either logit-level or representation-level adjustments.\n\n3. **Comprehensive Experimental Evaluation**: The paper provides a comprehensive evaluation of MR2 on seven datasets, including ImageNet, and diverse pre-trained backbones such as MAE, MoCov2, and CLIP. The results demonstrate the effectiveness of MR2 in improving overall accuracy and reducing performance disparity across various settings.\n\n4. **Significant Impact on Hard Classes**: MR2 significantly boosts 'hard' class performance without trading off 'easy' classes, which is a crucial improvement over existing methods that often entail performance trade-offs.\n\n5. **Clear and Concise Writing**: The paper is well-written, with clear and concise explanations of complex technical concepts. The authors provide a thorough discussion of the proposed method, its theoretical justification, and experimental evaluation.\n\n6. **General Applicability**: The proposed method, MR2, has the potential to be widely adopted and applied to various applications, as it is evaluated on diverse datasets and pre-trained backbones.\n\n## Conclusion\n\nThe paper's strengths lie in its theoretically principled approach, originality of ideas, comprehensive experimental evaluation, significant impact on hard classes, clear writing, and general applicability. These strengths make the paper a valuable contribution to the research area of deep learning and fairness."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Analysis of Hyperparameter Sensitivity**: The paper could benefit from a more comprehensive analysis of hyperparameter sensitivity. While the authors mention that they tuned the hyperparameters $\\bar{c}$ and $\\lambda$ over a range of values, a more detailed analysis of how these hyperparameters affect the performance of MR2 would provide more insights into the robustness of the method.\n\n2. **Comparison to Recent Works**: Although the paper compares MR2 to several baselines, it would be beneficial to compare it with more recent works in the area of fairness and robustness in deep learning. This would help to better position MR2 in the context of current state-of-the-art methods.\n\n3. **Theoretical Analysis of Representation Margin**: While the paper provides a theoretical analysis of the logit margin, the representation margin loss $\\ell_{\\bar{s}}$ is not thoroughly analyzed from a theoretical perspective. A more detailed analysis of how $\\ell_{\\bar{s}}$ affects the generalization error bound would strengthen the paper's theoretical contributions.\n\n4. **Visualization of Feature Distributions**: The paper could benefit from visualizations of the feature distributions for different classes before and after applying MR2. This would help to intuitively understand how MR2 affects the feature space and leads to improved fairness.\n\n5. **Evaluation on Imbalanced Datasets**: The paper focuses on class-balanced datasets, but it would be interesting to evaluate MR2 on imbalanced datasets as well. This would help to understand how MR2 performs in more realistic scenarios where class imbalance is common.\n\n6. **Scalability to Larger Models and Datasets**: While the paper evaluates MR2 on several datasets and pre-trained backbones, it would be interesting to evaluate its scalability to larger models and datasets. This would help to understand whether MR2 can be applied to real-world applications with large-scale data.\n\n## Conclusion\n\nThe paper's weaknesses lie in its limited analysis of hyperparameter sensitivity, comparison to recent works, theoretical analysis of representation margin, visualization of feature distributions, evaluation on imbalanced datasets, and scalability to larger models and datasets. Addressing these weaknesses would further strengthen the paper's contributions and provide more insights into the effectiveness of MR2."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Hyperparameter Sensitivity Analysis**: The authors mention tuning hyperparameters $\\bar{c}$ and $\\lambda$ over a range of values. Could they provide a more detailed analysis of how these hyperparameters affect the performance of MR2? This could help in understanding the robustness of the method.\n\n2. **Recent Works Comparison**: Although MR2 is compared to several baselines, it would be beneficial to compare it with more recent works in fairness and robustness. Could the authors discuss how MR2 relates to and improves upon recent methods like FairDRO, CSR, and DFL?\n\n3. **Theoretical Analysis of Representation Margin**: The representation margin loss $\\ell_{\\bar{s}}$ is not thoroughly analyzed from a theoretical perspective. Could the authors provide a more detailed analysis of how $\\ell_{\\bar{s}}$ affects the generalization error bound?\n\n4. **Visualization of Feature Distributions**: Visualizations of feature distributions for different classes before and after applying MR2 would help understand how MR2 affects the feature space. Could the authors provide such visualizations?\n\n5. **Evaluation on Imbalanced Datasets**: The paper focuses on class-balanced datasets. Could the authors evaluate MR2 on imbalanced datasets and discuss its performance in such scenarios?\n\n6. **Scalability to Larger Models and Datasets**: Could the authors evaluate the scalability of MR2 to larger models and datasets? This would help understand its applicability to real-world applications.\n\n7. **Impact on Real-World Applications**: How does MR2 perform in real-world applications with large-scale data? Could the authors provide case studies or examples of applying MR2 to practical problems?\n\n8. **Comparative Analysis with Other Fairness Methods**: Could the authors compare MR2 with other fairness methods, such as reweighting methods (LfF, JTT), margin adjustment methods (EQL, LDAM), and contrastive representation learning methods (SupCon, DRL)?\n\n9. **Code and Model Availability**: Could the authors make the code and models used in the paper publicly available to facilitate reproducibility and further research?\n\n## Conclusion\n\nAddressing these questions and suggestions would help clarify potential confusions, address limitations, and change opinions about the effectiveness and applicability of MR2. This is crucial for a productive rebuttal and discussion phase with the authors."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "REDUCING CLASS-WISE PERFORMANCE DISPARITY VIA MARGIN REGULARIZATION",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 METHOD",
+    "3.1 DISCUSSION WITH EXISTING WORK",
+    "4 THEORETICAL ANALYSIS",
+    "4.1 PRELIMINARIES",
+    "4.2 MARGIN REGULARIZATION PROMOTES GENERALIZATION AND REDUCES DISPARITY",
+    "(a) CIFAR-100",
+    "4.3 GENERAL NORM BOUNDS ON MARGIN-BASED COMPLEXITY",
+    "5 EXPERIMENTS",
+    "5.1 MAIN RESULTS",
+    "5.2 ABLATION STUDIES",
+    "6 CONCLUSION",
+    "ACKNOWLEDGMENT",
+    "CONTENTS",
+    "A ADDITIONAL DISCUSSIONS",
+    "Discussion 3: Relation to Neural Collapse.",
+    "Discussion 4: Applying our MR 2 to class-imbalanced settings.",
+    "B MISSING PROOFS",
+    "B.1 CONNECTION BETWEEN ℓ ¯ s AND ˆ ℓ ¯ s",
+    "B.2 CONNECTION BETWEEN PAIRWISE DISTANCE AND MEAN SQUARED DEVIATION",
+    "B.3 PROOF OF LEMMA 1",
+    "B.4 PROOF OF LEMMA 2",
+    "B.5 PROOF OF LEMMA 3",
+    "B.6 PROOF OF COROLLARY 1",
+    "B.7 PROOF OF PROPOSITION 2",
+    "B.8 PER-CLASS ERROR BOUND",
+    "C ADDITIONAL EXPERIMENTAL DETAILS AND RESULTS",
+    "C.1 ADDITIONAL DETAILS OF BASELINE METHODS",
+    "C.2 ADDITIONAL IMPLEMENTATION DETAILS",
+    "C.3 ADDITIONAL EXPERIMENTAL RESULTS",
+    "D SOCIETAL IMPACT AND LIMITATION",
+    "E LLM USAGE STATEMENT",
+    "(a) CIFAR-100",
+    "(b) ImageNet",
+    "(b) Our MR 2 Loss"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

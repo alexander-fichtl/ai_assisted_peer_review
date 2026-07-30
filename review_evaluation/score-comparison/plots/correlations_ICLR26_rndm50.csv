@@ -1,0 +1,4 @@
+source,n_papers,pearson_r_median,pearson_p_median,spearman_r_median,spearman_p_median,pearson_r_mean,pearson_p_mean,spearman_r_mean,spearman_p_mean
+gpt,50,0.5549,0.0,0.5118,0.0001,0.6188,0.0,0.6043,0.0
+llama,50,0.0513,0.7234,0.0761,0.5995,-0.0085,0.9535,-0.0155,0.9147
+qwen,50,0.1258,0.3839,0.0709,0.6247,0.1281,0.3754,0.0917,0.5266

@@ -1,0 +1,20 @@
+{
+  "avg_generated": 67.5019642409458,
+  "avg_human": 65.54758200534555,
+  "avg_diff_generated_minus_human": 1.9543822356002494,
+  "n_human_used_for_avg": 86,
+  "avg_per_reviewer": {
+    "gpt": {
+      "avg": 61.51200891310169,
+      "n": 31
+    },
+    "llama": {
+      "avg": 73.04547217584425,
+      "n": 31
+    },
+    "qwen": {
+      "avg": 67.94841163389144,
+      "n": 31
+    }
+  }
+}

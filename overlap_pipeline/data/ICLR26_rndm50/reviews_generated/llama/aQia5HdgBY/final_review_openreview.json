@@ -1,0 +1,65 @@
+{
+  "pdfname": "aQia5HdgBY",
+  "content": {
+    "summary": {
+      "value": "This paper proposes a Persistent Shared Memory (PSM) mechanism for zero-shot object navigation (ZSON), enabling single or multi-agent systems to accumulate and reuse semantic knowledge across tasks and agents. The authors introduce a Temporally Consistent Semantic Map (TCSM) that decouples scene memory from task-specific information and maintains semantic consistency via weighted confidence updates. A beyond-line-of-sight (BLOS) navigation strategy is designed to propagate stored semantics into nearby navigable areas and perform line-of-sight checks for waypoint selection. The proposed framework achieves state-of-the-art performance on public benchmarks, including HM3D and MP3D. The PSM mechanism reframes ZSON from isolated, single-task executions towards continuous, collaborative learning. The authors' approach avoids redundant scene re-exploration and improves navigation efficiency. The contributions include introducing PSM, proposing TCSM, and designing a BLOS-aware navigation strategy. The framework's effectiveness is demonstrated through extensive experiments."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "The paper has several notable strengths:\n\n1. **Original Problem Formulation**: The authors introduce the Persistent Shared Memory (PSM) mechanism, reframing zero-shot object navigation (ZSON) from isolated, single-task executions towards continuous, collaborative learning. This new problem formulation addresses the inefficiency of current ZSON paradigms in practical applications like home robotics.\n\n2. **Novel Technical Framework**: The proposed framework features two key components: the Temporally Consistent Semantic Map (TCSM) and a beyond-line-of-sight (BLOS) navigation strategy. The TCSM employs a weighted update mechanism to ensure long-term consistency and robustness, while the BLOS strategy enables the agent to reason about and plan efficient paths towards occluded or distant targets.\n\n3. **State-of-the-Art Performance**: The framework achieves state-of-the-art performance on public benchmarks, including HM3D and MP3D, demonstrating significant gains in navigation efficiency and establishing a new standard for persistent ZSON.\n\n4. **Comprehensive Evaluation**: The authors conduct extensive experiments to validate their approach, including comparative analysis with existing methods, ablation studies, and analysis of the impact of pre-existing memory size on navigation performance.\n\n5. **Practical Significance**: The proposed PSM mechanism and TCSM have practical implications for applications like home robotics and multi-agent systems, where efficient and persistent navigation is crucial.\n\n6. **Clear and Concise Presentation**: The paper is well-written, and the presentation is clear and concise, making it easy to follow and understand the proposed approach and its significance."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Dependency on Upstream Perception Models**: \nThe system's performance is contingent on the accuracy of pre-trained perception models. As noted in the paper, \"Dependency on Upstream Perception Models Our system's perceptual accuracy is capped by the performance of the pre-trained perception models it relies on.\" This dependency might limit the overall performance and robustness of the proposed framework.\n\n2. **Assumption of a Static Environment**: \nThe Temporally Consistent Semantic Map (TCSM) assumes a static environment, which might not hold in real-world scenarios where objects can be moved, and layouts can change dynamically. Extending the framework to handle dynamic environments could enhance its practical applicability.\n\n3. **Limited Ablation Study for BLOS Strategy**: \nWhile the paper provides an ablation study for various components of the proposed framework, the specific impact of the beyond-line-of-sight (BLOS) strategy on overall performance could be more thoroughly analyzed. Additional experiments isolating the effect of the BLOS strategy would strengthen the claims regarding its efficacy.\n\n4. **Scalability and Generalizability**: \nThe experiments are conducted on specific benchmarks (HM3D and MP3D). Evaluating the framework on a broader range of environments and scenarios would help establish its scalability and generalizability.\n\n5. **Computational Cost and Efficiency**: \nAlthough the paper provides a computation cost analysis, further optimization of the TCSM update and query operations, as well as the BLOS navigation strategy, might be necessary to ensure real-time applicability in resource-constrained environments.\n\n## Actionable Insights for Improvement\n\n1. **Incorporate Active Perception Strategies**: \nImplementing active perception strategies could help mitigate the dependency on upstream perception models by allowing the agent to gather disambiguating evidence or correct semantic inconsistencies.\n\n2. **Enhance TCSM for Dynamic Environments**: \nIntegrating change detection mechanisms or dynamic object tracking could extend the TCSM to handle dynamic environments, making it more robust and applicable to real-world settings.\n\n3. **Additional Experiments**: \nConducting experiments on diverse environments and scenarios would help validate the framework's scalability and generalizability.\n\n4. **Optimize Computational Efficiency**: \nFurther optimizing the computational efficiency of the TCSM and BLOS strategy would enhance the framework's practical applicability, especially in resource-constrained environments.\n\nBy addressing these weaknesses and incorporating actionable insights, the proposed framework can be further strengthened and made more applicable to real-world zero-shot object navigation tasks."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on BLOS Strategy Impact**: \nThe authors mention that the beyond-line-of-sight (BLOS) strategy enhances navigation efficiency, particularly in scenarios involving BLOS conditions and disconnected navigable regions. Could they provide more detailed analysis or experiments to isolate the specific impact of the BLOS strategy on overall performance?\n\n2. **Dependency on Perception Models**: \nThe paper notes that the system's perceptual accuracy is capped by the performance of pre-trained perception models. How do the authors plan to address this limitation? Are there any potential strategies for integrating active perception or online learning to mitigate this dependency?\n\n3. **Handling Dynamic Environments**: \nThe TCSM assumes a static environment, which might not hold in real-world scenarios. What are the authors' plans for extending the framework to handle dynamic environments, perhaps by incorporating change detection mechanisms or dynamic object tracking?\n\n4. **Scalability and Generalizability**: \nThe experiments are conducted on HM3D and MP3D benchmarks. How do the authors plan to evaluate the framework's scalability and generalizability across a broader range of environments and scenarios?\n\n5. **Computational Efficiency Optimization**: \nThe paper provides a computation cost analysis, but further optimization might be necessary for real-time applicability. Are there any plans to optimize the TCSM update and query operations, as well as the BLOS navigation strategy, for resource-constrained environments?\n\n6. **Ablation Study for BLOS Strategy**: \nWhile the paper provides an ablation study for various components, the specific impact of the BLOS strategy could be more thoroughly analyzed. Could the authors provide additional experiments to isolate the effect of the BLOS strategy on overall performance?\n\n7. **Quantitative Analysis of Redundant Exploration Reduction**: \nThe authors claim that the PSM mechanism significantly reduces redundant exploration. Could they provide more quantitative analysis or metrics to support this claim, such as specific numbers or percentages of reduced exploration?\n\n8. **Comparison with Other Multi-Agent Systems**: \nThe paper mentions the benefits of shared memory in multi-agent systems. How does the proposed framework compare to other multi-agent systems that utilize shared memory or collaborative perception?\n\n## Suggestions for Improvement\n\n1. **Incorporate Active Perception Strategies**: \nImplementing active perception strategies could help mitigate the dependency on upstream perception models.\n\n2. **Enhance TCSM for Dynamic Environments**: \nIntegrating change detection mechanisms or dynamic object tracking could extend the TCSM to handle dynamic environments.\n\n3. **Additional Experiments**: \nConducting experiments on diverse environments and scenarios would help validate the framework's scalability and generalizability.\n\n4. **Optimize Computational Efficiency**: \nFurther optimizing the computational efficiency of the TCSM and BLOS strategy would enhance the framework's practical applicability.\n\nBy addressing these questions and suggestions, the authors can provide further clarification, address limitations, and enhance the overall quality and applicability of their proposed framework."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "The paper proposes a Persistent Shared Memory (PSM) mechanism for zero-shot object navigation (ZSON), enabling single or multi-agent systems to accumulate and reuse semantic knowledge across tasks and agents. The authors introduce a Temporally Consistent Semantic Map (TCSM) and a beyond-line-of-sight (BLOS) navigation strategy, achieving state-of-the-art performance on HM3D and MP3D benchmarks.\n\nThe soundness of the technical claims and experimental methodology is supported by:\n- The clear problem formulation and solution overview\n- The detailed description of the TCSM architecture and update protocols\n- The mechanics of the integrated navigation policy\n- Extensive experiments on HM3D and MP3D benchmarks\n\nThe central claims of the paper are adequately supported with evidence:\n- The proposed framework achieves state-of-the-art performance on public benchmarks\n- The PSM mechanism significantly improves navigation efficiency by eliminating redundant exploration\n- The positive correlation between the amount of pre-existing knowledge and task performance\n\nHowever, some limitations and potential areas for future research are noted:\n- Dependency on upstream perception models\n- Assumption of a static environment\n- Potential ethical considerations\n\nRating: \nSoundness: 4 \nPresentation: 3 \nContribution: 4 \nConfidence: 4 \n\nOverall Score: 8 \n\nThe paper is technically strong, with novel ideas, and excellent impact on at least one area. It has excellent evaluation, resources, and reproducibility, and no unaddressed ethical considerations. Therefore, I recommend a **Strong Accept**."
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "REMEMBER BEFORE YOU EXPLORE: PERSISTENT SHARED MEMORY FOR ZERO-SHOT OBJECT NAVIGATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "3 METHODOLOGY",
+    "3.1 PROBLEM FORMULATION",
+    "2 RELATED WORKS",
+    "3.2 METHOD OVERVIEW",
+    "3.3 TEMPORALLY CONSISTENT SEMANTIC MAP",
+    "3.4 BLOS-AWARE NAVIGATION STRATEGY",
+    "4 EXPERIMENTS",
+    "4.1 BENCHMARKS AND IMPLEMENTATION DETAILS",
+    "Table 1: Object Navigation results on HM3D and MP3D.",
+    "4.2 COMPARATIVE ANALYSIS",
+    "4.3 IMPACT OF PRE-EXISTING MEMORY SIZE",
+    "4.4 MULTI-AGENT COLLABORATION WITH TCSM",
+    "4.5 ABLATION STUDIES",
+    "4.6 COMPUTATION COST ANALYSIS",
+    "5 CONCLUSION",
+    "Under review as a conference paper at ICLR 2026"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

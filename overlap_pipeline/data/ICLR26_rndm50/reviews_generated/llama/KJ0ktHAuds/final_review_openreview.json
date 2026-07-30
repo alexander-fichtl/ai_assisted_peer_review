@@ -1,0 +1,78 @@
+{
+  "pdfname": "KJ0ktHAuds",
+  "content": {
+    "summary": {
+      "value": "This paper introduces Gaze on the Prize, a framework that enhances visual Reinforcement Learning (RL) with a learnable foveal attention mechanism guided by return-guided contrastive learning. The core insight is that return differences reveal task-relevant features, allowing the attention to focus on regions that distinguish success from failure. The framework is designed as a versatile plugin compatible with any vision-based RL architecture. It consists of a learnable foveal attention model, a contrastive buffer, a triplet mining procedure, and a return-guided contrastive loss. The method achieves up to 2.52× improvement in sample efficiency and can solve challenging tasks that baseline methods fail to learn. The contributions include a learnable foveal attention for visual RL, return-guided attention learning, plug-in compatibility, and experimental evaluation on RL schemes like SAC and PPO."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Originality of Ideas**: The paper introduces a novel framework, Gaze on the Prize, which combines insights from human visual attention, contrastive learning, and Reinforcement Learning (RL) to enhance visual RL performance. This creative combination of existing ideas leads to a significant improvement in sample efficiency and performance.\n\n2. **Clear and Well-Motivated Approach**: The paper presents a well-structured and well-motivated approach to addressing the challenge of learning to focus on task-relevant features from high-dimensional visual observations. The technical claims are sound, and the experimental methodology is rigorous.\n\n3. **Significant Improvement in Sample Efficiency**: The method achieves up to 2.52× improvement in sample efficiency and can solve challenging tasks that baseline methods fail to learn. This significant improvement has the potential to impact the development of more efficient and effective visual RL algorithms.\n\n4. **Versatile Plugin Compatibility**: The framework is designed as a versatile plugin compatible with any vision-based RL architecture, making it a valuable contribution to the research area.\n\n5. **Thorough Experiments and Ablation Studies**: The paper provides thorough experiments and ablation studies that demonstrate the effectiveness of the proposed method across different RL algorithms (PPO and SAC) and tasks. The ablation studies on buffer size and update frequency further support the design choices and provide insights into the trade-offs involved.\n\n6. **Well-Written and Clear Presentation**: The paper is well-written, with a clear and concise presentation of the proposed framework. The writing style is excellent, making it easy to follow the technical details and understand the contributions.\n\n## Conclusion\n\nThe paper's strengths lie in its originality of ideas, clear and well-motivated approach, significant improvement in sample efficiency, versatile plugin compatibility, thorough experiments and ablation studies, and well-written and clear presentation. These strengths make the paper a valuable contribution to the research area of visual Reinforcement Learning."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Evaluation in Sparse-Reward Environments**: The paper assumes that returns exhibit some degree of variation during training, which may not be satisfied in strictly sparse-reward environments. This limitation could be addressed by incorporating auxiliary signals, such as curiosity-driven objectives, to augment informative signals even when provided rewards are rare.\n\n2. **Single Fovea Attention Mechanism**: The attention mechanism predicts a single fovea, modeled as a single Gaussian, which may not be sufficient for tasks that require simultaneously attending to multiple spatially distinct regions within an image. An extension of the framework to predict multiple Gaussian heads or a mixture of Gaussians could better capture richer spatial structure and handle such tasks.\n\n3. **Buffer Size and Update Frequency Trade-Offs**: The ablation studies on buffer size and update frequency highlight a trade-off between providing diverse samples and mining from stale representations. While a moderate buffer size (100k) and frequent updates (every iteration) yield the best performance, the optimal values may vary across tasks. A more comprehensive analysis of these hyperparameters and their task-specific effects could further improve the method.\n\n4. **Comparison to Existing Contrastive Representation Learning Baselines**: Although the paper compares the proposed method to CURL, a widely used contrastive representation learning approach, the comparison is limited to a specific implementation and setting. A more extensive comparison to other contrastive learning methods, such as M-CURL and TACO, could provide a more comprehensive understanding of the proposed method's strengths and weaknesses.\n\n5. **Computational Overhead**: The paper reports a 32.8% reduction in throughput when applying contrastive updates every iteration. While the gains in sample efficiency outweigh this reduction, a more detailed analysis of the computational cost and potential optimizations could make the method more practical for real-world applications.\n\n## Conclusion\n\nThe paper's weaknesses lie in its limited evaluation in sparse-reward environments, single fovea attention mechanism, buffer size and update frequency trade-offs, comparison to existing contrastive representation learning baselines, and computational overhead. Addressing these weaknesses could further improve the method's performance, generalizability, and practicality."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Return Variation**: The authors assume that returns exhibit some degree of variation during training. Can they provide more insights into how they ensure return variation in their experiments? What happens if the returns are strictly sparse?\n\n2. **Handling Multiple Fovea**: The attention mechanism predicts a single fovea. How do the authors envision extending their framework to predict multiple Gaussian heads or a mixture of Gaussians to handle tasks that require attending to multiple regions?\n\n3. **Buffer Size and Update Frequency**: The ablation studies show a trade-off between buffer size and update frequency. Can the authors provide more comprehensive guidelines on choosing these hyperparameters for different tasks or environments?\n\n4. **Comparison to Other Contrastive Learning Methods**: The authors compare their method to CURL. Would it be possible to also compare to other contrastive learning methods, such as M-CURL and TACO, to provide a more comprehensive understanding of the strengths and weaknesses of their approach?\n\n5. **Computational Optimizations**: The authors report a reduction in throughput when applying contrastive updates. Are there any potential optimizations or techniques that could mitigate this computational overhead and make the method more practical for real-world applications?\n\n6. **Evaluation in Cluttered Environments**: The authors evaluate their method in cluttered environments but only for a subset of tasks. Can they provide more insights into how their method performs in cluttered environments for the other tasks?\n\n7. **Ablation on Hyperparameters**: The authors conduct ablation studies on buffer size and update frequency. Can they provide more comprehensive ablation studies on other hyperparameters, such as the number of anchors, top k nearest neighbors, and contrastive loss weight?\n\n8. **Applicability to Other RL Algorithms**: The authors validate their method with PPO and SAC. Can they provide more insights into how their method can be applied to other RL algorithms, such as DQN or TD3?\n\n## Conclusion\n\nThese questions and suggestions aim to clarify potential confusions, address limitations, and encourage further discussion with the authors. Addressing these points can help strengthen the paper and provide a more comprehensive understanding of the proposed method."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "GAZE ON THE PRIZE: SHAPING VISUAL ATTENTION WITH RETURN-GUIDED CONTRASTIVE LEARNING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORKS",
+    "2.1 GAZE IN COMPUTER VISION AND ROBOTICS",
+    "2.2 CONTRASTIVE LEARNING IN RL",
+    "3 GAZE ON THE PRIZE",
+    "3.1 OVERVIEW",
+    "3.2 GAZE MODULE",
+    "3.3 CONTRASTIVE ATTENTION LEARNING",
+    "3.3.1 CONTRASTIVE ATTENTION LOSS",
+    "3.3.2 CONTRASTIVE BUFFER AND RETURN-GUIDED TRIPLET MINING",
+    "4 EXPERIMENTS",
+    "4.1 RESEARCH QUESTIONS",
+    "4.2 EXPERIMENTAL SETUP",
+    "5 RESULTS",
+    "5.2 DOES RETURN-GUIDED CONTRASTIVE LEARNING ENHANCE FOVEAL ATTENTION? (RQ2)",
+    "5.3 DOES RETURN-GUIDED CONTRASTIVE LEARNING HELP THE AGENT FOCUS ON TASK-RELEVANT REGIONS IN THE PRESENCE OF DISTRACTOR OBJECTS? (RQ3)",
+    "5.4 IS OUR APPROACH APPLICABLE ACROSS DIFFERENT RL ALGORITHMS? (RQ4)",
+    "5.5 HOW DOES OUR APPROACH COMPARE AGAINST EXISTING CONTRASTIVE REPRESENTATION LEARNING BASELINES? (RQ5)",
+    "5.6 ABLATIONS",
+    "6 LIMITATIONS AND FUTURE WORK",
+    "7 CONCLUSION",
+    "A TASK/ENVIRONMENT DETAILS",
+    "A.1 TASK DESCRIPTIONS",
+    "A.2 OBSERVATION AND ACTION SPACES",
+    "A.3 REWARD STRUCTURE",
+    "A.4 CLUTTERED ENVIRONMENTS",
+    "B COMPUTE OVERHEAD ANALYSIS",
+    "C CURL IMPLEMENTATION DETAILS",
+    "D HYPERPARAMETERS",
+    "E ADDITIONAL SUPPLEMENTARY MATERIALS"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

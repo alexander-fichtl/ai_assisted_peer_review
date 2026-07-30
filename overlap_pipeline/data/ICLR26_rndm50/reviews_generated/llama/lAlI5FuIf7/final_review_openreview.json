@@ -1,0 +1,102 @@
+{
+  "pdfname": "lAlI5FuIf7",
+  "content": {
+    "summary": {
+      "value": "The paper proposes a novel training scheme for diffusion language models (DLMs) called Planner Aware Path Learning (PAPL), which aligns the training objective with planner-based inference. DLMs have emerged as a powerful alternative to autoregressive models, enabling fast inference through flexible and parallel generation paths. However, the standard training evidence lower bound (ELBO) does not accurately describe a denoiser that uses a non-uniform planner. The authors derive a new planned evidence lower bound (P-ELBO) that incorporates planner-based reverse dynamics directly into the training objective. PAPL is implemented as a simple yet effective modification to the standard masked discrete diffusion loss, making it widely applicable and easy to adopt. Empirically, PAPL delivers consistent gains across domains, including a 40% relative improvement in protein sequences, improved text generation with up to a 4 × relative MAUVE gain, and 23% relative improvement in code generation. The main contributions include a unified framework that derives a novel generalized planner-aware lower bound (P-ELBO), an efficient implementation of PAPL, and improved performance across various domains."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "1. **Theoretical Framework**: The paper provides a rigorous theoretical framework for addressing the mismatch between training and inference in diffusion language models (DLMs) when using planners. The authors derive a new planned evidence lower bound (P-ELBO) that incorporates planner-based reverse dynamics directly into the training objective.\n\n2. **Unified Framework for Planners**: The P-ELBO framework unifies existing planner-guided inference strategies under one umbrella, providing a principled approach to understanding and comparing different planners.\n\n3. **Efficient Implementation**: The proposed Planner Aware Path Learning (PAPL) algorithm is a simple yet effective modification to the standard masked discrete diffusion loss. This makes PAPL widely applicable and easy to adopt.\n\n4. **Empirical Validation**: The paper presents comprehensive empirical evaluations across multiple domains, including protein sequence generation, text generation, and code generation. The results demonstrate consistent and significant improvements over prior diffusion models.\n\n5. **Improved Performance**: PAPL achieves state-of-the-art results in various tasks, such as a 40% relative increase in protein foldability, up to a 4 × improvement in MAUVE for text generation, and a 23% relative improvement in code generation on HumanEval.\n\n6. **Clarity and Writing Style**: The paper is well-written with clear explanations of complex concepts, making it accessible to a broad audience. The writing style is concise, and the paper is easy to follow.\n\n7. **Originality**: The paper introduces a novel approach to training DLMs that aligns with planner-based inference, addressing a critical limitation in current DLM training methods.\n\n8. **Applicability**: The proposed PAPL algorithm has broad applicability across different domains and tasks, making it a valuable contribution to the field of generative modeling.\n\n9. **Ablation Studies**: The paper includes thorough ablation studies that validate the effectiveness of PAPL and provide insights into the importance of planner-aware training.\n\n10. **Hyperparameter Tuning**: The authors investigate the effect of key hyperparameters, such as the softmax temperature τ and the path learning weight α, providing practical guidance for practitioners."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Analysis of Planner Functions**: The paper primarily focuses on using the denoiser's own confidence to plan. However, there are other possible planning functions, such as \"top probability margin\" (Kim et al., 2025a), \"RDM\" (Zheng et al., 2023), \"Top-k 'block-denoising'\" (Nie et al., 2025b), and \"Confidence Thresholding\" (Wu et al., 2025). A more comprehensive analysis of these alternative planning functions and their integration into the PAPL framework could strengthen the paper.\n\n2. **Training Overhead**: The paper mentions that the training overhead of PAPL makes it expensive to implement with large planning models compared to just testing performance at inference time. Exploring methods to reduce this training overhead or proposing more efficient planning strategies could improve the practicality of PAPL.\n\n3. **Post-Training Decoding Strategy Evaluation**: The paper suggests that some amount of post-training is necessary to test whether the decoding strategy's performance can be improved via using a planner-aware loss. A more detailed analysis of how different decoding strategies can be evaluated and improved post-training would be beneficial.\n\n4. **Hyperparameter Sensitivity**: Although the paper provides some insights into the effect of hyperparameters like τ and α, a more extensive analysis of hyperparameter sensitivity and robustness across different tasks and domains could enhance the paper.\n\n5. **Mode Collapse in Text Generation**: The paper reports comparable entropy across all methods in text generation experiments. However, it would be beneficial to provide more detailed analysis or experiments to ensure that PAPL does not suffer from mode collapse, especially given that diffusion approaches still trail autoregressive models in absolute quality.\n\n## Suggestions for Improvement\n\n1. **Exploring Alternative Planning Functions**: The authors could extend their analysis to include other planning functions and provide a comprehensive comparison of their effectiveness.\n\n2. **Efficiency Optimizations**: Investigating methods to optimize the training efficiency of PAPL, such as parallelization techniques or more efficient planner designs, could make the approach more practical for large-scale applications.\n\n3. **Post-Training Evaluation Framework**: Developing a systematic framework for evaluating and improving decoding strategies post-training could enhance the usability and impact of PAPL.\n\n4. **Hyperparameter Tuning Guidelines**: Providing more detailed guidelines or recommendations for hyperparameter tuning in PAPL could help practitioners apply the method more effectively across different tasks and domains.\n\n5. **Mode Collapse Analysis**: Conducting additional experiments or analyses to assess the potential for mode collapse in PAPL, especially in text generation tasks, would strengthen the paper's conclusions regarding its effectiveness."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Planner Functions**: The authors mention that there are many other possible planning functions, such as \"top probability margin,\" \"RDM,\" \"Top-k 'block-denoising',\" and \"Confidence Thresholding.\" How do these alternative planning functions fit into the proposed mathematical framework, and are there plans to explore their integration into the PAPL algorithm?\n\n2. **Training Overhead Reduction**: The paper notes that the training overhead of PAPL makes it expensive to implement with large planning models. Are there any potential methods or future directions for reducing this training overhead, making PAPL more practical for large-scale applications?\n\n3. **Post-Training Decoding Strategy Evaluation**: The authors suggest that some amount of post-training is necessary to test whether the decoding strategy's performance can be improved via using a planner-aware loss. What specific methods or frameworks do the authors propose for evaluating and improving decoding strategies post-training?\n\n4. **Hyperparameter Sensitivity Analysis**: While the paper provides some insights into the effect of hyperparameters like τ and α, a more extensive analysis of hyperparameter sensitivity and robustness across different tasks and domains would be beneficial. Are there plans to conduct a more thorough investigation of hyperparameter tuning in PAPL?\n\n5. **Mode Collapse in Text Generation**: The paper reports comparable entropy across all methods in text generation experiments. However, it would be beneficial to provide more detailed analysis or experiments to ensure that PAPL does not suffer from mode collapse, especially given that diffusion approaches still trail autoregressive models in absolute quality.\n\n## Additional Suggestions\n\n1. **Comparison with Other Denoising Methods**: It would be interesting to see how PAPL compares to other denoising methods, such as those proposed in (Kim et al., 2025a) and (Zheng et al., 2023). A more comprehensive comparison could help strengthen the paper's conclusions.\n\n2. **Theoretical Analysis of PAPL**: While the paper provides a thorough empirical evaluation of PAPL, a more detailed theoretical analysis of the algorithm's properties and behavior could provide additional insights and strengthen the paper's contributions.\n\n3. **Practical Guidelines for PAPL**: Providing more detailed guidelines or recommendations for practitioners on how to apply PAPL in different tasks and domains could enhance the paper's usability and impact.\n\n4. **Visualization of Generated Samples**: Including visualizations of generated samples from PAPL, especially in protein sequence generation and text generation tasks, could help illustrate the qualitative improvements achieved by the algorithm.\n\n5. **Code and Model Release**: Releasing the code and pretrained models for PAPL upon publication would support full reproducibility and enable other researchers to build upon and extend the proposed approach."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "PLANNER AWARE PATH LEARNING IN DIFFUSION LANGUAGE MODELS TRAINING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Q . How should we adapt the training of denoisers in diffusion language models when inference inevitably proceeds under a planner?",
+    "2 BACKGROUND AND PRELIMINARIES",
+    "2.1 MASKED DIFFUSION LANGUAGE MODELS",
+    "3 METHOD: PATH LEARNING",
+    "3.1 REVERSE DYNAMICS WITH A PLANNER",
+    "3.2 GREEDY ANCESTRAL VIOLATES THE VANILLA DLM ELBO",
+    "3.4 EFFICIENT IMPLEMENTATION:PAPL",
+    "3.3 PLANNER-AWARE EVIDENCE LOWER BOUND",
+    "Algorithm 1 PAPL Training",
+    "4 EXPERIMENTS",
+    "4.1 PROTEIN SEQUENCE GENERATION",
+    "4.2 TEXT GENERATION",
+    "4.3 CODE GENERATION",
+    "4.4 ABLATION",
+    "5 RELATED WORK",
+    "6 CONCLUSION",
+    "810 APPENDIX OUTLINE",
+    "A THEORETICAL DERIVATIONS AND PROOFS",
+    "Corollary A.4. Inequality for Marginalization of Discrete Distributions:",
+    "A.1.2 DISCRETE TIME MARKOV CHAINS",
+    "A.1.3 APPLICATION TO THE ELBO",
+    "A.1.4 PROOF OF PROPOSITION 3.2: A SIMPLE, DISCRETE TIME PERSPECTIVE",
+    "A.1.5 FORM OF THE OPTIMAL PLANNER FOR A FIXED DENOISER: PROOF OF PROPOSITION A.8",
+    "A.1.7 PROOF OF PROPOSITION 3.1 (GREEDY ANCESTRAL VIOLATES THE VANILLA ELBO)",
+    "A.2 INSTANTIATIONS",
+    "A.2.1 PROOF OF COROLLARY A.9 (ELBO FOR GREEDY PLANNER)",
+    "A.2.2 PROOF OF COROLLARY A.10 (ELBO FOR SOFTMAX PLANNER)",
+    "A.2.3 CONNECTION BETWEEN COROLLARY A.10 AND THE PAPL LOSS EQUATION 7",
+    "A.2.4 COMPARING RELATIVE SIZE OF THE APPROXIMATE LOSSES",
+    "A.3 ALTERNATIVE PROOF OF PROPOSITION 3.2: CONTINUOUS TIME MARKOV CHAINS PERSPECTIVE",
+    "A.3.1 TIME-INHOMOGENEOUS CONTINUOUS TIME MARKOV CHAINS (CTMC)",
+    "A.3.2 DLMS IN THE CTMC FRAMEWORK",
+    "Algorithm 3 Gillespie Sampler for Masked Diffusion Models",
+    "A.3.3 SETUP AND ELBO IN THE CTMC FRAMEWORK",
+    "1777 A.3.4 TIME INDEPENDENT FORMULATION OF THE ELBO",
+    "A.4 GENERALIZATION TO PLANNERS WITH REMASKING (P2-STYLE)",
+    "Algorithm 4 Gillespie Sampler with a P2-Planner",
+    "A.4.1 DERIVING THE TRANSITION PROBABILITIES",
+    "A.4.2 MARKOV CHAIN SETUP AND ELBO FOR P2 PLANNER",
+    "A.5 OTHER SAMPLING METHODS WITH MULTIPLE DENOISING POSITIONS AND/OR REMASKING",
+    "B EXPERIMENTAL DETAILS",
+    "B.1 PROTEIN SEQUENCE GENERATION",
+    "2097 B.2 TEXT GENERATION",
+    "2099 B.2.1 SETUP",
+    "2148 B.2.2 ABLATION OF SAMPLING METHODS",
+    "B.3 CODE GENERATION",
+    "B.3.1 SETUP",
+    "B.3.2 ABLATION OF SAMPLING METHODS",
+    "C ADDITIONAL RESULTS",
+    "C.1 UNSTABLE TRAINING WITH PURE PAPL LOSS",
+    "C.2 COMPARISON OF TRAINING CURVES WITH VANILLA MDM LOSS",
+    "C.3 EMPIRICAL ESTIMATION OF THE EFFECT OF THE APPROXIMATION STEPS",
+    "C.4 HUMANEVAL PERFORMANCE ANALYSIS"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

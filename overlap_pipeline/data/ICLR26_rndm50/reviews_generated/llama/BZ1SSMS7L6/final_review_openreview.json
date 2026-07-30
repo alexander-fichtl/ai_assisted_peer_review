@@ -1,0 +1,70 @@
+{
+  "pdfname": "BZ1SSMS7L6",
+  "content": {
+    "summary": {
+      "value": "This paper addresses the problem of safe offline reinforcement learning, which involves training a policy to satisfy safety constraints using an offline dataset. The authors propose a novel framework, the Q-learning Penalized Transformer policy (QPT), to tackle the challenges of balancing safety constraint satisfaction, reward maximization, and behavior regularization. QPT adopts a sequence modeling paradigm, learning the action distribution conditioned on historical trajectories and target returns, and incorporates Q-learning penalization to optimize the policy. The approach ensures robust behavior regularization and facilitates zero-shot adaptation to diverse deployment scenarios. Theoretical analysis demonstrates the advantages of QPT, aligning with optimal policies under mild assumptions. Experimental results across 38 tasks validate QPT's effectiveness, showing its ability to learn safe, robust, and high-reward policies, and consistently outperforming state-of-the-art baselines. The framework also retains zero-shot adaptation capabilities to varying constraint thresholds, making it well-suited for real-world RL applications with safety requirements."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Novel Framework**: The paper proposes a novel framework, Q-learning Penalized Transformer policy (QPT), which effectively integrates sequence modeling and Q-learning penalization to address the challenges of safe offline reinforcement learning.\n\n2. **Theoretical Analysis**: The authors provide a thorough theoretical analysis of QPT, demonstrating its advantages in aligning with optimal policies under mild assumptions. This analysis provides a solid foundation for the approach.\n\n3. **Experimental Evaluation**: The paper presents an extensive experimental evaluation of QPT across 38 tasks, showcasing its ability to learn safe, robust, and high-reward policies. The results demonstrate QPT's effectiveness in outperforming state-of-the-art baselines.\n\n4. **Zero-Shot Adaptation**: QPT's ability to adapt to varying constraint thresholds without retraining is a significant strength, making it particularly well-suited for real-world RL applications with safety requirements.\n\n5. **Clear Writing and Presentation**: The paper is well-written, with a clear and concise presentation of the problem, methodology, and results. The writing style is clear and easy to follow, making it accessible to a broad audience.\n\n6. **Originality of Ideas**: The paper brings a significant originality of ideas, as evidenced by its unique approach to addressing the challenges in safe offline reinforcement learning. The integration of sequence modeling and Q-learning penalization is a creative combination of existing ideas.\n\n## Conclusion\n\nThe paper's strengths lie in its novel framework, thorough theoretical analysis, extensive experimental evaluation, and clear writing and presentation. The results demonstrate QPT's effectiveness in learning safe, robust, and high-reward policies, making it a valuable contribution to the research area of safe offline reinforcement learning."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Discussion on Hyperparameter Sensitivity**: While the paper provides an ablation study on the role of different components, it could benefit from a more in-depth analysis of hyperparameter sensitivity. Specifically, the authors could explore how variations in hyperparameters, such as $\\eta_1$ and $\\eta_2$, impact performance across different tasks.\n\n2. **Comparison to Recent Works**: Although the paper compares QPT to several state-of-the-art baselines, it would be beneficial to include a comparison to more recent works in safe offline reinforcement learning. For instance, incorporating results from recent studies like [Koirala et al., 2024a] and [Gong et al., 2025] could provide a more comprehensive evaluation of QPT's performance.\n\n3. **Theoretical Assumptions**: The theoretical analysis relies on assumptions such as near-determinism and return coverage. While these assumptions are mild, it would be helpful to discuss their practical implications and potential limitations in real-world scenarios.\n\n4. **Scalability and Computational Efficiency**: As QPT involves sequence modeling and Q-learning penalization, it may be computationally intensive. The authors could discuss potential limitations in scalability and provide insights into how QPT could be optimized for larger, more complex tasks.\n\n5. **Safety Constraint Violations**: Although QPT demonstrates satisfactory safety performance, there is still room for improvement. The authors could explore more advanced techniques for ensuring zero constraint violations during inference, such as incorporating additional safety guarantees or constraints.\n\n## Conclusion\n\nThe paper's weaknesses lie in its limited discussion on hyperparameter sensitivity, comparison to recent works, theoretical assumptions, scalability, and safety constraint violations. Addressing these weaknesses could further strengthen the paper's contributions and provide a more comprehensive evaluation of QPT's performance in safe offline reinforcement learning."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Hyperparameter Sensitivity Analysis**: The authors mention that the weighting factors $\\eta_1$ and $\\eta_2$ are defined as functions of the Q-networks' expectations. Can they provide more insights into how they tuned these hyperparameters, and how sensitive the performance of QPT is to variations in these parameters?\n\n2. **Comparison to Recent Works**: The paper compares QPT to several state-of-the-art baselines, but there are recent works like [Koirala et al., 2024a] and [Gong et al., 2025] that are not included. Could the authors provide a comparison to these works, and discuss how QPT's performance compares to theirs?\n\n3. **Practical Implications of Theoretical Assumptions**: The theoretical analysis relies on assumptions such as near-determinism and return coverage. Can the authors discuss the practical implications of these assumptions, and how they might be violated in real-world scenarios?\n\n4. **Scalability and Computational Efficiency**: QPT involves sequence modeling and Q-learning penalization, which may be computationally intensive. Can the authors discuss potential limitations in scalability, and provide insights into how QPT could be optimized for larger, more complex tasks?\n\n5. **Safety Constraint Violations**: Although QPT demonstrates satisfactory safety performance, there is still room for improvement. Can the authors explore more advanced techniques for ensuring zero constraint violations during inference, such as incorporating additional safety guarantees or constraints?\n\n6. **Ablation Study on Data Augmentation**: The authors mention that data augmentation improves cost performance by \"stitching\" additional safe trajectories into the training dataset. Can they provide a more detailed ablation study on the role of data augmentation, and how it impacts performance across different tasks?\n\n7. **Ensemble Size and Computational Overhead**: The authors utilize a default ensemble size of 50 candidate actions during inference. Can they discuss the trade-offs between ensemble size, computational overhead, and performance, and provide insights into how to optimize the ensemble size for different tasks?\n\n## Conclusion\n\nThe authors can address these questions and suggestions to provide further clarification, address limitations, and strengthen the paper's contributions. This will facilitate a productive rebuttal and discussion phase, ultimately improving the paper's quality and impact."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "Overall Score: 8\n\nThe paper presents a technically strong approach to safe offline reinforcement learning, introducing the Q-learning Penalized Transformer policy (QPT) framework. The authors provide a thorough theoretical analysis and extensive experimental evaluation, demonstrating QPT's effectiveness in learning safe, robust, and high-reward policies across 38 tasks. The paper's writing and presentation are clear and concise, making it accessible to a broad audience.\n\nThe strengths of the paper include its novel framework, thorough theoretical analysis, extensive experimental evaluation, and clear writing and presentation. The results demonstrate QPT's effectiveness in outperforming state-of-the-art baselines and adapting to varying constraint thresholds.\n\nWhile the paper has some weaknesses, such as limited discussion on hyperparameter sensitivity and comparison to recent works, these do not detract from its overall technical strength and impact. The authors' responses to these weaknesses can help clarify and address these limitations.\n\nOverall, the paper makes a significant contribution to the research area of safe offline reinforcement learning, and its technical strength, clarity, and impact warrant a strong accept rating."
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Q-LEARNING PENALIZED TRANSFORMER FOR SAFE OFFLINE REINFORCEMENT LEARNING",
+    "Anonymous authors",
+    "2 RELATED WORK",
+    "3 METHODOLOGY",
+    "3.1 PROBLEM SETUP",
+    "3.2 CONDITIONAL TRANSFORMER POLICY",
+    "3.3 Q-LEARNING PENALIZATION",
+    "3.4 DATA AUGMENTATION AND ENSEMBLE",
+    "3.5 THEORETICAL ANALYSIS",
+    "4 EXPERIMENT",
+    "4.1 ABLATION",
+    "5 CONCLUSION",
+    "A ADDITIONAL STATEMENT",
+    "B PROOF OF THEOREM 3.1",
+    "Algorithm 1 QPT: Q-learning Penalized Transformer",
+    "for t = 1 to H do",
+    "end for .",
+    "end for .",
+    "repeat",
+    "D EXPERIMENT DETAILS",
+    "D.1 ENVIRONMENT DESCRIPTIONS",
+    "D.2 HYPERPARAMETERS",
+    "D.3 ABLATION OF THE NUMBER OF CANDIDATE ACTIONS IN ENSEMBLE"
+  ],
+  "images_used": 4,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

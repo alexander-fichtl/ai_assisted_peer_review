@@ -1,0 +1,102 @@
+{
+  "pdfname": "lAlI5FuIf7",
+  "content": {
+    "summary": {
+      "value": "This paper identifies a fundamental mismatch between training and inference in Diffusion Language Models (DLMs), where standard training assumes uniform random denoising paths while inference typically employs planners that select non-uniform generation paths. The authors theoretically demonstrate that the standard DLM evidence lower bound (ELBO) is invalid under planner-based inference and derive a new Planner-aware ELBO (P-ELBO) that properly accounts for the reverse dynamics of planned denoising. Building on this theoretical foundation, they introduce Planner Aware Path Learning (PAPL), a simple yet effective training scheme that aligns training with inference by incorporating planner-dependent weights into the loss function. PAPL requires only a minimal code change to standard DLM training while maintaining the same computational cost. The method demonstrates consistent improvements across multiple domains, including a 40% relative increase in protein sequence foldability, up to 4× improvement in text generation MAUVE scores, and 23% relative gains in code generation performance. The work provides a unified framework that explains existing planning heuristics as special cases of the P-ELBO and offers a practical solution to the training-inference mismatch problem in diffusion language modeling."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Fundamental Problem Identification**: The paper identifies a critical yet previously overlooked mismatch between training and inference in Diffusion Language Models (DLMs). While standard DLM training assumes uniform random denoising paths, practical inference uses planners that select non-uniform generation paths. This insight is not merely an implementation detail but a fundamental theoretical disconnect that degrades performance. The paper provides rigorous proof (Proposition 3.1) that greedy sampling violates the standard DLM ELBO, demonstrating this isn't just a heuristic issue but a formal theoretical limitation.\n\n2. **Novel Theoretical Framework**: The derivation of the Planner-aware ELBO (P-ELBO) represents a significant theoretical advance. Unlike previous approaches that treated planners as inference-time heuristics, the paper develops a unified mathematical framework that properly accounts for planner-based reverse dynamics. The P-ELBO is not a minor modification but a complete rethinking of the training objective that maintains theoretical guarantees while incorporating planning behavior.\n\n3. **Practical Implementation with Minimal Overhead**: The PAPL algorithm is remarkable for its elegant simplicity—requiring only a one-line modification to standard DLM training code (Algorithm 1)—while delivering substantial empirical gains. This rare combination of theoretical rigor and practical accessibility makes the approach immediately deployable across existing DLM implementations without computational overhead.\n\n4. **Empirical Validation Across Diverse Domains**: The authors demonstrate consistent, significant improvements across three fundamentally different domains: protein sequence generation (40% relative improvement in foldability), text generation (4× MAUVE gain), and code generation (23% improvement on HUMANEVAL). These results aren't isolated to a single benchmark but show the approach's broad applicability to structured generation tasks requiring different types of constraints.\n\n5. **Theoretical Unification of Existing Methods**: The paper shows how previously disparate planning heuristics (MaskGIT, P2, and others) emerge as special cases of the P-ELBO framework. This unification provides a principled explanation for why these methods work while revealing their limitations, transforming what were previously seen as ad-hoc techniques into theoretically grounded approaches."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Lack of direct comparison with DDPD**: The paper mentions DDPD (Liu et al., 2024) in the related work as \"training for a planner-selected denoising order\" but fails to include experimental comparisons against this method. Since DDPD also addresses the training-inference mismatch in diffusion models, a direct comparison would strengthen the paper's claims about PAPL's advantages. The authors should include DDPD in their protein, text, and code generation benchmarks to demonstrate whether PAPL's simpler implementation (vs. DDPD's requirement for a planner of similar size to the denoiser) translates to practical performance benefits.\n\n2. **Incomplete computational cost analysis**: While the paper claims PAPL is \"a single line code change with no additional computational overhead,\" it lacks quantitative measurements of actual training time, memory usage, or inference speed compared to standard DLMs. The interpolation with vanilla loss (controlled by α) likely introduces additional computation that should be measured and reported, especially since Figure 5 shows unstable training behavior with pure PAPL loss. A detailed analysis of computational trade-offs would help practitioners understand when the performance gains justify potential overhead.\n\n3. **Insufficient exploration of alternative planners**: The paper focuses exclusively on confidence-based planners (using the denoiser's own outputs) but doesn't explore other potential planner designs that might better address the training-inference mismatch. Given the paper's core insight is about aligning training with inference planners, more investigation into how different planner designs (e.g., learned planners, rule-based planners for specific domains) affect performance would strengthen the work. The authors could implement and compare against planners specifically designed for protein structure or code syntax.\n\n4. **Limited hyperparameter analysis across domains**: While Figure 4 thoroughly analyzes the effect of τ and α on protein foldability, similar analyses are missing for text and code generation tasks. Different domains likely have different optimal hyperparameter settings, and the paper would benefit from domain-specific guidance. For example, the text generation results in Table 2 show PAPL's strongest gains at T=128, but without knowing how hyperparameters affect performance at different sampling steps, practitioners cannot optimize for their specific use cases.\n\n5. **Lack of theoretical analysis of approximation gaps**: The paper makes several approximations to move from the theoretical P-ELBO to the practical PAPL algorithm (detaching gradients, using uniform masking), but doesn't quantify how these approximations degrade the theoretical guarantee. While Table 7 provides some empirical loss comparisons, a more rigorous analysis of the gap between the theoretical P-ELBO and practical PAPL loss would strengthen the work's theoretical foundation and help identify which approximations most impact performance."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## 1. Direct Comparison with DDPD\nThe paper mentions DDPD (Liu et al., 2024) as a related approach that \"trains for a planner-selected denoising order\" but provides no experimental comparison. Could you please include results comparing PAPL with DDPD on one or more benchmarks (e.g., protein foldability or code generation)? This would significantly strengthen the paper's claims about PAPL's advantages, as DDPD directly addresses the same training-inference mismatch issue. A clear demonstration of PAPL's superiority over this specific prior work would address potential concerns about novelty.\n\n## 2. Quantification of Computational Overhead\nWhile the paper states PAPL requires \"no additional computational overhead,\" Figure 5 suggests training instability with pure PAPL loss, and the ablation study shows performance depends on hyperparameters τ and α. Could you quantify the actual computational overhead (e.g., percentage increase in training time) and explain why this is considered negligible despite the additional planner weight calculations? A concrete measurement would help practitioners assess whether the benefits outweigh any practical costs.\n\n## 3. Theoretical Extension to Remasking Planners\nThe theoretical framework assumes planners only select masked positions (Section 3.1), but Section A.4 discusses P2-style planners that allow remasking. Could you elaborate on whether the P-ELBO derivation (Proposition 3.2) holds for remasking planners, or if significant modifications are required? The paper uses P2 sampling in experiments but doesn't clarify whether the theoretical justification fully applies to this practical case, which is crucial for understanding the approach's scope.\n\n## 4. Mechanism Behind Training Instability\nFigure 5 shows unstable training with pure PAPL loss, which the paper attributes to the denoiser \"becoming overly confident.\" Could you provide more detailed analysis of this instability mechanism? Specifically: (a) Does this instability occur because the planner weights become too concentrated on specific paths too early? (b) Have you explored alternative stabilization techniques beyond the interpolation with vanilla loss? Understanding this could help practitioners avoid pitfalls when implementing PAPL.\n\n## 5. Justification for Weighting Scheme\nThe paper uses weights of the form (1 + αw_i) rather than alternatives like αw_i or w_i/(1-w_i). Could you provide theoretical justification for this specific form? The ablation in Figure 4 shows α=5 works best for proteins, but the paper doesn't explain why this form was chosen over other potential weighting schemes that might achieve similar results with different α values.\n\n## 6. Practical Implementation Details\nThe paper mentions \"self-planning\" where the denoiser computes its own confidence, but doesn't specify the exact implementation. Could you clarify: (a) What specific metric of confidence is used (e.g., probability of predicted token, entropy, or something else)? (b) How do you handle cases where the denoiser is equally confident about multiple positions? This would help practitioners reproduce the results and potentially adapt PAPL to other domains."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 9
+    },
+    "confidence": {
+      "value": 5
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "PLANNER AWARE PATH LEARNING IN DIFFUSION LANGUAGE MODELS TRAINING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Q . How should we adapt the training of denoisers in diffusion language models when inference inevitably proceeds under a planner?",
+    "2 BACKGROUND AND PRELIMINARIES",
+    "2.1 MASKED DIFFUSION LANGUAGE MODELS",
+    "3 METHOD: PATH LEARNING",
+    "3.1 REVERSE DYNAMICS WITH A PLANNER",
+    "3.2 GREEDY ANCESTRAL VIOLATES THE VANILLA DLM ELBO",
+    "3.4 EFFICIENT IMPLEMENTATION:PAPL",
+    "3.3 PLANNER-AWARE EVIDENCE LOWER BOUND",
+    "Algorithm 1 PAPL Training",
+    "4 EXPERIMENTS",
+    "4.1 PROTEIN SEQUENCE GENERATION",
+    "4.2 TEXT GENERATION",
+    "4.3 CODE GENERATION",
+    "4.4 ABLATION",
+    "5 RELATED WORK",
+    "6 CONCLUSION",
+    "810 APPENDIX OUTLINE",
+    "A THEORETICAL DERIVATIONS AND PROOFS",
+    "Corollary A.4. Inequality for Marginalization of Discrete Distributions:",
+    "A.1.2 DISCRETE TIME MARKOV CHAINS",
+    "A.1.3 APPLICATION TO THE ELBO",
+    "A.1.4 PROOF OF PROPOSITION 3.2: A SIMPLE, DISCRETE TIME PERSPECTIVE",
+    "A.1.5 FORM OF THE OPTIMAL PLANNER FOR A FIXED DENOISER: PROOF OF PROPOSITION A.8",
+    "A.1.7 PROOF OF PROPOSITION 3.1 (GREEDY ANCESTRAL VIOLATES THE VANILLA ELBO)",
+    "A.2 INSTANTIATIONS",
+    "A.2.1 PROOF OF COROLLARY A.9 (ELBO FOR GREEDY PLANNER)",
+    "A.2.2 PROOF OF COROLLARY A.10 (ELBO FOR SOFTMAX PLANNER)",
+    "A.2.3 CONNECTION BETWEEN COROLLARY A.10 AND THE PAPL LOSS EQUATION 7",
+    "A.2.4 COMPARING RELATIVE SIZE OF THE APPROXIMATE LOSSES",
+    "A.3 ALTERNATIVE PROOF OF PROPOSITION 3.2: CONTINUOUS TIME MARKOV CHAINS PERSPECTIVE",
+    "A.3.1 TIME-INHOMOGENEOUS CONTINUOUS TIME MARKOV CHAINS (CTMC)",
+    "A.3.2 DLMS IN THE CTMC FRAMEWORK",
+    "Algorithm 3 Gillespie Sampler for Masked Diffusion Models",
+    "A.3.3 SETUP AND ELBO IN THE CTMC FRAMEWORK",
+    "1777 A.3.4 TIME INDEPENDENT FORMULATION OF THE ELBO",
+    "A.4 GENERALIZATION TO PLANNERS WITH REMASKING (P2-STYLE)",
+    "Algorithm 4 Gillespie Sampler with a P2-Planner",
+    "A.4.1 DERIVING THE TRANSITION PROBABILITIES",
+    "A.4.2 MARKOV CHAIN SETUP AND ELBO FOR P2 PLANNER",
+    "A.5 OTHER SAMPLING METHODS WITH MULTIPLE DENOISING POSITIONS AND/OR REMASKING",
+    "B EXPERIMENTAL DETAILS",
+    "B.1 PROTEIN SEQUENCE GENERATION",
+    "2097 B.2 TEXT GENERATION",
+    "2099 B.2.1 SETUP",
+    "2148 B.2.2 ABLATION OF SAMPLING METHODS",
+    "B.3 CODE GENERATION",
+    "B.3.1 SETUP",
+    "B.3.2 ABLATION OF SAMPLING METHODS",
+    "C ADDITIONAL RESULTS",
+    "C.1 UNSTABLE TRAINING WITH PURE PAPL LOSS",
+    "C.2 COMPARISON OF TRAINING CURVES WITH VANILLA MDM LOSS",
+    "C.3 EMPIRICAL ESTIMATION OF THE EFFECT OF THE APPROXIMATION STEPS",
+    "C.4 HUMANEVAL PERFORMANCE ANALYSIS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

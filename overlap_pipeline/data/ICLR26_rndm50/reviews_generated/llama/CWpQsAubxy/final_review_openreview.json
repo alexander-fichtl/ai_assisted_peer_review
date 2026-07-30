@@ -1,0 +1,110 @@
+{
+  "pdfname": "CWpQsAubxy",
+  "content": {
+    "summary": {
+      "value": "The paper proposes a unified framework for the Active Estimation of Causal Quantities (ActiveCQ), addressing the challenge of sample-efficient estimation of causal effects. Current methods focus on conditional average treatment effects (CATE), but ActiveCQ formalizes the task for a broader class of causal quantities. The authors model the regression function with a Gaussian Process (GP) and represent the target distribution using Conditional Mean Embeddings (CMEs) in a reproducing kernel Hilbert space. This combination enables the principled derivation of uncertainty-aware utility functions for active learning. The framework is instantiated with two strategies: information gain and total variance reduction. Experimental results on simulations and semi-synthetic datasets demonstrate that the proposed approach significantly outperforms baseline methods, achieving substantial gains in sample efficiency. The work lays a foundation for future research directions, including integrating scalable approximations and extending to complex causal settings. The proposed framework is modular and can be adapted to various causal quantities and settings."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Unified Framework for Active Estimation of Causal Quantities (ActiveCQ)**: The paper proposes a novel and unified Bayesian framework for ActiveCQ, formalizing the task for a broader class of causal quantities beyond Conditional Average Treatment Effects (CATE). This framework pairs a Gaussian Process (GP) for the regression function with Conditional Mean Embeddings (CMEs) for the target distribution.\n\n2. **Principled Derivation of Uncertainty-Aware Utility Functions**: The framework enables the principled derivation of uncertainty-aware utility functions for active learning, including information gain and total variance reduction. These utility functions are instantiated in elegant, closed-form expressions tailored to the causal quantity of interest.\n\n3. **Convergence Guarantees**: The paper provides convergence guarantees for the class of causal quantities, showing that the marginal variance of the treatment effect estimator is controlled by both the irreducible uncertainty and the information gain.\n\n4. **Significant Gains in Sample Efficiency**: Experimental results on simulations and semi-synthetic datasets demonstrate that the proposed approach significantly outperforms baseline methods, achieving substantial gains in sample efficiency across various settings.\n\n5. **Modularity and Adaptability**: The proposed framework is modular and can be adapted to various causal quantities and settings, making it a valuable contribution to the research area. It also invites future work that integrates scalable approximations like sparse GPs or Nyström methods.\n\n6. **Clear and Concise Presentation**: The paper is well-written with a clear and concise presentation of the proposed framework, methodology, and experimental results. The writing style is easy to follow, and the use of figures and tables helps illustrate the framework and results.\n\n7. **Comprehensive Evaluation**: The authors provide a comprehensive evaluation of their approach, including visualizations of acquired data points and ablation studies. This evaluation demonstrates the robustness of the proposed methods under different initial conditions and settings.\n\n## Least Generic Strengths\n\n1. **Novel Combination of GP and CME**: The paper introduces a novel combination of GP and CME for modeling the regression function and target distribution, providing a powerful synergy that sidesteps the challenge of direct density estimation.\n\n2. **Task-Specific Conditional Distribution Estimation**: The framework represents and learns conditional distributions in a reproducing kernel Hilbert space (RKHS), providing a more efficient and task-oriented solution.\n\n3. **Applicability to Transductive Active Learning**: The problem naturally aligns with transductive active learning, enabling the drawing of similar insights to address challenges in scenarios where the target distribution differs from the observational distribution.\n\nThe paper's strengths lie in its originality, clarity, significance, and comprehensive evaluation, making it a valuable contribution to the research area of causal inference and active learning."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Computational Complexity**: The paper's GP-based instantiation inherits cubic complexity, which limits scalability. Future work could integrate scalable approximations like sparse GPs or Nyström methods to handle larger datasets.\n\n2. **Limited Evaluation on Real-World Datasets**: The paper primarily evaluates the proposed methods on simulations and semi-synthetic datasets. A more comprehensive evaluation on real-world datasets would strengthen the claims and provide more insight into the methods' performance in practical scenarios.\n\n3. **Dependence on Hyperparameter Tuning**: The performance of the proposed methods may depend on careful hyperparameter tuning. The paper could provide more details on the hyperparameter settings and the sensitivity of the methods to different hyperparameter choices.\n\n4. **Comparison to Existing Methods**: While the paper compares the proposed methods to several baseline methods, it could be beneficial to compare them to more state-of-the-art methods in the field of active causal learning.\n\n5. **Novelty of the Conditional Mean Embeddings (CME) Approach**: The paper claims that the CME approach is novel in the context of active causal learning. However, CMEs have been used in other areas of machine learning. A more detailed discussion of the novelty of the CME approach in this context would be beneficial.\n\n6. **Uncertainty Quantification**: The paper focuses on reducing the uncertainty of the causal estimator but does not provide a detailed discussion of how to quantify and propagate uncertainty in the estimated causal quantities.\n\n7. **Causal Quantities Estimation**: The paper provides a unified framework for estimating various causal quantities but does not discuss the estimation of causal quantities in the presence of hidden confounders or instrumental variables.\n\n## Least Generic Weaknesses\n\n1. **Scalability with Bayesian Neural Networks**: Replacing the GP with a Bayesian Neural Network (BNN) could improve scalability for large datasets and provide greater flexibility in handling complex, high-dimensional inputs.\n\n2. **Targeting Downstream Decision-Making**: The paper focuses on minimizing the estimation error of the causal quantity but does not discuss how to target downstream decision-making directly. Future work could explore how to design acquisition functions that explicitly maximize the expected gain in decision value.\n\n3. **Relaxing Identification Assumptions**: The paper operates under the standard assumption of no unmeasured confounders. Future work could extend the active learning framework to more complex scenarios where this assumption is violated, incorporating established identification strategies such as the front-door criterion or instrumental variables."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Computational Complexity**: The paper mentions that the GP-based instantiation inherits cubic complexity, which limits scalability. Could the authors provide more details on how to integrate scalable approximations like sparse GPs or Nyström methods to handle larger datasets?\n\n2. **Additional Experiments on Real-World Datasets**: The paper primarily evaluates the proposed methods on simulations and semi-synthetic datasets. Would it be possible to include more experiments on real-world datasets to strengthen the claims and provide more insight into the methods' performance in practical scenarios?\n\n3. **Hyperparameter Tuning and Sensitivity Analysis**: The performance of the proposed methods may depend on careful hyperparameter tuning. Could the authors provide more details on the hyperparameter settings and the sensitivity of the methods to different hyperparameter choices?\n\n4. **Comparison to State-of-the-Art Methods**: While the paper compares the proposed methods to several baseline methods, it would be beneficial to compare them to more state-of-the-art methods in the field of active causal learning.\n\n5. **Novelty of the Conditional Mean Embeddings (CME) Approach**: The paper claims that the CME approach is novel in the context of active causal learning. Could the authors provide a more detailed discussion of the novelty of the CME approach in this context, especially considering its use in other areas of machine learning?\n\n6. **Uncertainty Quantification and Propagation**: The paper focuses on reducing the uncertainty of the causal estimator but does not provide a detailed discussion of how to quantify and propagate uncertainty in the estimated causal quantities. Could the authors elaborate on this aspect?\n\n7. **Handling Hidden Confounders or Instrumental Variables**: The paper provides a unified framework for estimating various causal quantities but does not discuss the estimation of causal quantities in the presence of hidden confounders or instrumental variables. Could the authors discuss potential extensions to handle such scenarios?\n\n8. **Targeting Downstream Decision-Making**: The paper focuses on minimizing the estimation error of the causal quantity but does not discuss how to target downstream decision-making directly. Could the authors explore how to design acquisition functions that explicitly maximize the expected gain in decision value?\n\n## Suggestions for Productive Rebuttal and Discussion Phase\n\n1. **Addressing Scalability Concerns**: The authors could provide a roadmap for integrating scalable approximations to handle larger datasets, which would enhance the practical applicability of their framework.\n\n2. **Providing Additional Experimental Results**: Including more experimental results on real-world datasets would help to validate the performance of the proposed methods in practical scenarios.\n\n3. **Clarifying Hyperparameter Settings**: Detailed hyperparameter settings and sensitivity analyses would help to understand the robustness of the proposed methods.\n\n4. **Comparing to State-of-the-Art Methods**: Comparing the proposed methods to state-of-the-art methods would provide a more comprehensive evaluation and help to establish the advantages of the proposed framework.\n\n5. **Discussing Novelty and Contributions**: A more detailed discussion of the novelty and contributions of the CME approach would help to clarify the paper's impact on the field of active causal learning.\n\n6. **Elaborating on Uncertainty Quantification**: Providing more details on uncertainty quantification and propagation would enhance the understanding of the proposed methods and their practical applications.\n\n7. **Extending to Complex Causal Scenarios**: Discussing potential extensions to handle hidden confounders or instrumental variables would be an important step towards making the framework more comprehensive.\n\n8. **Designing Acquisition Functions for Decision-Making**: Exploring the design of acquisition functions that target downstream decision-making directly would align the framework with practical goals in high-stakes applications."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "ACTIVECQ: ACTIVE ESTIMATION OF CAUSAL QUANTITIES",
+    "Erdun Gao 1,2 &amp;Dino Sejdinovic 1,2",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 PRELIMINARIES",
+    "3 THE ACTIVECQ PROBLEM FORMULATION",
+    "4 UNCERTAINTY QUANTIFICATION OF CQS",
+    "4.1 REGRESSION FUNCTION MODELING",
+    "4.2 CONDITIONAL DENSITY ESTIMATION",
+    "4.3 INTEGRAL OVER CONDITIONAL DISTRIBUTION",
+    "4.4 SPECIFYING THE SUBPOPULATION OF INTEREST",
+    "4.5 UNCERTAINTY REDUCTION",
+    "4.6 UNCERTAINTY DECAY ANALYSIS",
+    "5 EXPERIMENTAL RESULTS",
+    "6 RELATED WORK",
+    "7 CONCLUSION",
+    "8 ACKNOWLEDGMENTS",
+    "ETHICS STATEMENT",
+    "REPRODUCIBILITY STATEMENT",
+    "Table of Contents",
+    "A ACKNOWLEDGMENT OF LLM USAGE",
+    "B MORE RELATED WORKS",
+    "B.1 RELATED WORKS (CONTINUING)",
+    "B.2 TRANSDUCTIVE ACTIVE LEARNING",
+    "B.3 IN-DEPTH DISCUSSION OF ABCI",
+    "C FURTHER PRELIMINARIES AND DEFINITIONS",
+    "C.1 DAG AND CAUSAL GRAPHS",
+    "C.2 KERNELS AND RKHS",
+    "C.3 INFORMATION-THEORETIC MEASURES",
+    "D MODELING FOR VARIOUS CAUSAL QUANTITIES",
+    "D.1 DERIVATION FOR THE CATE",
+    "D.2 DERIVATION FOR ATE",
+    "D.3 DERIVATION FOR ATT",
+    "D.4 DERIVATION FOR ATEDS",
+    "D.5 CONNECTION BETWEEN IG AND TVR",
+    "E CONVERGENCE ANALYSIS",
+    "E.1 JUSTIFICATION OF ASSUMPTION 1",
+    "E.2 PRELIMINARY DEFINITIONS AND CONCEPTS",
+    "E.3 APPROXIMATE MARKOV BOUNDARY",
+    "E.4 PROOF OF THEOREM 2",
+    "F EXPERIMENTS DETAILS",
+    "F.1 DATASETS",
+    "F.1.1 VISUALIZATION",
+    "F.1.2 SIMULATIONS",
+    "F.1.3 SEMI-SYNTHETIC DATASETS",
+    "F.2 IMPLEMENTATION DETAILS",
+    "F.2.1 GENERAL SETTING",
+    "F.2.2 HYPERPARAMETER SETTINGS",
+    "F.2.3 BASELINE METHODS",
+    "F.3 HARDWARE",
+    "Algorithm 1 Active Learning Framework for CATE Estimation",
+    "Train a baseline model",
+    "Main active learning loop for each round # Use the model from the previous round",
+    "F.4 METRICS",
+    "F.4.1 UNCERTAINTY REDUCTION AS AN EVALUATION CRITERION",
+    "F.5 COMPUTATIONAL COMPLEXITY",
+    "F.6 ADDITIONAL EXPERIMENTAL RESULTS",
+    "F.6.1 VISUALIZATION",
+    "F.6.2 ABLATION RESULTS",
+    "Robustness to Heteroscedastic Noise. To",
+    "F.6.3 SIMULATION RESULTS",
+    "F.6.4 IHDP RESULTS",
+    "F.6.5 EXPERIMENTAL RESULTS ON LALONDE",
+    "G DISCUSSIONS",
+    "G.1 SUMMARY OF CONTRIBUTIONS AND FUTURE DIRECTIONS",
+    "G.2 THE ADVANTAGES OF CME IN THE ACTIVE LEARNING SETUP"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

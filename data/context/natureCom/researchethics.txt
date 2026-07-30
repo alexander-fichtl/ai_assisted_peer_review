@@ -1,0 +1,128 @@
+Principles of scholarly freedom and scholarly responsibility
+Researchers should be free to pursue lines of inquiry and the communication of knowledge and ideas without fear of repression or censorship. At the same time, they have the ethical obligation to uphold intellectual integrity and avoid preventable harms that may arise in the course of research or its communication.
+
+Benefits and harms of research
+Research should respect the dignity and rights of human research participants; of individuals or groups connected either with the research participants or the research topic; and of the communities in which research is carried out. Research should also respect the rights of non-human life, tangible and intangible heritage, natural resources, and the environment.
+
+Harms can arise as a direct result of the conduct of research – for instance, injury to human participants in the course of participating in a research project; unnecessary suffering of non-human animals as a result of experimentation; material compromise of tangible heritage; ecosystem disruption etc. Harms can also arise indirectly, as a result of the publication of a research project or a piece of scholarly communication – for instance, stigmatization of a vulnerable human group or potential use of the results of research for unintended purposes (e.g., public policies that undermine human rights or misuse of information to threaten public health).
+
+Non-maleficence and beneficence are two fundamental principles in research ethics requiring the maximization of benefits and minimization of potential harms. These principles form a core part of general frameworks for the ethical conduct of research across the sciences and humanities (for example, The World Medical Association Declaration of Helsinki; The Belmont Report; the International Ethical Guidelines for Health-related Research Involving Humans; Ethics in Social Science and Humanities).
+
+Advancing knowledge and understanding is a public good and, as such, a key benefit of research, even when the research in question does not have an obvious, immediate, or direct application. Although the pursuit of knowledge is a fundamental public good, considerations of harm can occasionally supersede the goal of seeking or sharing new knowledge, and a decision not to undertake or not to publish a project may be warranted. 
+
+Consideration of risks and benefits (above and beyond any institutional ethics review) underlies the editorial process of all forms of scholarly communication in our publications. Editors consider harms that might result from the publication of a piece of scholarly communication, may seek external guidance on such potential risks of harm as part of the editorial process, and in cases of substantial risk of harm that outweighs any potential benefits, may decline publication (or correct, retract, remove or otherwise amend already published content).
+
+
+
+
+
+Research involving animals or humans
+All authors of life and social sciences manuscripts should ensure their compliance with the Nature Portfolio journals’ editorial policies.
+
+Animal research
+For primary research manuscripts in the Nature Portfolio journals reporting experiments on live vertebrates and/or higher invertebrates, the corresponding author must confirm that all experiments were performed in accordance with relevant guidelines and regulations. The manuscript must include a statement identifying the institutional and/or licensing committee approving the experiments, including any relevant details. Sex and other characteristics of animals that may influence results must be described. Details of housing and husbandry must be included where they are likely to influence experimental results. We recommend following the ARRIVE 2.0 reporting guidelines when documenting animal studies (https://doi.org/10.1371/journal.pbio.3000411) We also recommend consulting the American Veterinary Medical Association (AVMA) Guidelines for the Euthanasia of Animals (2020), as a comprehensive resource for guidance on veterinary best practice for the euthanasia of animals. 
+The Editor will take account of animal welfare issues and reserves the right to reject a manuscript, especially if the research involves protocols that are inconsistent with commonly accepted norms of animal research. In rare cases, the Editor may contact the ethics committee for further information.
+Manuscripts presenting studies that have employed anesthesia or euthanasia methods inconsistent with the commonly accepted norms of veterinary best practice (e.g. chloral hydrate, ether, and chloroform) will not be considered. Decisions to not consider manuscripts presenting such anesthesia or euthanasia methods are independent of the approving ethics committee and any previously published work.
+
+Research with human participants, their data or biological material
+
+Human participants research
+Research involving human research participants must have been performed in accordance with the Declaration of Helsinki . Authors must identify the ethics committee approving the research, including the name and reference number of the committee in submitted manuscripts. If the study has been granted exemption from requiring ethics approval, details of the committee granting exemption should be included in the manuscript. Manuscripts must also include a statement affirming that informed consent was obtained from all human research participants.
+
+Research on human populations (including reporting standards)
+For studies involving humans categorized by race, ethnicity, national or social origin, sex, gender identity, sexual orientation, religion, political or other beliefs, age, disease, (dis)ability, socio-economic status, or other socially constructed or socially relevant groupings, authors should:
+- Explicitly describe their methods of categorizing human populations
+- Define categories in as much detail as the study protocol allows
+- Justify their choices of definitions and categories, including for example whether any rules of categorization were required by their funding agency
+- Explain whether (and if so, how) they controlled for confounding variables in their analyses
+Additionally, we require that all content submitted for publication be respectful of the dignity and rights of individuals and human groups. Researchers are asked to carefully consider the potential implications (including inadvertent consequences) of research on human groups defined by attributes of race, ethnicity, national or social origin, sex, gender identity, sexual orientation, religion, political or other beliefs, age, disease, (dis)ability or other status, to be reflective of their authorial perspective if not part of the group under study, and contextualise their findings to minimize as much as possible potential misuse or risks of harm to the studied groups in the public sphere. 
+Finally, authors should use inclusive, respectful, non-stigmatizing language in their submitted manuscripts. Authors should ensure that writing is free from stereotypes or cultural assumptions. We recommend avoiding the use of descriptors that refer to attributes such as race, ethnicity, national or social origin, sex, gender identity, sexual orientation, religion, political or other beliefs, age, disease, (dis)ability or other group descriptors unless they are relevant. We advise that authors writing in English follow the guidance on bias-free language provided by the American Psychological Association when preparing their manuscripts for submission. 
+Regardless of content type (research, review or opinion) and, for research, regardless of whether a research project was reviewed and approved by an appropriate institutional ethics committee, editors reserve the right to request modifications to (or correct or otherwise amend post-publication), and in severe cases refuse publication of (or retract post-publication):
+1. Content that is premised upon the assumption of inherent biological, social, or cultural superiority or inferiority of one human group over another based on race, ethnicity, national or social origin, sex, gender identity, sexual orientation, religion, political or other beliefs, age, disease, (dis)ability, or other socially constructed or socially relevant groupings (hereafter referred to as socially constructed or socially relevant human groupings).
+2. Content that undermines - or could reasonably be perceived to undermine - the rights and dignities of an individual or human group on the basis of socially constructed or socially relevant human groupings.
+3. Content that includes text or images that directly or indirectly disparage a person or group on the basis of socially constructed or socially relevant human groupings.
+4. Submissions that embody singular, privileged perspectives, which are exclusionary of a diversity of voices in relation to socially constructed or socially relevant human groupings, and which purport such perspectives to be generalisable and/or assumed. 
+
+
+
+
+
+Race, ethnicity and racism
+Race and ethnicity are sociopolitical constructs. Humans do not have biological races, at least based on modern biological criteria for the identification of geographical races or subspecies.
+
+Studies that use the constructs of race and/or ethnicity should explicitly motivate their use. Race/ethnicity should not be used as proxies for other variables – for example, socioeconomic status or income. For studies involving data collected from human participants, researchers should explain:
+- who provided the classification terms (the participants, the researchers or third parties);
+- what the classification terms are;
+- how racial/ethnic identity was determined (by the participants, the researchers or third parties).
+This information should be provided in the Methods section of your manuscript and in the Reporting Summary. 
+Biomedical studies should not conflate genetic ancestry (a biological construct) and race/ethnicity (sociopolitical constructs): although race/ethnicity are important constructs for the study of disparities in health outcomes and health care, empirically established genetic ancestry is the appropriate construct for the study of the biological aetiology of diseases or differences in treatment response. If race/ethnicity are used in the context of disease aetiology due to the unavailability of genetic ancestry data, this should be done with caution and clarification. 
+Racism is scientifically unfounded and ethically untenable. Editors reserve the right to request modifications to (or correct or otherwise amend post-publication), and in severe cases refuse publication of (or retract post-publication), racist content. Editors use the guiding criteria I-IV set out in the section Research on human populations (see above) to identify content that potentially undermines the equal dignity and rights of humans of all races/ethnicities. 
+
+
+
+
+
+Sex, gender (identity/presentation), and sexual orientation
+Researchers are encouraged to follow the ‘Sex and Gender Equity in Research – SAGER – guidelines’ and to include sex and gender considerations where relevant (overview can be found here). We recommend consulting the full guidelines when designing research studies and before submission. These guidelines apply to studies involving humans, vertebrate animals and cell lines.
+Authors should use the terms sex (biological attribute) and gender (shaped by social and cultural circumstances) carefully in order to avoid confusing both terms.  
+The following recommendations and requirements (adapted from the SAGER guidelines) will apply to studies under consideration at Nature journals (including Nature & Nature Communications), Communications Journals and Nature Partner Journals involving human participants and vertebrate animals, where relevant to the topic of study. From June 2022 onwards, Nature Cancer, Nature Communications, Nature Medicine and Nature Metabolism will introduce a pilot actively encouraging authors to report on points (i)-(iii) below. We also urge responsible communication of research findings on sex and gender differences so as to avoid inadvertent perpetuation of harmful gender stereotypes.
+i. Title and/or abstract should indicate when the findings apply to only one sex or gender
+ii. describe in the Nature Portfolio Reporting Summary whether sex and gender were considered in the study design, whether sex and/or gender of participants was determined based on self-report or assigned (and methodology used).
+iii. data should be reported disaggregated for sex and gender where this information has been collected and consent has been obtained for reporting and sharing individual-level data; disaggregated numbers for individual experiments must be provided in the source data as appropriate whereas overall numbers may be provided in the Nature Portfolio Reporting Summary.
+iv. if sex- and gender-based analyses have been performed a priori, results should be reported regardless of positive or negative outcome. Authors should refrain from conducting post hoc sex- and gender-based analysis if the study design is insufficient (for example, low sample size) to enable meaningful conclusions.
+v. If no sex- and gender-based analyses have been performed, authors should justify reasons for lack of analysis in the Nature Portfolio Reporting Summary.
+
+ 
+Working definitions (adopted/adapted from the SAGER guidelines and other sources):
+Sex – refers to currently understood biological differences between females and males, including chromosomes, sex organs, and endogenous hormonal profiles. Sex is usually categorized as female or male, although there is variation in the biological attributes that constitute sex.
+Gender – refers to socially constructed and enacted roles and behaviours which occur in a historical and cultural context and vary across societies and over time. Gender is usually incorrectly conceptualized as a binary (man / woman or feminine/masculine) factor. In reality, there is a spectrum of gender identities and expressions defining how individuals identify themselves and express their gender 
+Gender identity – an individual’s conception of self as being a man, woman, masculine, feminine, nonbinary, ambivalent, etc., based in part on physical, psychological and social factors. It is the internal experience of a gender role. There is a broad range of gender identities including, but not limited to, transgender, gender-queer, gender-fluid, non-binary, gender-variant, genderless, agender, nongender, bi-gender, trans man, trans woman, trans masculine, trans feminine and cisgender 
+Gender presentation – how a person publicly expresses or presents their gender identity. This can include behaviour and outward appearance such as dress, hair, make-up, body language and voice. A person’s chosen name and pronouns are also common ways of expressing gender. Others perceive a person’s gender through these attributes. Another term is “gender expression.”
+"Gender" refers to a set of cultural norms and expectations and not a “biologically defined variable”. Such norms are not fixed but evolve across time and space. As such, definitions will require frequent revisiting, as the exercise of defining gender (and sexuality) is under constant flux and evolution, as is the area of study in itself.
+Researchers are encouraged to promote equality between men and women in their academic research which by nature should be grounded on the recognition of merit, competences and creativity, regardless of any other personal attributes or orientation.
+Sexist, misogynistic and/or anti-LGBTQ+ content is ethically objectionable. Regardless of content type (research, review or opinion) and, for research, regardless of whether a research project was reviewed and approved by appropriate ethics specialists, editors may raise with the authors concerns regarding potentially sexist, misogynistic, and/or anti-LGBTQ+ assumptions, implications or speech in their submission; engage external ethics experts to provide input on such issues as part of the peer review process; or request modifications to (or correct or otherwise amend post-publication), and in severe cases refuse publication of (or retract post-publication) sexist, misogynistic, and/or anti-LGBTQ+ content, using the guiding criteria I-IV in the section Research on human populations (see above).
+
+
+
+
+
+Studies involving vulnerable groups
+For manuscripts reporting studies involving vulnerable groups where there is the potential for coercion or where consent may not have been fully informed, extra care will be taken by the editor. The manuscript may be referred to an internal editorial oversight group for further scrutiny. Consent must be obtained for all forms of personally identifiable data including biomedical, clinical, and biometric data. Documentary evidence of consent must be supplied if requested.
+
+Publishing images from human research participants
+When publishing identifiable images from human research participants in Nature Portfolio journals, authors include a statement in the published paper affirming that they have obtained informed consent for publication of the images. All reasonable measures must be taken to protect patient anonymity. Black bars over the eyes are not acceptable means of anonymization.  In certain cases, we may insist upon obtaining evidence of informed consent from authors. Images without appropriate consent will be removed from publication.
+
+Clinical trials
+All interventional trials must be registered before enrollment of the first participant. Trial registration records must be available in a primary register of the WHO International Clinical Trials Registry Platform (ICTRP), in ClinicalTrials.gov, or in any publicly accessible database that meets the minimum 24-item trial registration dataset, including the ISRCTN registry, which is administered and published by BMC (BMC is part of Springer Nature).
+The trial number must be clearly indicated in the abstract and methods section of the manuscript. 
+Authors reporting phase II and phase III randomized controlled trials should refer to the CONSORT Statement for recommendations to facilitate the complete and transparent reporting of trial findings. Reports that do not conform to the CONSORT guidelines may need to be revised before formal review.
+
+Tumor marker prognostic studies
+Authors reporting tumor markers prognostic studies are encouraged to follow the REMARK guidelines for complete and transparent reporting.
+
+Human biospecimens
+For describing human biospecimens, we recommend referring to the BRISQ reporting guidelines (Biospecimen Reporting for Improved Study Quality) and ensuring at least Tier 1 characteristics are provided (doi: 10.1002/cncy.20147).
+
+Human transplantation studies
+Authors must also include a statement in their manuscript attesting that no organs/tissues were procured from prisoners and providing details of the institution(s)/clinic(s)/department(s) via which organs/tissues were procured while taking care to not violate privacy of donors. For retrospective transplantation studies, authors must include a testament confirming that informed consent was obtained from all participants or that the need for informed consent was waived by the ethics committee/institutional review board.
+
+
+
+
+
+Studies involving human embryos, gametes and stem cells 
+Manuscripts that report experiments involving the use of human embryos and gametes, human embryonic stem cells and related materials, and clinical applications of stem cells must include confirmation that all experiments were performed in accordance with relevant guidelines and regulations.
+The manuscript must include an ethics statement identifying the institutional and/or licensing committees approving the experiments and describing any relevant details. The ethics statement must also confirm that informed consent was obtained from all recipients and/or donors of cells or tissues, where necessary, and describe the conditions of donation of materials for research, such as human embryos or gametes. Copies of approval and redacted consent documents may be requested by the editors.
+We encourage authors to follow the principles laid out in the 2016 ISSCR Guidelines for Stem Cell Research and Clinical Applications of Stem Cells. Editors are guided by these principles in their evaluation of the ethical and regulatory aspects of the reported research.  When appropriate, ethical and regulatory advice is sought in parallel with the scientific peer review process.
+In deciding whether to publish papers describing modifications of the human germline, we are guided by safety considerations, compliance with applicable regulations, as well as the status of the societal debate on the implications of such modifications for future generations. We have established an editorial monitoring group to oversee the consideration of these concerns. (The monitoring group includes the Editor-in-Chief of Nature Portfolio publications, the Nature Editorial Director, the Head of Editorial Policy, Nature Portfolio Journals and the Executive Editor, Life Sciences.) As always, the decision whether to publish a paper is the responsibility of the Chief Editor of the Nature Portfolio journal concerned.
+
+
+
+
+
+Dual use research of concern
+Some manuscripts provide information that could be directly misapplied to pose a significant threat to public health, safety or security, agricultural crops and other plants, animals, or the environment. For such information to be published, the benefit to the research community, society, or to public health, must outweigh any risks. We reserve the right to take expert advice in cases where we believe that concerns may arise, and we may require a manuscript to undergo peer review specifically to assess the dual use risk. Where the risk of misuse outweighs any potential benefit, publication is declined; published content may be corrected, retracted or removed.
+Researchers are expected to comply with their institutional and funder’s requirements, as well as any national regulations. They should be aware of dual-use concerns related to their work and take steps to minimize misuse of their research. Such concerns include, but are not limited to, biosecurity, nuclear and chemical threats. Where relevant regulations exist, authors should disclose whether their study is subject to consideration as dual use research of concern; if it is, the manuscript should report the authority granting approval and reference number for the regulatory approval. When the study reports material that can be harmful outside the laboratory context, the manuscript should describe appropriate containment (e.g. biosafety) procedures.
+Authors of any paper describing agents or technologies whose misuse may pose a risk must complete the dual use research of concern section of the Nature Portfolio Reporting Summary. This provides an opportunity not only to highlight potential hazards, but also to explain the precautions that have been taken and the benefits of publishing the research. The Reporting Summary is made available to editors, reviewers and expert advisors during manuscript assessment, and is published with all accepted manuscripts.
+We have established an editorial monitoring group to oversee the consideration of papers with biosecurity concerns. The monitoring group includes the Editor-in-Chief of Nature Portfolio publications, the Head of Editorial Policy, Nature Portfolio and the Nature Portfolio Editorial Director and it is responsible for maintaining a network of advisors on biosecurity issues.
+We recognize the widespread view that openness in science helps to alert society to potential threats and to defend against them, and we anticipate that only very rarely will the risks be perceived as outweighing the benefits of publishing a paper that has otherwise been deemed appropriate for publication.

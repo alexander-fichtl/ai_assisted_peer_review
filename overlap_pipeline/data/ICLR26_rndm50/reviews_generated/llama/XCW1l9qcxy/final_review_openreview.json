@@ -1,0 +1,76 @@
+{
+  "pdfname": "XCW1l9qcxy",
+  "content": {
+    "summary": {
+      "value": "The paper introduces Transductive Visual Programming (TVP), a novel framework that dynamically evolves a library of reusable tools for complex visual reasoning by learning from its problem-solving experience. TVP operates via a closed-loop process centered on a dual-library architecture, consisting of an Example Library that accumulates successful program solutions and a Tool Library that maintains an evolving set of functions abstracted from experience. This approach allows TVP to emulate human learning, first solving concrete problems and then generalizing successful patterns into reusable skills. On the challenging Omni3D-Bench for 3D spatial reasoning, TVP achieves a new state-of-the-art overall accuracy of 33.3%, outperforming both generic VLMs and prior visual programming systems. The learned tools also exhibit strong generalization to out-of-domain queries on 3DSRBench, SpatialSense, and VG-Bench. The paper demonstrates that transductive tool evolution is a powerful and generalizable paradigm for building robust visual reasoning systems. TVP's dual-library architecture is task-agnostic, opening exciting directions for continually self-learning agents that build hierarchical, compositional skills."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Novel Framework**: The paper introduces Transductive Visual Programming (TVP), a novel framework that dynamically evolves a library of reusable tools for complex visual reasoning by learning from its problem-solving experience. This approach is fundamentally different from existing visual programming methods.\n\n2. **Transductive Learning Approach**: Unlike prior methods that either rely on fixed toolsets or speculate on potentially useful functions before their utility is proven, TVP learns tools transductively through experience—solving problems with basic tools first, then abstracting recurring solution patterns into new functions. This guarantees the usefulness of learned tools.\n\n3. **State-of-the-Art Performance**: TVP achieves a new state-of-the-art overall accuracy of 33.3% on the challenging Omni3D-Bench for 3D spatial reasoning, outperforming both generic VLMs like GPT-4o by 22.4% and previous visual programming systems including VADAR by 11.3%.\n\n4. **Generalization Capabilities**: The learned tools exhibit strong generalization to out-of-domain queries on 3DSRBench, SpatialSense, and VG-Bench, demonstrating that TVP builds robust, reusable knowledge.\n\n5. **Task-Agnostic Architecture**: TVP's dual-library architecture is task-agnostic, opening exciting directions for continually self-learning agents that build hierarchical, compositional skills.\n\n6. **Efficiency and Interpretability**: TVP steadily reduces program complexity across iterations, decreasing average McCabe's Cyclomatic Complexity Number (CCN) from 3.5 to 2.88 (-17.7%), and the median CCN drops from 3.0 to 1.0. This program compression improves efficiency, reduces potential errors, and enhances interpretability.\n\n7. **Progressive Self-Improvement**: The full TVP system shows significant improvement across iterations (31.3% → 31.9% → 33.3%), while the Example-Library-Only variant maintains static performance (31.7% → 31.5% → 31.5%). This progressive improvement stems from the closed-loop design of TVP.\n\n8. **Robustness to Backbone LLM Choice**: TVP exhibits a clear performance improvement with increasing model capacity, using open-source smaller LLMs like Qwen2.5-Coder-Instruct. With a 32B model, TVP achieves performance close to the GPT-4o-backed variant (30.7% vs. 31.3%) and surpasses VADAR (29.9%)."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Analysis of Abstraction Potential**: The paper could provide a more detailed analysis of the abstraction potential of TVP. Specifically, it would be beneficial to discuss the limitations and challenges of abstracting tools from experience and how TVP addresses these challenges.\n\n2. **Lack of Human Evaluation**: While the paper mentions that the quality judge gates entry to the Example Library, it would be valuable to include human evaluations of the generated tools and programs to validate their effectiveness and usefulness.\n\n3. **Computational Cost**: Although the paper mentions that TVP operates in two distinct stages with different cost profiles, a more detailed breakdown of the computational requirements and costs associated with running TVP would be helpful. This could include a discussion of the trade-offs between computational cost and performance.\n\n4. **TVP's Robustness to Noisy Data**: The paper could investigate TVP's robustness to noisy or incomplete data. In real-world applications, data quality can be variable, and it would be valuable to understand how TVP performs in such scenarios.\n\n5. **Comparison to Other Visual Programming Systems**: While the paper compares TVP to VADAR and other baselines, it would be beneficial to include a more comprehensive comparison to other visual programming systems, such as VisProg and ViperGPT.\n\n6. **Scalability of TVP**: The paper could provide more insights into the scalability of TVP. For example, how does TVP perform on larger datasets or with more complex queries? Are there any limitations to its scalability, and if so, how can they be addressed?\n\n7. **Interpretability of Learned Tools**: Although the paper mentions that TVP's learned tools are easily applicable to diverse tasks, it would be valuable to provide more insights into the interpretability of these tools. For example, how do the learned tools relate to the original problem-solving experience, and how can users understand and trust the generated tools?\n\n8. **TVP's Performance on Different Types of Queries**: The paper could investigate TVP's performance on different types of queries, such as yes/no questions, multiple-choice questions, and open-ended questions. This would provide a more comprehensive understanding of TVP's strengths and weaknesses.\n\nBy addressing these weaknesses, the authors can further improve the effectiveness and generalizability of TVP, and provide a more comprehensive understanding of its strengths and limitations."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Abstraction Potential**: The paper mentions that TVP abstracts tools from experience, but it would be beneficial to provide a more detailed analysis of the abstraction potential of TVP. Specifically, how do the authors determine the abstraction potential of a cluster of examples, and what are the limitations and challenges of abstracting tools from experience?\n\n2. **Human Evaluation of Generated Tools**: While the paper mentions that the quality judge gates entry to the Example Library, it would be valuable to include human evaluations of the generated tools and programs to validate their effectiveness and usefulness. How do the authors plan to incorporate human feedback and evaluation into the TVP framework?\n\n3. **Detailed Breakdown of Computational Requirements**: Although the paper mentions that TVP operates in two distinct stages with different cost profiles, a more detailed breakdown of the computational requirements and costs associated with running TVP would be helpful. Can the authors provide a more comprehensive analysis of the trade-offs between computational cost and performance?\n\n4. **TVP's Robustness to Noisy Data**: The paper could investigate TVP's robustness to noisy or incomplete data. In real-world applications, data quality can be variable, and it would be valuable to understand how TVP performs in such scenarios. How do the authors plan to address potential issues with noisy or incomplete data?\n\n5. **Scalability of TVP**: The paper could provide more insights into the scalability of TVP. For example, how does TVP perform on larger datasets or with more complex queries? Are there any limitations to its scalability, and if so, how can they be addressed?\n\n6. **Interpretability of Learned Tools**: Although the paper mentions that TVP's learned tools are easily applicable to diverse tasks, it would be valuable to provide more insights into the interpretability of these tools. For example, how do the learned tools relate to the original problem-solving experience, and how can users understand and trust the generated tools?\n\n7. **Comparison to Other Visual Programming Systems**: While the paper compares TVP to VADAR and other baselines, it would be beneficial to include a more comprehensive comparison to other visual programming systems, such as VisProg and ViperGPT. How do the authors plan to address potential limitations and challenges of TVP compared to other visual programming systems?\n\n8. **TVP's Performance on Different Types of Queries**: The paper could investigate TVP's performance on different types of queries, such as yes/no questions, multiple-choice questions, and open-ended questions. This would provide a more comprehensive understanding of TVP's strengths and weaknesses.\n\n## Suggestions for Improvement\n\n1. **Provide More Detailed Analysis of Abstraction Potential**: The authors could provide a more detailed analysis of the abstraction potential of TVP, including a discussion of the limitations and challenges of abstracting tools from experience.\n\n2. **Incorporate Human Feedback and Evaluation**: The authors could incorporate human feedback and evaluation into the TVP framework to validate the effectiveness and usefulness of the generated tools and programs.\n\n3. **Investigate TVP's Robustness to Noisy Data**: The authors could investigate TVP's robustness to noisy or incomplete data and provide a more comprehensive analysis of its performance in such scenarios.\n\n4. **Address Scalability Limitations**: The authors could provide more insights into the scalability of TVP and address potential limitations and challenges of scaling up the framework.\n\n5. **Improve Interpretability of Learned Tools**: The authors could provide more insights into the interpretability of the learned tools and how they relate to the original problem-solving experience.\n\nBy addressing these questions and suggestions, the authors can further improve the effectiveness and generalizability of TVP and provide a more comprehensive understanding of its strengths and limitations."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "8"
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "TRANSDUCTIVE VISUAL PROGRAMMING: EVOLVING TOOL LIBRARIES FROM EXPERIENCE FOR SPATIAL REASONING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 TRANSDUCTIVE VISUAL PROGRAMMING",
+    "2.1 PROGRAM GENERATION AND EXECUTION",
+    "2.2 EXAMPLE LIBRARY: ADDING HIGH-QUALITY PROGRAMS",
+    "3 EXPERIMENTS",
+    "3.1 3D SPATIAL REASONING PERFORMANCE",
+    "Tool abstraction facilitates progressive self-improvement, especially on hard problems. To iso-",
+    "TVP is robust to backbone LLM choice, showing a",
+    "3.2 GENERALIZING ACROSS UNSEEN SPATIAL REASONING QUERIES",
+    "3.3 QUALITATIVE ANALYSIS ON TOOL UTILIZATION AND EVOLUTION",
+    "4 RELATED WORK",
+    "4.1 SPATIAL REASONING",
+    "4.2 TOOL USE AND ABSTRACTION",
+    "5 CONCLUSION",
+    "A THE USE OF LARGE LANGUAGE MODELS (LLMS)",
+    "B FURTHER COMPARISON WITH RELATED TOOL-USE WORK",
+    "C IMPLEMENTATION DETAILS",
+    "C.1 VADAR REPRODUCING CONFIGURATIONS",
+    "C.2 TVP CONFIGURATIONS",
+    "C.3 CRITERIA IN TVP'S JUDGE COMPONENTS",
+    "C.4 COMPLEXITY RATING OF 3D SPATIAL REASONING QUESTIONS",
+    "D ADDITIONAL EMPIRICAL ANALYSES AND DISCUSSION",
+    "D.1 TVP'S RESILIENCE TO RANDOM DATAPOINT ORDERING",
+    "D.2 COMPUTATIONAL COST AND EFFICIENCY",
+    "E PROMPT TEMPLATES",
+    "1090 F COMPLETE TVP ALGORITHM",
+    "Algorithm 2 AbstractTools - Tool Abstraction from Example Clusters",
+    "1296 1297 1298 1299 1300 1301 1302 1303 1304 1305 1306 1307 1308 1309 1310 1311 1312 1313 1314 1315 1316 1317 1318 1319 1320 1321 1322 1323 1324 1325 1326 1327 1328 1329 1330 1331 1332 1333 1334 1335 1336 1337 1338 1339 1340 1341 1342 1343 1344 1345 1346 1347 1348 1349 Algorithm 4 DeduplicateTools - Merge Similar Tools Input: Tool Library T 1: # Filter eligible tools 2: T eligible ←{ t ∈ T : t. level &gt; 0 ∧ ¬ t. deprecated } 3: # Find duplicate groups 4: M← LLMdedup ( T eligible ) ▷ Groups with similarity ≥ 0 . 95 5: for each merge group M ∈ M do 6: # Get examples using these tools 7: E M ←{ e ∈ E : ∃ t ∈ M,t ∈ e. tools used } 8: for retry = 1 to R merge do 9: if retry = 1 then 10: t merged ← LLMmerge ( M, strategy ) 11: else 12: t merged ← LLMmerge ( M, strategy , feedback ) 13: end if 14: val ← ValidateTool ( t merged , E M , T ) 15: if val.passed then 16: T ← T ∪ { t merged } 17: for each t ∈ M do 18: t. deprecated ← True 19: t. reason ← 'Merged into t merged' 20: end for 21: # Update examples 22: for each e ∈ E M with successful rewrite do 23: Update e with merged tool 24: end for 25: break 26: else 27: feedback ← val.errors 28: end if 29: end for 30: end for 31: return T"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

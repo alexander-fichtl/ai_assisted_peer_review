@@ -1,0 +1,73 @@
+{
+  "pdfname": "8uZ5UdIul2",
+  "content": {
+    "summary": {
+      "value": "This paper presents Fast Flow Joint Distillation (F2D2), a framework for simultaneously accelerating sampling and likelihood evaluation in flow-based generative models. F2D2 jointly distills the sampling trajectory and cumulative divergence using a single model, reducing the number of neural function evaluations (NFEs) required for both tasks by two orders of magnitude. The method is modular, compatible with existing flow-based few-step sampling models, and requires only an additional divergence prediction head. Experiments on CIFAR-10 and ImageNet 64x64 demonstrate F2D2's capability to achieve accurate log-likelihood with few-step evaluations while maintaining high sample quality. F2D2 solves a long-standing computational bottleneck in flow-based generative models, enabling new algorithmic possibilities such as maximum likelihood self-guidance. The approach allows a 2-step MeanFlow model to outperform a 1024-step teacher model with only a single additional backward NFE. Overall, F2D2 provides a significant advancement in the efficiency and applicability of flow-based generative models."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "The paper has several notable strengths:\n\n1. **Originality of the proposed method**: The authors introduce Fast Flow Joint Distillation (F2D2), a novel framework that simultaneously accelerates sampling and likelihood evaluation in flow-based generative models. This approach addresses a long-standing computational bottleneck in these models.\n\n2. **Significance of the contribution**: F2D2's ability to jointly distill the sampling trajectory and cumulative divergence using a single model reduces the number of neural function evaluations (NFEs) required for both tasks by two orders of magnitude. This efficiency gain enables new algorithmic possibilities, such as maximum likelihood self-guidance.\n\n3. **Quality and clarity of the writing**: The paper is well-written, with clear explanations of the proposed method, its theoretical justification, and experimental results. The authors provide a detailed characterization of the joint flow map and derive four separate training objectives for the sampling and likelihood subsystems.\n\n4. **Effectiveness of the proposed method**: The experimental results on CIFAR-10 and ImageNet 64x64 demonstrate F2D2's capability to achieve accurate log-likelihood with few-step evaluations while maintaining high sample quality. The method's compatibility with existing flow-based few-step sampling models and its requirement for only an additional divergence prediction head are significant advantages.\n\n5. **Impact on future research**: The authors' approach has the potential to impact future research in this area by enabling more efficient and practical applications of flow-based generative models. The proposed maximum likelihood self-guidance method allows a 2-step MeanFlow model to outperform a 1024-step flow matching model of the same size on CIFAR-10, demonstrating the effectiveness of F2D2 in providing valid signals to guide the sampling process toward higher-quality generations.\n\n6. **Theoretical justification and characterization**: The paper provides a thorough theoretical analysis of the joint flow map, including a characterization of valid joint flow maps under the proposed parametrization. The authors also derive the Lagrangian, Eulerian, and semigroup conditions for the joint system.\n\n7. **Extensive experimental validation**: The authors conduct extensive experiments to validate the effectiveness of F2D2, including comparisons with flow matching, shortcut models, and MeanFlow. They also provide qualitative results and ablation studies to further investigate the behavior of F2D2 models."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Evaluation on Conditional Generation**: The paper primarily focuses on unconditional generation and does not provide a comprehensive evaluation of F2D2 on conditional generation tasks. Conditional generation is a crucial application of flow-based models, and evaluating F2D2 in this setting would provide a more complete understanding of its capabilities.\n\n2. **Sensitivity to Divergence Target Scaling**: The performance of F2D2 is sensitive to divergence target scaling, which may affect its practical effectiveness in other architectures or modalities. A more detailed analysis of how to optimize this hyperparameter or make the method more robust to its setting would be beneficial.\n\n3. **Computational Resources Constraints**: On the ImageNet64 × 64 dataset, the authors were constrained by computational resources and only trained with a reduced model size and insufficient training iterations. Training with a larger model and longer duration could potentially further improve the performance of F2D2.\n\n4. **Early Stopping and Overfitting**: F2D2 training requires careful early stopping to avoid overfitting or degraded likelihood estimation once the calibrated BPD value is reached. Developing improved network architectures or auxiliary regularization techniques could help mitigate this issue.\n\n5. **Ablation Study on Loss Weighting**: While the paper provides an ablation study on the effect of different loss components, it does not extensively explore the impact of various loss weighting schemes on the performance of F2D2. A more fine-grained analysis of loss weighting could potentially further improve the performance of F2D2.\n\n6. **Comparison to Normalizing Flows**: The paper primarily compares F2D2 to flow matching and few-step flow-based models. A comparison to normalizing flows, which offer exact and tractable log-likelihoods, could provide additional context on the benefits and limitations of F2D2.\n\n7. **Validation on Additional Modalities**: The paper focuses on image datasets (CIFAR-10 and ImageNet 64x64). Validating F2D2 on additional modalities, such as audio or text, would help establish its broader applicability and effectiveness.\n\nBy addressing these weaknesses, the authors could further strengthen their contribution and provide a more comprehensive understanding of the capabilities and limitations of F2D2."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Conditional Generation**: The paper primarily focuses on unconditional generation. How does F2D2 perform on conditional generation tasks, and what modifications, if any, are needed to adapt the method for conditional setups?\n\n2. **Divergence Target Scaling**: The performance of F2D2 is sensitive to divergence target scaling. Can the authors provide more details on how they optimized this hyperparameter, and are there any strategies to make F2D2 more robust to its setting?\n\n3. **Computational Resources and Training Duration**: On the ImageNet64 × 64 dataset, the authors were constrained by computational resources. What are the potential improvements that could be achieved by training with a larger model and for a longer duration?\n\n4. **Early Stopping and Overfitting**: F2D2 training requires careful early stopping to avoid overfitting. What strategies or techniques can be employed to mitigate overfitting and ensure that the model does not degrade after reaching the calibrated BPD value?\n\n5. **Ablation Study on Loss Weighting**: The paper provides an ablation study on the effect of different loss components. Can the authors explore the impact of various loss weighting schemes on the performance of F2D2 in more detail?\n\n6. **Comparison to Normalizing Flows**: It would be beneficial to compare F2D2 to normalizing flows, which offer exact and tractable log-likelihoods. How does F2D2's performance and efficiency compare to normalizing flows, especially in terms of sample quality and likelihood evaluation?\n\n7. **Validation on Additional Modalities**: The paper focuses on image datasets. Can the authors validate F2D2 on additional modalities, such as audio or text, to establish its broader applicability and effectiveness?\n\n8. **Maximum Likelihood Self-Guidance**: The authors propose a maximum likelihood self-guidance method. Can they provide more details on the potential applications and limitations of this method, especially in comparison to other guidance signals or optimization objectives?\n\n## Additional Suggestions\n\n- Provide a more detailed analysis of the computational cost and runtime efficiency of F2D2 compared to existing methods.\n- Explore the use of different network architectures or auxiliary regularization techniques to improve the stability and performance of F2D2.\n- Consider conducting a more extensive comparison of F2D2 with other flow-based models and distillation methods to further establish its advantages and limitations.\n\n## Conclusion \n\nAddressing these questions and suggestions can help clarify potential confusions, address limitations, and provide a more comprehensive understanding of the capabilities and applicability of Fast Flow Joint Distillation (F2D2). This would be crucial for a productive rebuttal and discussion phase with the authors."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "JOINT DISTILLATION FOR FAST LIKELIHOOD EVALUATION AND SAMPLING IN FLOW-BASED MODELS",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 BACKGROUND",
+    "3 METHOD",
+    "3.1 FAST FLOW JOINT DISTILLATION (F2D2): PARAMETRIZING A JOINT FLOW MAP",
+    "(c) Φ satisfies the semigroup property Φ Y ( y, t, s ) = Φ Y (Φ Y ( y, t, r ) , r, s ) for t &lt; r &lt; s .",
+    "3.2 INSTANTIATING F2D2 WITH SHORTCUT AND MEANFLOW",
+    "3.2.1 JOINT SHORTCUT: SHORTCUT-F2D2",
+    "3.2.2 JOINT MEANFLOW: MEANFLOW-F2D2",
+    "3.3 PRACTICAL DESIGN CHOICES",
+    "3.4 APPLICATION: MAXIMUM LIKELIHOOD SELF-GUIDANCE WITH F2D2",
+    "4 RELATED WORKS",
+    "5 EXPERIMENTS",
+    "5.1 SETUPS",
+    "5.2 RESULTS",
+    "5.3 MAXIMUM LIKELIHOOD SELF-GUIDANCE WITH MEANFLOW-F2D2",
+    "5.4 2D CHECKERBOARD",
+    "6 CONCLUSION",
+    "REPRODUCIBILITY STATEMENT",
+    "A CHARACTERIZATION OF THE JOINT FLOW MAP",
+    "B ADDITIONAL THEORETICAL ANALYSIS",
+    "C IMPLEMENTATION DETAILS",
+    "D ADDITIONAL ABLATIONS",
+    "E ADDITIONAL RESULTS",
+    "1836 F LIMITATIONS AND FUTURE WORKS",
+    "G THE USE OF LARGE LANGUAGE MODELS (LLMS)"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

@@ -1,0 +1,82 @@
+{
+  "pdfname": "KfjpyOcPQj",
+  "content": {
+    "summary": {
+      "value": "This paper addresses class-wise performance disparity in deep neural networks, where models exhibit significant accuracy imbalances across classes even when trained on class-balanced data. The authors provide a theoretical analysis establishing a margin-based, class-sensitive generalization bound that reveals how per-class feature variability contributes to error, with \"hard\" classes showing greater feature diversity than \"easy\" ones. They propose MR² (Margin Regularization for performance disparity Reduction), a framework that dynamically adjusts margins in both logit and representation spaces: the logit margin is designed proportional to feature spread to minimize the generalization bound, while the representation margin loss promotes intra-class compactness. The method is validated across seven datasets including ImageNet using diverse architectures (ResNet, ViT) and pre-trained foundation models (MAE, MoCov2, CLIP), demonstrating consistent improvements in both overall accuracy and class-wise balance. MR² significantly boosts performance on \"hard\" classes without sacrificing \"easy\" class accuracy, effectively reducing performance disparity without trade-offs. The approach provides theoretical grounding for margin design in balanced classification settings, distinguishing it from prior work focused on long-tailed scenarios. The authors demonstrate that their method works across various implementation paradigms including end-to-end fine-tuning and linear probing. The paper includes comprehensive ablation studies and visualization of feature geometry, confirming the mechanism by which MR² achieves balanced performance."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Novel theoretical framework for class-wise performance disparity**: The paper establishes a margin-based, class-sensitive generalization bound (Proposition 1) that directly connects per-class feature variability to error rates. This is significant because it explains why \"hard\" classes (with greater feature diversity as shown in Figure 1b) underperform even when training data is class-balanced—a phenomenon previously only observed empirically but not theoretically grounded. The bound reveals that classes with larger feature variability contribute more to generalization error, providing the first principled explanation for this important practical problem.\n\n2. **Theoretically derived margin regularization**: Unlike prior margin-based methods that collapse to standard cross-entropy under balanced class priors (e.g., LDAM, EQL, Balanced Softmax), the authors derive a class-sensitive margin design (Corollary 1) that remains meaningful for balanced datasets. The logit margin γ_y is specifically designed proportional to (‖μ̂_y‖²₂ + ‖ŝ_y‖²₂)^(1/3), which minimizes the generalization bound while maintaining a fixed average margin budget. This is not an ad hoc modification but a direct consequence of optimizing the theoretical bound.\n\n3. **Dual-space regularization with complementary theoretical justification**: The paper uniquely addresses both logit and representation spaces with two complementary regularizers. While the logit margin targets the bound directly, the representation margin loss (ℓ̄_s) tightens the bound by reducing mean-squared deviations (Proposition 1 justification). The ablation studies (Table 3) demonstrate that both components are necessary for optimal performance, with the representation margin alone improving hard class accuracy by +2.1% and the logit margin by +3.7%.\n\n4. **Effective application to cosine classifier models**: The authors extend their framework to cosine classifiers (e.g., CLIP) through Proposition 2, which provides a general norm-based formulation that restores class-dependent margins through non-L2 norms (e.g., L3). This is particularly valuable as it enables their method to work with state-of-the-art foundation models where standard margin approaches would fail, as demonstrated by the +2.8% hard class improvement on CLIP ViT-B/32 (Table 2).\n\n5. **Comprehensive validation across diverse settings**: The evaluation spans seven datasets (including ImageNet), multiple architectures (CNNs and Vision Transformers), and diverse pre-trained backbones (MAE, MoCov2, CLIP) with both end-to-end fine-tuning and linear probing. Critically, the method consistently improves hard class performance without sacrificing easy class accuracy—a key limitation of prior approaches like reweighting methods (LfF, JTT) and distributionally robust optimization (DRO), which often trade off easy vs. hard class performance.\n\n6. **Empirical validation of theoretical insights**: The paper provides compelling evidence supporting its theoretical claims. Figure 7 shows MR² consistently compressing the gap between easy and hard classes throughout training, while Figure 10's t-SNE visualizations demonstrate how MR² makes hard class features more compact and better separated. The per-class accuracy improvements in Table 14 (e.g., +8.2% and +9.1% for the two worst-performing CIFAR-10 classes) directly validate the paper's core premise.\n\n7. **Clear distinction from long-tailed learning**: The paper correctly identifies and addresses a fundamentally different problem from long-tailed classification—class-wise disparity under balanced class priors. This distinction is crucial because it reveals that performance imbalance stems from feature representation issues rather than class frequency, as evidenced by Figure 1b showing greater feature variability in hard classes. The authors explicitly demonstrate that methods designed for long-tailed scenarios (e.g., LDAM) fail to address this specific problem."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Lack of comparison with recent decoupling methods for class imbalance**: While the paper focuses on class-balanced datasets, it fails to compare with modern decoupling approaches like \"Decoupling Representation and Classifier for Long-Tailed Recognition\" (Kang et al., 2020) that have become standard in addressing class imbalance. Since the paper's goal is reducing performance disparity, and decoupling methods specifically target this problem (albeit in imbalanced settings), a comparison would help position MR² more precisely. The authors could implement a version of decoupling for balanced settings or test their method in scenarios where both class imbalance and feature spread imbalance coexist to demonstrate complementary strengths.\n\n2. **Insufficient analysis of failure cases and limitations**: The paper consistently reports positive results across datasets but doesn't deeply investigate scenarios where MR² underperforms. For example, in Table 10, the Food dataset shows only 0.5% overall improvement with MR², significantly less than other datasets. The paper should analyze why certain datasets (like Food) respond less to the approach—perhaps by examining whether feature spread correlates less with class difficulty in these cases. This would strengthen the paper by providing boundaries for when the method is most applicable.\n\n3. **Limited investigation of why feature spread correlates with class difficulty**: The paper assumes feature spread (Figure 1b) explains class-wise performance disparity but doesn't explore why certain classes naturally exhibit greater feature diversity. Is this due to inherent class complexity (e.g., \"aircraft\" having many subtypes), dataset artifacts, or annotation inconsistencies? A qualitative analysis of representative \"hard\" vs. \"easy\" classes (beyond just accuracy metrics) would strengthen the theoretical foundation and could suggest additional improvements to the method.\n\n4. **No quantification of computational overhead**: The paper introduces additional computations for maintaining exponential moving averages of feature statistics and calculating the representation margin loss (Eq. 2), but doesn't report the computational cost compared to standard training. Since the method is intended for practical deployment, reporting training time per epoch or GPU memory usage across different batch sizes would help practitioners assess trade-offs. The authors could also explore approximations to reduce this overhead while maintaining performance.\n\n5. **Inadequate exploration of margin design alternatives**: While Section 5.2 analyzes hyperparameters, the paper doesn't investigate alternative functional forms for the margin design beyond the p-norm variations. For example, would a non-monotonic relationship between feature spread and margin (e.g., with a threshold for \"very hard\" classes) yield better results? The authors could test different parameterizations of γ_y in Eq. (1) to determine if their cube root relationship is truly optimal or if simpler formulations (e.g., linear scaling) would suffice."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions for Clarification\n\n1. **Theoretical justification for p=3 in cosine classifiers**: In Section 4.3 and implementation details, you specify using p=3 for cosine classifier models like CLIP. Could you elaborate on the theoretical reasoning behind selecting p=3 specifically? Is this value empirically determined, or does it follow from properties of cosine similarity spaces? Understanding whether this choice is optimal or if there's a principled way to select p for different architectures would strengthen the theoretical framework.\n\n2. **Class-specific margin distribution**: The ablation study in Table 3 shows that uniform margins (Row b) provide minimal improvement while class-specific margins (Row c) significantly boost hard class performance. Could you share the actual distribution of margin values across classes when using your proposed γ_y formula? This would help clarify whether the margin values vary substantially across classes and why uniform margins fail to address the performance disparity.\n\n3. **Computational overhead analysis**: While implementation details are provided in Section C.2, the paper doesn't quantify the computational cost of MR² compared to standard training. Could you report the training time increase (as a percentage) for your method versus baseline training? This practical consideration is important for practitioners evaluating the trade-offs of adopting your approach.\n\n4. **Early training dynamics**: Figure 7 shows the evolution of ∥ŝ_y∥₂ for easy, medium, and hard classes throughout training. At approximately which training epoch does MR² begin to significantly compress the gap between easy and hard classes? Understanding this timing could provide valuable insights into the mechanism by which your method reduces performance disparity.\n\n## Suggestions for Improvement\n\n1. **Sensitivity analysis for class balance assumption**: Your theoretical analysis assumes perfectly balanced class priors (P(y)=1/K). Many real-world \"balanced\" datasets contain minor imbalances. Could you provide a brief analysis of how sensitive your theoretical guarantees are to small deviations from perfect class balance? This would help clarify the practical applicability of your framework to real-world scenarios.\n\n2. **Extension to class-imbalanced settings**: While you mention in Discussion 4 that MR² can be combined with logit adjustment for imbalanced settings, providing even preliminary results on standard long-tail benchmarks would strengthen the paper's practical impact. A short ablation showing how the two techniques interact would be valuable for readers interested in applying your method to imbalanced data.\n\n3. **Analysis of margin value distribution**: Including a visualization of the actual margin values (γ_y) across classes would complement Figure 1(b) and provide concrete evidence of how your method allocates larger margins to classes with greater feature variability. This would strengthen the connection between your theoretical motivation and practical implementation.\n\n4. **Comparison with recent decoupling methods**: Although your focus is on class-balanced datasets, modern decoupling approaches (like Kang et al., 2020) have become standard for addressing class imbalance. A brief discussion of how your approach differs from or could complement these methods, even in balanced settings, would help position your work within the broader literature on performance disparity."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "REDUCING CLASS-WISE PERFORMANCE DISPARITY VIA MARGIN REGULARIZATION",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 METHOD",
+    "3.1 DISCUSSION WITH EXISTING WORK",
+    "4 THEORETICAL ANALYSIS",
+    "4.1 PRELIMINARIES",
+    "4.2 MARGIN REGULARIZATION PROMOTES GENERALIZATION AND REDUCES DISPARITY",
+    "(a) CIFAR-100",
+    "4.3 GENERAL NORM BOUNDS ON MARGIN-BASED COMPLEXITY",
+    "5 EXPERIMENTS",
+    "5.1 MAIN RESULTS",
+    "5.2 ABLATION STUDIES",
+    "6 CONCLUSION",
+    "ACKNOWLEDGMENT",
+    "CONTENTS",
+    "A ADDITIONAL DISCUSSIONS",
+    "Discussion 3: Relation to Neural Collapse.",
+    "Discussion 4: Applying our MR 2 to class-imbalanced settings.",
+    "B MISSING PROOFS",
+    "B.1 CONNECTION BETWEEN ℓ ¯ s AND ˆ ℓ ¯ s",
+    "B.2 CONNECTION BETWEEN PAIRWISE DISTANCE AND MEAN SQUARED DEVIATION",
+    "B.3 PROOF OF LEMMA 1",
+    "B.4 PROOF OF LEMMA 2",
+    "B.5 PROOF OF LEMMA 3",
+    "B.6 PROOF OF COROLLARY 1",
+    "B.7 PROOF OF PROPOSITION 2",
+    "B.8 PER-CLASS ERROR BOUND",
+    "C ADDITIONAL EXPERIMENTAL DETAILS AND RESULTS",
+    "C.1 ADDITIONAL DETAILS OF BASELINE METHODS",
+    "C.2 ADDITIONAL IMPLEMENTATION DETAILS",
+    "C.3 ADDITIONAL EXPERIMENTAL RESULTS",
+    "D SOCIETAL IMPACT AND LIMITATION",
+    "E LLM USAGE STATEMENT",
+    "(a) CIFAR-100",
+    "(b) ImageNet",
+    "(b) Our MR 2 Loss"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

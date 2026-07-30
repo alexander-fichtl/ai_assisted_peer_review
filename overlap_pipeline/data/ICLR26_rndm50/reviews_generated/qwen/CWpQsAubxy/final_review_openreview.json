@@ -1,0 +1,110 @@
+{
+  "pdfname": "CWpQsAubxy",
+  "content": {
+    "summary": {
+      "value": "This paper introduces ActiveCQ, a unified framework for the active estimation of causal quantities (CQs) beyond the commonly studied conditional average treatment effect (CATE). The authors formalize the problem of strategically selecting data points to efficiently estimate various causal quantities when outcome measurement is expensive, recognizing that different CQs require targeting distinct subpopulations. Their framework models the outcome regression function with Gaussian processes and represents target distributions using conditional mean embeddings in reproducing kernel Hilbert spaces, enabling principled derivation of acquisition strategies directly from the posterior uncertainty of the causal estimator itself. This approach avoids explicit density estimation and automatically adapts to the target distribution of interest. The authors instantiate two utility functions based on information gain and total variance reduction, providing theoretical guarantees on uncertainty decay. Experiments across multiple causal quantities (CATE, ATE, ATT, and ATE under distribution shift) demonstrate significant sample efficiency gains over standard active learning baselines, particularly when substantial distribution mismatches exist between the observational data and target CQ. The framework's key innovation lies in targeting uncertainty reduction specifically for the causal quantity of interest rather than the underlying regression function, making it particularly effective for causal estimation tasks with distribution shifts."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths Assessment\n\nThe paper demonstrates several significant and non-generic strengths that advance the field of active causal inference:\n\n1. **Novel problem formalization**: The authors introduce \"ActiveCQ\" as a distinct problem formulation that addresses a critical gap in the literature. Unlike prior work focused exclusively on CATE estimation, they formalize the broader challenge of efficiently estimating diverse causal quantities (CATE, ATE, ATT, ATEDS) when outcome measurement is expensive. This reframing is crucial because different causal quantities require targeting fundamentally different subpopulations (as illustrated in Figure 1), making standard active learning approaches inadequate.\n\n2. **Unified integral representation**: The paper's most significant theoretical contribution is the elegant unification of disparate causal quantities through an integral representation (Remark 1, Section 2). By expressing all causal quantities as τ_CQ = ∫ E[y|a=s,s]P*_CQ(ds), the authors create a single mathematical framework that accommodates various causal estimation tasks. This enables a systematic approach to active learning for causal inference rather than treating each quantity as a separate problem.\n\n3. **Innovative CME integration**: The authors' use of Conditional Mean Embeddings (CME) instead of traditional conditional density estimation represents a creative methodological advance (Section 4.2-4.3). Unlike density-based approaches, CMEs operate within the same RKHS as the GP regression, avoiding the need for explicit density estimation while enabling adaptive refinement of the distribution model after each acquisition round. This integration is particularly powerful because it \"shifts the CATE estimation task from the computationally intensive numerical integration of a regression function to directly manipulating a distribution embedding\" (Section 4.3), creating a more efficient and task-aligned approach.\n\n4. **CQ-specific acquisition strategies**: The paper develops acquisition functions that directly target causal quantity uncertainty rather than model parameter uncertainty (Section 4.5). Traditional active learning methods like BALD focus on minimizing uncertainty over the observational distribution, while their approach minimizes uncertainty of the causal estimator itself. The closed-form derivations for information gain and total variance reduction are specifically tailored to the causal quantity of interest, creating a principled connection between the acquisition strategy and the target causal quantity.\n\n5. **Theoretical guarantees for transductive setting**: The convergence analysis (Section 4.6) provides meaningful theoretical guarantees for this complex active learning problem. The authors successfully extend transductive active learning theory to the more challenging setting of distributional integral estimation, showing that their approach achieves the rate O(γ_nB/√nB), demonstrating the method's robustness despite the added complexity of causal quantity estimation."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses Assessment\n\nThe paper demonstrates strong theoretical contributions but has several substantive limitations that could be addressed to strengthen its practical impact:\n\n1. **Scalability limitations without empirical validation of approximations**: While the authors acknowledge the cubic complexity of GPs (Section 7), they don't empirically evaluate how their framework performs with scalable GP approximations (e.g., sparse GPs, Nyström methods) that would enable real-world deployment. The paper would be significantly strengthened by including experiments comparing performance with different scalable approximations, particularly for datasets larger than 1,000 samples where GP limitations become pronounced. For instance, Section F.5 notes \"our GP-based instantiation inherits cubic complexity\" but provides no evidence of how the framework would perform with practical approximations on larger datasets where the current implementation becomes infeasible.\n\n2. **Lack of robustness analysis to unmeasured confounding**: The framework assumes no unmeasured confounders (Section 3), yet the paper doesn't evaluate how sensitive their approach is to violations of this assumption. Since unmeasured confounding is common in real-world causal inference, the authors could strengthen their contribution by incorporating sensitivity analysis (e.g., following methods from Yadlowsky et al., 2018) or testing their framework with synthetic datasets containing controlled amounts of unmeasured confounding to demonstrate robustness boundaries.\n\n3. **Limited validation on truly large-scale real-world datasets**: While the IHDP and Lalonde benchmarks are standard in causal inference, they represent small-scale academic benchmarks (747 and 2,675 samples respectively). The authors should validate their approach on larger-scale real-world datasets like the MIMIC-III clinical database or industry-scale A/B testing data to demonstrate practical utility. The current experiments don't address whether the computational overhead (Figure 4) becomes prohibitive at scale or whether the distributional targeting advantage persists with higher-dimensional real-world data.\n\n4. **No exploration of policy-relevant metrics**: The paper focuses exclusively on minimizing estimation error of causal quantities, but doesn't evaluate how well the estimated quantities translate to better decision-making. For clinical or policy applications, the ultimate metric should be policy value (e.g., expected outcomes under the optimal treatment policy). The authors could strengthen their contribution by adding experiments that measure how their active learning approach improves policy learning compared to baselines, which would better demonstrate practical value for real-world decision-making scenarios.\n\nThese improvements would better align the work with its stated goal of \"efficiently estimating causal quantities when outcome measurement is expensive\" in real-world settings where scalability, robustness to assumption violations, and policy relevance are critical considerations."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## 1. Scalability with Practical Approximations\nThe paper mentions the cubic complexity of GPs as a limitation but states the framework is modular and can accommodate scalable approximations. Could you share preliminary results or insights about how the framework performs with sparse GPs or Nyström methods? The current experiments appear to use full GPs on relatively small datasets (500 training points). Understanding how well the CME approach maintains its advantages with scalable approximations would significantly impact the practical applicability assessment of your method.\n\n## 2. Continuous Treatment Handling\nSection F.6.3 explains that discrete treatments were used due to computational constraints with the determinant calculation for IG methods. Are there alternative approaches to handle continuous treatments without discretization that could maintain computational feasibility? For example, could kernel-based approximations or adaptive sampling strategies be used to estimate the posterior covariance matrix for continuous treatments while preserving the theoretical guarantees?\n\n## 3. Acquisition Function Selection Guidance\nThe paper presents both IG and TVR approaches but doesn't provide clear guidance on when to prefer one over the other. Could you elaborate on the theoretical differences between these approaches in the context of causal quantity estimation? Specifically, in which scenarios would IG be expected to outperform TVR (beyond the theoretical connection in Remark 3), and are there practical heuristics for practitioners to choose between them?\n\n## 4. Real-World Constraints Implementation\nThe framework assumes we can query outcomes for any individuals in the pool dataset. In practice, there might be ethical, logistical, or cost constraints on which individuals can be selected (e.g., certain patient subgroups might be difficult to recruit). How might the framework be adapted to handle such constraints? Could the acquisition function be modified to incorporate constraint-aware sampling?\n\n## 5. CME vs. CDE Ablation\nWhile the paper claims advantages of CME over CDE, the ablation studies don't isolate this factor clearly. Could you provide a more controlled comparison between CME and CDE with identical settings (same kernel, same GP parameters, same acquisition strategy) to better demonstrate the specific advantages of CME? This would help clarify whether the performance gains come primarily from the CME approach itself versus other implementation details.\n\n## 6. Theoretical Guarantees for Batch Selection\nThe paper uses greedy batch selection but doesn't provide theoretical guarantees about how well this approximates optimal batch selection. Could you discuss the theoretical bounds on the quality of the greedy approximation in your specific context? How does the information ratio (Section E.2) affect these guarantees in the causal quantity estimation setting compared to standard active learning?\n\n## 7. Real-World Application Constraints\nThe paper assumes we can query outcomes for any individuals in the pool dataset. In practice, there might be ethical, logistical, or cost constraints on which individuals can be selected (e.g., certain patient subgroups might be difficult to recruit). How might the framework be adapted to handle such constraints? Could the acquisition function be modified to incorporate constraint-aware sampling?"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "ACTIVECQ: ACTIVE ESTIMATION OF CAUSAL QUANTITIES",
+    "Erdun Gao 1,2 &amp;Dino Sejdinovic 1,2",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 PRELIMINARIES",
+    "3 THE ACTIVECQ PROBLEM FORMULATION",
+    "4 UNCERTAINTY QUANTIFICATION OF CQS",
+    "4.1 REGRESSION FUNCTION MODELING",
+    "4.2 CONDITIONAL DENSITY ESTIMATION",
+    "4.3 INTEGRAL OVER CONDITIONAL DISTRIBUTION",
+    "4.4 SPECIFYING THE SUBPOPULATION OF INTEREST",
+    "4.5 UNCERTAINTY REDUCTION",
+    "4.6 UNCERTAINTY DECAY ANALYSIS",
+    "5 EXPERIMENTAL RESULTS",
+    "6 RELATED WORK",
+    "7 CONCLUSION",
+    "8 ACKNOWLEDGMENTS",
+    "ETHICS STATEMENT",
+    "REPRODUCIBILITY STATEMENT",
+    "Table of Contents",
+    "A ACKNOWLEDGMENT OF LLM USAGE",
+    "B MORE RELATED WORKS",
+    "B.1 RELATED WORKS (CONTINUING)",
+    "B.2 TRANSDUCTIVE ACTIVE LEARNING",
+    "B.3 IN-DEPTH DISCUSSION OF ABCI",
+    "C FURTHER PRELIMINARIES AND DEFINITIONS",
+    "C.1 DAG AND CAUSAL GRAPHS",
+    "C.2 KERNELS AND RKHS",
+    "C.3 INFORMATION-THEORETIC MEASURES",
+    "D MODELING FOR VARIOUS CAUSAL QUANTITIES",
+    "D.1 DERIVATION FOR THE CATE",
+    "D.2 DERIVATION FOR ATE",
+    "D.3 DERIVATION FOR ATT",
+    "D.4 DERIVATION FOR ATEDS",
+    "D.5 CONNECTION BETWEEN IG AND TVR",
+    "E CONVERGENCE ANALYSIS",
+    "E.1 JUSTIFICATION OF ASSUMPTION 1",
+    "E.2 PRELIMINARY DEFINITIONS AND CONCEPTS",
+    "E.3 APPROXIMATE MARKOV BOUNDARY",
+    "E.4 PROOF OF THEOREM 2",
+    "F EXPERIMENTS DETAILS",
+    "F.1 DATASETS",
+    "F.1.1 VISUALIZATION",
+    "F.1.2 SIMULATIONS",
+    "F.1.3 SEMI-SYNTHETIC DATASETS",
+    "F.2 IMPLEMENTATION DETAILS",
+    "F.2.1 GENERAL SETTING",
+    "F.2.2 HYPERPARAMETER SETTINGS",
+    "F.2.3 BASELINE METHODS",
+    "F.3 HARDWARE",
+    "Algorithm 1 Active Learning Framework for CATE Estimation",
+    "Train a baseline model",
+    "Main active learning loop for each round # Use the model from the previous round",
+    "F.4 METRICS",
+    "F.4.1 UNCERTAINTY REDUCTION AS AN EVALUATION CRITERION",
+    "F.5 COMPUTATIONAL COMPLEXITY",
+    "F.6 ADDITIONAL EXPERIMENTAL RESULTS",
+    "F.6.1 VISUALIZATION",
+    "F.6.2 ABLATION RESULTS",
+    "Robustness to Heteroscedastic Noise. To",
+    "F.6.3 SIMULATION RESULTS",
+    "F.6.4 IHDP RESULTS",
+    "F.6.5 EXPERIMENTAL RESULTS ON LALONDE",
+    "G DISCUSSIONS",
+    "G.1 SUMMARY OF CONTRIBUTIONS AND FUTURE DIRECTIONS",
+    "G.2 THE ADVANTAGES OF CME IN THE ACTIVE LEARNING SETUP"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

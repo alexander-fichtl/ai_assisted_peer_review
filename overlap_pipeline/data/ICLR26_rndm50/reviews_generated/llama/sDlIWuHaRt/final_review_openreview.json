@@ -1,0 +1,78 @@
+{
+  "pdfname": "sDlIWuHaRt",
+  "content": {
+    "summary": {
+      "value": "This paper investigates how regularization techniques using soft labels enhance model calibration and robustness against gradient-based adversarial attacks. The study analyzes decision regions, confidence contours, and gradient directions in the representation space, demonstrating that regularization reduces feature RMS and increases cosine similarity to class centers. The reduced RMS mitigates overconfident predictions, while higher cosine similarity directs perturbations toward the origin, enhancing adversarial robustness. The findings offer new insights into the regularization dynamics in the representation space. The paper provides a comprehensive evaluation of various models trained with different methods, consistently showing that regularization improves robustness across a variety of adversarial attacks. However, the effect of regularization remains limited under the strongest PGD and AutoAttack configuration. The study aims to provide a novel explanation from the perspective of the representation space. The paper presents a thorough analysis of the adjustments in feature distributions due to regularization. The authors provide new insights into the characteristics of the high-dimensional representation space in relation to training and regularization using soft labels."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "The paper has several strengths:\n\n1. **Novel Perspective**: The paper provides a novel explanation for how regularization techniques using soft labels enhance model calibration and robustness against gradient-based adversarial attacks from the perspective of the representation space.\n\n2. **Comprehensive Evaluation**: The study is comprehensive, evaluating various models trained with different methods and showing consistent improvements in robustness across a variety of adversarial attacks.\n\n3. **Extensive Evidence**: The authors support their claims with extensive evidence, including visualizations of decision regions, confidence contours, and gradient directions in the representation space.\n\n4. **Improved Understanding**: The paper offers new insights into the regularization dynamics in the representation space, providing an improved understanding of how soft labels impact model behavior.\n\n5. **Practical Implications**: The paper's findings have practical implications for improving model calibration and robustness in various applications.\n\n6. **Well-Written**: The paper is well-written and provides a clear explanation of the proposed method and its contributions.\n\n7. **Originality of Ideas**: The paper brings significant originality of ideas and execution, as it provides a new perspective on the regularization dynamics in the representation space.\n\n8. **Significance**: The questions being asked are important, as they address a significant gap in the understanding of how regularization techniques using soft labels impact model calibration and adversarial robustness. \n\nThese strengths make the paper a valuable contribution to the research area being studied."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Exploration of Regularization Limitations**: The paper could be improved by further exploring the limitations of regularization under stronger iterative attacks, such as PGD and AutoAttack. While the authors demonstrate improved robustness across various adversarial attacks, the effect of regularization remains limited under the strongest configurations.\n\n2. **Lack of Comparison to Alternative Methods**: The paper primarily focuses on regularization techniques using soft labels, such as label smoothing, Mixup, and CutMix. However, it would be beneficial to compare these methods to alternative approaches for improving model calibration and robustness, such as adversarial training or ensemble methods.\n\n3. **Insufficient Analysis of Hyperparameter Sensitivity**: The paper presents a comprehensive evaluation of various models trained with different methods, but it would be helpful to analyze the sensitivity of the results to hyperparameters. This could involve exploring how different hyperparameter settings impact the effectiveness of regularization techniques.\n\n4. **Limited Discussion of Practical Applications**: While the paper mentions the practical implications of the findings, it would be beneficial to provide more specific examples of how the proposed methods could be applied in real-world scenarios.\n\n5. **No Clear Guidelines for Choosing Regularization Techniques**: The paper does not provide clear guidelines for choosing the most effective regularization technique for a given problem. It would be helpful to provide recommendations or heuristics for selecting the most suitable method.\n\n6. **Inadequate Analysis of Downstream Transfer Performance**: The paper evaluates the impact of soft-label regularization on downstream transfer learning, but the analysis is limited. A more comprehensive evaluation of the transfer performance of models trained with different regularization techniques would be beneficial.\n\n## Actionable Insights for Improvement\n\n1. **Conduct a more thorough analysis of the limitations of regularization under stronger iterative attacks**.\n\n2. **Compare regularization techniques to alternative methods for improving model calibration and robustness**.\n\n3. **Analyze the sensitivity of the results to hyperparameters**.\n\n4. **Provide more specific examples of practical applications**.\n\n5. **Develop guidelines or heuristics for choosing the most effective regularization technique**.\n\n6. **Evaluate the downstream transfer performance of models trained with different regularization techniques**.\n\nBy addressing these weaknesses and incorporating these actionable insights, the paper could provide a more comprehensive and practical understanding of how regularization techniques using soft labels impact model calibration and robustness."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Regularization Limitations**: The paper demonstrates improved robustness across various adversarial attacks, but the effect of regularization remains limited under the strongest PGD and AutoAttack configurations. Can the authors provide further insights into why the robustness gains from soft-label regularization diminish under stronger iterative attacks?\n\n2. **Comparison to Alternative Methods**: The paper primarily focuses on regularization techniques using soft labels. How do these methods compare to alternative approaches, such as adversarial training or ensemble methods, in terms of improving model calibration and robustness?\n\n3. **Hyperparameter Sensitivity Analysis**: The authors evaluate various models trained with different methods, but it would be helpful to analyze the sensitivity of the results to hyperparameters. Can the authors explore how different hyperparameter settings impact the effectiveness of regularization techniques?\n\n4. **Practical Applications**: The paper mentions the practical implications of the findings, but can the authors provide more specific examples of how the proposed methods could be applied in real-world scenarios?\n\n5. **Guidelines for Choosing Regularization Techniques**: The paper does not provide clear guidelines for choosing the most effective regularization technique for a given problem. Can the authors provide recommendations or heuristics for selecting the most suitable method?\n\n6. **Downstream Transfer Performance**: The paper evaluates the impact of soft-label regularization on downstream transfer learning, but the analysis is limited. Can the authors conduct a more comprehensive evaluation of the transfer performance of models trained with different regularization techniques?\n\n7. **Visualization of 3D Representation Spaces**: The paper provides visualizations of 2D representation spaces, but it would be beneficial to see similar visualizations for 3D representation spaces to gain a more comprehensive understanding of the regularization dynamics.\n\n8. **Additional Experimental Results**: The paper presents a comprehensive evaluation of various models, but it would be helpful to see additional experimental results, such as the performance of other models (e.g., transformers) under different regularization techniques.\n\n## Actionable Insights for Improvement\n\n1. **Provide a more thorough analysis of the limitations of regularization under stronger iterative attacks**.\n\n2. **Compare regularization techniques to alternative methods for improving model calibration and robustness**.\n\n3. **Analyze the sensitivity of the results to hyperparameters**.\n\n4. **Provide more specific examples of practical applications**.\n\n5. **Develop guidelines or heuristics for choosing the most effective regularization technique**.\n\n6. **Evaluate the downstream transfer performance of models trained with different regularization techniques**.\n\nBy addressing these questions and suggestions, the authors can provide further clarification, insights, and improvements to their work, ultimately enhancing the understanding and applicability of regularization techniques using soft labels."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "Overall Score: 8 \n\nThe paper is technically strong, with novel ideas and excellent impact on multiple areas of AI/ML. It provides a comprehensive evaluation of various models trained with different methods, showing consistent improvements in robustness across a variety of adversarial attacks. The authors support their claims with extensive evidence, including visualizations of decision regions, confidence contours, and gradient directions in the representation space. The paper's findings have practical implications for improving model calibration and robustness in various applications. However, the effect of regularization remains limited under the strongest PGD and AutoAttack configuration, and further exploration of this limitation could be beneficial. Overall, the paper is well-written, and its contributions are significant and valuable to the broader NeurIPS community."
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "IMPACT OF REGULARIZATION ON CALIBRATION AND ROBUSTNESS: FROM THE REPRESENTATION SPACE PERSPECTIVE",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "3 REPRESENTATION SPACE",
+    "3.1 DECISION REGIONS",
+    "3.2 CONFIDENCE CONTOURS, GRADIENT DIRECTIONS",
+    "4 EFFECT OF REGULARIZATION",
+    "4.1 MEASURING FEATURE DISTRIBUTIONS",
+    "4.2 IMPACT ON FEATURE DISTRIBUTIONS",
+    "321 322 The proof can be found in Appendix J.",
+    "4.3 IMPACT ON CALIBRATION",
+    "4.4 IMPACT ON ADVERSARIAL ROBUSTNESS",
+    "5 RESOLVING THE CONTRADICTION",
+    "6 COMPREHENSIVE EVALUATION",
+    "486 7 CONCLUSION",
+    "C DECISION REGIONS OF ORIGINAL MODELS",
+    "D BIAS TERM IN THE CLASSIFICATION LAYER",
+    "D.1 2D REPRESENTATION SPACES",
+    "D.2 ORIGINAL REPRESENTATION SPACES",
+    "E MORE VISUALIZATION OF 2D AND 3D REPRESENTATION SPACES",
+    "F EFFECT OF WEIGHT INITIALIZATION",
+    "G IMPLEMENTATION DETAILS",
+    "1085 G.1 2D AND 3D REPRESENTATION SPACES",
+    "G.2 ORIGINAL REPRESENTATION SPACES",
+    "1129 H REPRESENTATION SPACE VISUALIZATION",
+    "I HYPERPARAMETER SENSITIVITY ANALYSIS OF CLASS CENTERS",
+    "J PROOF OF THEOREM 1",
+    "K MORE RESULTS ON THE EFFECT OF REGULARIZATION",
+    "1350 L FEATURE SCALING",
+    "M EFFECT OF SOFT-LABEL REGULARIZATION ON DOWNSTREAM TRANSFER PERFORMANCE",
+    "N WHY ROBUSTNESS GAINS DIMINISH UNDER STRONG ITERATIVE",
+    "1399 1400 1401 ATTACKS"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

@@ -1,0 +1,106 @@
+{
+  "pdfname": "CYmjrbQRyM",
+  "content": {
+    "summary": {
+      "value": "This paper proposes attention-stabilized multiple instance learning (ASMIL), a novel unified framework for whole slide image (WSI) diagnosis. ASMIL addresses three major limitations of attention-based MIL methods: unstable attention dynamics, over-concentrated attention distribution, and overfitting. The framework uses an anchor model to stabilize attention, replaces softmax with a normalized sigmoid function (NSF) to prevent over-concentration, and applies token random dropping to mitigate overfitting. The anchor model is updated using an exponential moving average, providing a stable reference for the online model. Extensive experiments demonstrate that ASMIL achieves up to a 6.49% F1 score improvement over state-of-the-art methods. Additionally, integrating the anchor model and NSF into existing attention-based MIL methods consistently boosts their performance. The code and data are publicly available."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "The paper has several notable strengths:\n\n1. **Novel Problem Identification**: The authors identify a previously overlooked problem in attention-based multiple instance learning (MIL) for whole slide image (WSI) diagnosis: unstable attention dynamics. This contribution is significant as it sheds light on a critical issue affecting the performance and interpretability of MIL models.\n\n2. **Unified Framework**: The paper proposes a novel unified framework called attention-stabilized multiple instance learning (ASMIL), which addresses the identified limitations of unstable attention dynamics, over-concentrated attention distribution, and overfitting. ASMIL integrates an anchor model to stabilize attention, a normalized sigmoid function (NSF) to prevent over-concentration, and token random dropping to mitigate overfitting.\n\n3. **Theoretical and Mathematical Rigor**: The authors provide a mathematical formulation for the NSF and prove its selective flattening property, which differentiates it from softmax. This theoretical contribution is crucial as it provides a foundation for understanding why NSF can mitigate over-concentration issues in attention mechanisms.\n\n4. **Extensive Experimental Validation**: The paper includes comprehensive experiments on multiple public WSI datasets (CAMELYON-16, CAMELYON-17, and BRACS), comparing ASMIL with several state-of-the-art attention-based MIL methods. The results show significant improvements in F1 score (up to 6.49%) and AUC, demonstrating the effectiveness of ASMIL.\n\n5. **Generalizability and Applicability**: Beyond WSI, the authors evaluate ASMIL on classic MIL benchmarks outside of WSI, such as MUSK1, MUSK2, TIGER, FOX, and ELEPHANT, showing strong performance. This suggests that ASMIL's improvements are not limited to WSI applications but can generalize to other domains.\n\n6. **Code and Data Availability**: The authors make the code and data publicly available, enhancing the reproducibility of their results and facilitating further research and applications based on their work.\n\n7. **Clinical and Interpretability Impact**: By stabilizing attention and preventing over-concentration, ASMIL not only improves performance but also enhances the interpretability of attention maps, which is crucial for clinical applications and understanding model decisions.\n\nThese strengths highlight the paper's significant contributions to improving attention-based MIL for WSI diagnosis and potentially other applications, through a combination of novel problem formulation, methodological innovation, and thorough experimental validation."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Evaluation on Small Tumor Regions**: The paper acknowledges that ASMIL can fail to assign high attention to small tumor regions, particularly when large and small cancerous regions coexist within a single WSI. This issue is critical as small tumor regions are often missed in clinical settings, leading to inaccurate diagnoses. Future work should focus on enhancing ASMIL's sensitivity to small tumor regions.\n\n2. **Dependence on Hyperparameter Tuning**: The performance of ASMIL is sensitive to hyperparameters such as the learning rate, batch size, and the number of trainable FEAT tokens. The paper could benefit from a more detailed analysis of hyperparameter tuning and its impact on ASMIL's performance across different datasets.\n\n3. **Computational Overhead of the Anchor Model**: While the anchor model improves the stability and performance of ASMIL, it introduces additional computational overhead. Future research should explore strategies to reduce the computational cost of the anchor model without compromising its effectiveness.\n\n4. **Limited Generalizability to Non-WSI Datasets**: Although ASMIL demonstrates strong performance on WSI datasets, its generalizability to non-WSI datasets could be further explored. Additional experiments on diverse MIL benchmarks would strengthen the paper's claims about the broad applicability of ASMIL.\n\n5. **Interpretability of Attention Maps**: While ASMIL improves the interpretability of attention maps by stabilizing attention and preventing over-concentration, further analysis on the clinical relevance and utility of these attention maps in real-world scenarios would enhance the paper's impact.\n\n## Suggestions for Improvement\n\n1. **Enhance Sensitivity to Small Tumor Regions**: Future work should investigate strategies to improve ASMIL's sensitivity to small tumor regions, such as incorporating additional loss functions or modifying the attention mechanism.\n\n2. **Automated Hyperparameter Tuning**: Implementing automated hyperparameter tuning methods, such as Bayesian optimization or grid search, could help optimize ASMIL's performance across different datasets.\n\n3. **Efficient Anchor Model Implementation**: Research should focus on optimizing the implementation of the anchor model to reduce computational overhead without compromising performance.\n\n4. **Expanded Evaluation on Non-WSI Datasets**: Additional experiments on diverse MIL benchmarks would further demonstrate the generalizability and applicability of ASMIL.\n\n5. **Clinical Validation of Attention Maps**: Collaborating with clinicians to validate the interpretability and utility of ASMIL's attention maps in real-world scenarios would enhance the paper's impact and relevance to clinical applications."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Small Tumor Regions**: The paper mentions that ASMIL can fail to assign high attention to tiny foci and small tumor regions. Could the authors provide more details on the specific scenarios where ASMIL struggles with small tumor regions? Are there any potential modifications to the attention mechanism or loss functions that could improve ASMIL's sensitivity to these regions?\n\n2. **Hyperparameter Tuning Analysis**: The authors mention that they used a cosine learning rate schedule with an initial learning rate of $10^{-4}$ and Adam optimizer with weight decay $10^{-4}$. Could they provide a more detailed analysis of the hyperparameter tuning process? How did they determine the optimal values for these hyperparameters, and what is the sensitivity of ASMIL's performance to these hyperparameters?\n\n3. **Efficient Anchor Model Implementation**: The anchor model improves ASMIL's performance but introduces additional computational overhead. Are there any potential optimizations or modifications to the anchor model that could reduce its computational cost without compromising its effectiveness?\n\n4. **Generalizability to Non-WSI Datasets**: While ASMIL demonstrates strong performance on WSI datasets, its generalizability to non-WSI datasets could be further explored. Could the authors evaluate ASMIL on additional MIL benchmarks outside of WSI, such as images or graphs, to demonstrate its broader applicability?\n\n5. **Clinical Validation of Attention Maps**: The authors claim that ASMIL's attention maps are clinically relevant and useful. Could they provide more details on how they validated the interpretability and utility of these attention maps? Are there any plans for clinical collaborations or studies to further validate ASMIL's performance in real-world scenarios?\n\n6. **Comparison with Other Regularization Techniques**: The paper mentions that ASMIL uses token random dropping to mitigate overfitting. Could the authors compare the effectiveness of token random dropping with other regularization techniques, such as dropout or data augmentation, in reducing overfitting and improving ASMIL's performance?\n\n7. **Scalability and Efficiency**: The authors mention that ASMIL has a favorable computational profile. Could they provide more details on the scalability and efficiency of ASMIL, particularly for large-scale WSI datasets? Are there any potential optimizations or modifications that could further improve ASMIL's computational efficiency?\n\n## Suggestions for Improvement\n\n1. **Enhance Sensitivity to Small Tumor Regions**: Future work should investigate strategies to improve ASMIL's sensitivity to small tumor regions, such as incorporating additional loss functions or modifying the attention mechanism.\n\n2. **Automated Hyperparameter Tuning**: Implementing automated hyperparameter tuning methods, such as Bayesian optimization or grid search, could help optimize ASMIL's performance across different datasets.\n\n3. **Efficient Anchor Model Implementation**: Research should focus on optimizing the implementation of the anchor model to reduce computational overhead without compromising performance.\n\n4. **Expanded Evaluation on Non-WSI Datasets**: Additional experiments on diverse MIL benchmarks would further demonstrate the generalizability and applicability of ASMIL.\n\n5. **Clinical Validation of Attention Maps**: Collaborating with clinicians to validate the interpretability and utility of ASMIL's attention maps in real-world scenarios would enhance the paper's impact and relevance to clinical applications."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "8"
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "ASMIL: ATTENTION-STABILIZED MULTIPLE INSTANCE LEARNING FOR WHOLE SLIDE IMAGING",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 PRELIMINARIES AND MOTIVATION",
+    "3.1 NOTATION",
+    "3.2 MULTIPLE INSTANCE LEARNING WITH ATTENTION",
+    "3.3 MOTIVATION",
+    "4 METHODOLOGY",
+    "4.1 STABILIZING ATTENTION DISTRIBUTIONS VIA AN ANCHOR MODEL",
+    "4.2 PREVENTING ATTENTION CONCENTRATION WITH NSF IN THE ANCHOR MODEL",
+    "4.3 MITIGATING OVERFITTING WITH TOKEN RANDOM DROPPING",
+    "4.4 OVERALL TRAINING OBJECTIVE",
+    "5 EXPERIMENTS",
+    "5.1 SUBTYPING PERFORMANCE",
+    "5.2 INTEGRATING THE ANCHOR MODEL AND NSF WITH OTHER MIL METHODS",
+    "5.3 LOCALIZATION",
+    "5.4 ABLATION STUDY",
+    "6 CONCLUSION",
+    "ETHICS STATEMENT",
+    "REPRODUCIBILITY STATEMENT",
+    "A RELATED WORK ON EMA MODELS AND ANCHORING STRATEGIES",
+    "B EXPERIMENTAL DETAILS",
+    "B.1 WSI PRE-PROCESSING",
+    "B.2 DATASETS",
+    "B.3 DATA SPLITS",
+    "C T-SNE VISUALIZATION OF BAG-LEVEL FEATURES",
+    "D MACRO AUC AND MACRO F1 SCORE UNDER CLASS IMBALANCE",
+    "D.1 MACROF 1",
+    "D.2 MACRO-AUC (ROC)",
+    "E PROOF OF THEOREM 1",
+    "F ALTERNATIVE TO NSF IN ANCHOR MODEL",
+    "F.1 SOFTMAX WITH TEMPERATURE SCALING",
+    "F.2 ENTMAX",
+    "G APPLYING NORMALIZED SIGMOID TO THE ONLINE MODEL",
+    "H ALTERNATIVE STABILIZATION METHODS AND WHY THE ANCHOR IS PREFERABLE",
+    "H.1 ALTERNATIVE: PER-SLIDE TEMPORAL ENSEMBLING OF ATTENTION",
+    "H.2 WHY ASMIL'S ANCHOR IS PREFERABLE",
+    "NSF provides selective flattening that softmax cannot match.",
+    "Memory and implementation simplicity.",
+    "I WHY MATCHING THE TEACHER (ANCHOR) MODEL'S SOFTMAX FEATURE VECTOR CANNOT STABILIZE THE ATTENTION DISTRIBUTION",
+    "Therefore",
+    "UNI-VIT-L",
+    "J APPLYING ASMIL TO FEATURES EXTRACTED BY A WSI FOUNDATION MODEL",
+    "K ABLATION STUDY",
+    "K.1 ABLATION OF THE COEFFICIENT β",
+    "K.2 ABLATION STUDY ON NUMBER OF TRAINABLE FEAT TOKENS",
+    "K.3 ABLATION ON ANCHOR MODEL UPDATE",
+    "K.4 IMPACT OF THE RANDOM DROP RATE",
+    "K.5 RANDOM DROP MITIGATES OVERFITTING",
+    "K.6 SIGNIFICANCE TEST ON THE EFFECT OF ONLINE MODEL",
+    "L QUANTITATIVE LOCALIZATION RESULTS AND ADDITIONAL VISUALIZATION",
+    "M COMPUTATIONAL COST",
+    "M.1 COMPARISON OF THE COMPUTATIONAL COST BETWEEN ASMIL AND BASELINE METHODS",
+    "M.2 ADDITIONAL COMPUTATIONAL COST INTRODUCED BY ANCHOR MODEL",
+    "N SURVIVAL PREDICTION",
+    "O EVALUATE ASMIL OVER NON-WSI DATASET",
+    "P ATTENTION DYNAMICS OF DIFFERENT MIL METHODS ON VARIOUS DATASETS",
+    "P.1 CAMELYON-16 DATASET",
+    "P.2 BRACS DATASET",
+    "Q LIMITATIONS AND FUTURE WORK",
+    "R LLM USAGE STATEMENT"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

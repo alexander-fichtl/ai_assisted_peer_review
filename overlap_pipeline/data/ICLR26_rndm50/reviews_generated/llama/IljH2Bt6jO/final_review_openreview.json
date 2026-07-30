@@ -1,0 +1,78 @@
+{
+  "pdfname": "IljH2Bt6jO",
+  "content": {
+    "summary": {
+      "value": "This paper introduces ScreenExplorer, a novel vision-language model (VLM) agent designed for autonomous exploration in real, dynamic, open-ended graphical user interface (GUI) environments. ScreenExplorer is trained through reinforcement learning (RL) in a real GUI environment, enabling sustained interaction and diverse discovery without relying on predefined task structures. The approach combines a world model-inspired curiosity reward with state-change-based exploration rewards, encouraging agent's intrinsic motivation for venturing into novel states. An experience stream distillation mechanism is also designed to systematically accumulate and refine exploratory policies, enabling continual learning from gathered experiences. The proposed method achieves remarkable generalization and diverse exploration capabilities in unseen applications, outperforming static deployment baselines. Overall, ScreenExplorer establishes a new paradigm for GUI agents to progressively learn through autonomous exploration, moving beyond static dataset dependency toward adaptive, lifelong learning in complex digital worlds."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Novel Approach to GUI Exploration**: The paper introduces ScreenExplorer, a vision-language model (VLM) agent designed for autonomous exploration in real, dynamic, open-ended graphical user interface (GUI) environments. This approach is novel and addresses a significant limitation of current GUI agents: their inability to generalize beyond their training data.\n\n2. **Effective Combination of Rewards**: The authors propose a world model-inspired curiosity reward combined with state-change-based exploration rewards. This combination encourages the agent's intrinsic motivation for venturing into novel states, leading to sustained interaction and diverse discovery.\n\n3. **Experience Stream Distillation Mechanism**: The paper presents an experience stream distillation mechanism that systematically accumulates and refines exploratory policies. This enables continual learning from gathered experiences, leading to remarkable generalization and diverse exploration capabilities in unseen applications.\n\n4. **Extensive Evaluations and Ablation Studies**: The authors provide extensive evaluations of ScreenExplorer, demonstrating its effectiveness in achieving generalization and diverse exploration. Additionally, they conduct comprehensive ablation studies to evaluate the effectiveness of the world model and exploration reward components.\n\n5. **Scalable and Effective Alternative to Static Datasets**: The paper demonstrates the potential of exploration-driven learning as a scalable and effective alternative to static datasets. This approach establishes a new paradigm for GUI agents to progressively learn through autonomous exploration, moving beyond static dataset dependency toward adaptive, lifelong learning in complex digital worlds.\n\n6. **Well-written and Clear Presentation**: The paper is well-written, with a clear and concise writing style that effectively conveys the main ideas and contributions. The authors provide a thorough contextualization of their work relative to prior research, highlighting the limitations of current approaches and the significance of their proposed method."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Analysis of the World Model**: While the paper introduces a world model-inspired curiosity reward, it lacks a detailed analysis of the world model's performance and its impact on the agent's exploration. A more thorough evaluation of the world model's effectiveness in approximating environmental state transitions and guiding the agent toward under-explored regions would strengthen the paper.\n\n2. **Insufficient Discussion of Potential Biases**: The paper does not explicitly discuss potential biases in the GUI environment or the agent's exploration. For instance, the agent may exhibit biases toward certain types of actions or states, which could impact its performance and generalization capabilities. A more detailed discussion of potential biases and strategies for mitigating them would be beneficial.\n\n3. **Lack of Comparison to State-of-the-Art Methods**: Although the paper compares ScreenExplorer to several baselines, it does not provide a comprehensive comparison to state-of-the-art methods in the field. A more thorough comparison to recent and relevant work, such as DigiRL (Bai et al., 2024) and DistRL (Wang et al., 2025a), would help to contextualize the contributions of ScreenExplorer.\n\n4. **High-Dimensional Action Space**: The paper mentions that the action space is structured as a dictionary space, supporting various mouse and keyboard interactions. However, it does not provide a detailed analysis of the impact of this high-dimensional action space on the agent's performance and exploration efficiency. A more thorough discussion of the challenges and limitations of the action space would be beneficial.\n\n5. **Computational Cost and Scalability**: The paper mentions that the time cost of sampling and training the VLM agent in a real GUI environment is prohibitively high. A more detailed discussion of the computational cost and potential strategies for improving scalability, such as distributed sampling and training methods, would be helpful.\n\n6. **Limited Evaluation of Generalization Capabilities**: While the paper demonstrates the effectiveness of ScreenExplorer in achieving generalization and diverse exploration, it does not provide a comprehensive evaluation of its generalization capabilities in highly diverse or dynamic environments. A more thorough evaluation of ScreenExplorer's ability to generalize to new and unseen environments would strengthen the paper.\n\n7. **Dependence on Pre-trained Models**: The paper uses pre-trained models, such as Qwen2.5-VL and LLaMA, as the backbone for ScreenExplorer. A more detailed discussion of the dependence on these pre-trained models and potential strategies for reducing this dependence would be beneficial.\n\nBy addressing these weaknesses, the authors can further strengthen their paper and provide a more comprehensive evaluation of ScreenExplorer's capabilities and contributions."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on World Model Effectiveness**: The paper introduces a world model-inspired curiosity reward, but it would be beneficial to provide a more detailed analysis of the world model's performance and its impact on the agent's exploration. How does the world model approximate environmental state transitions, and what is its effectiveness in guiding the agent toward under-explored regions?\n\n2. **Discussion of Potential Biases**: The paper does not explicitly discuss potential biases in the GUI environment or the agent's exploration. Can the authors discuss potential biases and strategies for mitigating them, such as biases toward certain types of actions or states?\n\n3. **Comparison to State-of-the-Art Methods**: Although the paper compares ScreenExplorer to several baselines, a more thorough comparison to state-of-the-art methods in the field, such as DigiRL (Bai et al., 2024) and DistRL (Wang et al., 2025a), would help to contextualize the contributions of ScreenExplorer.\n\n4. **Impact of High-Dimensional Action Space**: The paper mentions that the action space is structured as a dictionary space, supporting various mouse and keyboard interactions. Can the authors provide a more detailed analysis of the impact of this high-dimensional action space on the agent's performance and exploration efficiency?\n\n5. **Computational Cost and Scalability**: The paper mentions that the time cost of sampling and training the VLM agent in a real GUI environment is prohibitively high. What strategies can be employed to improve scalability, such as distributed sampling and training methods?\n\n6. **Evaluation of Generalization Capabilities**: While the paper demonstrates the effectiveness of ScreenExplorer in achieving generalization and diverse exploration, a more thorough evaluation of its generalization capabilities in highly diverse or dynamic environments would strengthen the paper.\n\n7. **Dependence on Pre-trained Models**: The paper uses pre-trained models, such as Qwen2.5-VL and LLaMA, as the backbone for ScreenExplorer. Can the authors discuss potential strategies for reducing dependence on these pre-trained models and improving the agent's ability to learn from scratch?\n\n8. **Ablation Studies on Reward Components**: The paper conducts ablation studies on the exploration reward components, but it would be beneficial to provide more detailed results and analysis. Can the authors provide a more thorough discussion of the impact of each reward component on the agent's performance and exploration?\n\n9. **Experience Stream Distillation Mechanism**: The paper presents an experience stream distillation mechanism, but it would be beneficial to provide more details on its implementation and effectiveness. Can the authors provide a more detailed description of the distillation process and its impact on the agent's performance?\n\n10. **Future Work and Applications**: The paper demonstrates the potential of exploration-driven learning as a scalable and effective alternative to static datasets. Can the authors discuss potential future work and applications of ScreenExplorer, such as its use in other domains or environments?"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "Overall Score: 8\n\nThe paper presents a technically strong approach to training a vision-language model (VLM) agent for autonomous exploration in real, dynamic, open-ended graphical user interface (GUI) environments. The proposed method, ScreenExplorer, combines a world model-inspired curiosity reward with state-change-based exploration rewards and experience stream distillation, leading to remarkable generalization and diverse exploration capabilities in unseen applications.\n\nThe paper exhibits several strengths, including:\n\n1. **Novel Approach**: ScreenExplorer is a novel VLM-based agent designed for autonomous exploration in real, dynamic, open-ended GUI environments.\n2. **Effective Combination of Rewards**: The authors propose a world model-inspired curiosity reward combined with state-change-based exploration rewards, encouraging the agent's intrinsic motivation for venturing into novel states.\n3. **Experience Stream Distillation Mechanism**: The paper presents an experience stream distillation mechanism that systematically accumulates and refines exploratory policies, enabling continual learning from gathered experiences.\n\nHowever, there are some weaknesses and areas for improvement:\n\n1. **Limited Analysis of the World Model**: A more detailed analysis of the world model's performance and its impact on the agent's exploration would strengthen the paper.\n2. **Insufficient Discussion of Potential Biases**: The paper does not explicitly discuss potential biases in the GUI environment or the agent's exploration.\n\nDespite these weaknesses, the paper is technically strong, with excellent evaluation, resources, and reproducibility, and no unaddressed ethical considerations. Therefore, I assign an overall score of 8, indicating a strong accept."
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "000 001 002 TRAINING A VISION-LANGUAGE MODEL FOR DIVERSE EXPLORATION IN OPEN GUI WORLD",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Anonymous authors",
+    "2 RELATED WORK",
+    "2.1 OPEN-WORLD EXPLORATION",
+    "2.2 DIVERSE EXPLORATION BY LM",
+    "2.3 COMPUTER USE AGENTS",
+    "3 FRAMEWORK",
+    "3.1 MODELING EXPLORATION IN GUI AS A MARKOV DECISION PROCESS (MDP)",
+    "3.2 REWARD FUNCTION",
+    "3.3 LEARNING STATE TRANSITIONS WITH A WORLD MODEL",
+    "3.4 TRAINING VLM AGENT WITH GRPO",
+    "4 EXPERIMENT",
+    "4.1 EVALUATION METRICS ON EXPLORATION DIVERSITY",
+    "4.2 EXPLORATION PERFORMANCE",
+    "4.3 TRAINING DYNAMICS",
+    "5 DISCUSSION",
+    "6 CONCLUSION",
+    "486 USE OF LLMS",
+    "A TECHNICAL DETAILS OF GUI ENVIRONMENT AND VLM AGENT",
+    "B TECHNICAL DETAILS OF WORLD MODEL",
+    "C TRAINING PROCESS",
+    "Algorithm 1: RL Training Process of ScreenExplorer",
+    "D EXPERIENCE STREAM DISTILLATION",
+    "E BASELINE SETTINGS",
+    "We employ the following task prompts:",
+    "F ORIGINAL CAPACITY IN VLM",
+    "G ABLATION ON EXPLORATION REWARD COMPONENTS",
+    "w/o Intent-State Alignment",
+    "ScreenExplorer-3B",
+    "H CASE STUDY",
+    "H.1 CASE STUDY OF SCREENEXPLORER-7B",
+    "H.2 CASE STUDY OF SCREENEXPLORER-3B"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

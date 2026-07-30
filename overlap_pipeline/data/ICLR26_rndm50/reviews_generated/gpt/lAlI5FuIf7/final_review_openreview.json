@@ -1,0 +1,110 @@
+{
+  "pdfname": "lAlI5FuIf7",
+  "content": {
+    "summary": {
+      "value": "This paper studies the training–inference mismatch in masked diffusion language models (DLMs) that arises when inference uses planner-guided denoising orders rather than the uniform unmasking assumed by standard training. Using a path-wise KL view of Markov chains, the authors prove that common planners (e.g., greedy ancestral) violate the standard DLM ELBO (§3.2; Proposition 3.1), and derive a general planner-aware ELBO (P-ELBO) that explicitly incorporates planner-based reverse dynamics (§3.3). The framework recovers the uniform ELBO as a special case and subsumes popular heuristics such as MaskGIT-style greedy and P2-style planning (§A.2, §A.4). Building on P-ELBO, they propose Planner-Aware Path Learning (PAPL), an efficient training objective that reweights the masked cross-entropy by planner-derived confidences via a soft-greedy planner with temperature, implemented as a one-line change (Algorithm 1; Figure 1; §3.4). Empirically, PAPL improves protein generation (e.g., +40% relative foldability with better pTM/pAE; Table 1; Figure 3), text generation on OWT (up to 4× MAUVE and substantially lower generative perplexity; Table 2), and code generation (HumanEval pass@1: 18.5→20.8; pass@10: 31.1→38.4; plus infilling gains; Tables 3–4). Ablations show faster convergence, stronger performance across sampling budgets, and robustness to temperature (Figure 2), with sensitivity to the planner temperature τ and weight α (Figure 4). Theoretical derivations and CTMC-based alternatives supporting the P-ELBO are provided in Appendix A."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 3
+    },
+    "strengths": {
+      "value": "Strengths\n1. Precise diagnosis of the training–inference mismatch with a formal counterexample. Proposition 3.1 (§3.2; §A.1.7) rigorously shows that greedy ancestral sampling can violate the vanilla DLM ELBO, using an explicit L=2 construction. This directly challenges the common practice of planning-only-at-inference and motivates the rest of the paper.\n\n2. Unifying, planner-aware ELBO with dual derivations. Proposition 3.2 (§3.3) provides a general P-ELBO that (i) reduces to the standard ELBO for uniform planners (Eθ,ϕ2 vanishes), and (ii) admits both discrete-time and CTMC proofs (§A.1.4, §A.3), strengthening correctness and situating the result within existing DLM theory.\n\n3. Coverage of multiple planners in one framework. The paper specializes P-ELBO to concrete planners—uniform, greedy (Corollary A.9), soft-greedy (Corollary A.10), and P2-style planners with remasking (Proposition A.14; Corollary A.15; §A.4)—including derivations of the planned transition probabilities (Eq. 4; §A.1.6). This turns a collection of heuristics into principled instances of a single objective.\n\n4. A practical training recipe that is minimally invasive and efficient. Planner-Aware Path Learning (PAPL) (Algorithm 1; §3.4) becomes a “one-line” modification of the masked cross-entropy by replacing uniform weights with planner-derived weights (Eq. 7), while reusing uniform masking to avoid path simulation. The stabilization via interpolation (α) is motivated and empirically supported (Figure 5; §C.1–C.2).\n\n5. Strong, cross-domain empirical validation under matched configurations. \n   - Proteins: 40% relative foldability improvement (59.40% vs. 42.43%) with better pTM (0.72→0.65) and much lower pAE (8.97→12.00) at the same 150M scale, while preserving entropy/diversity (Table 1; Figure 3).\n   - Text: consistent MAUVE gains up to 0.067 at T=128 and markedly lower Gen PPL across T (Table 2), with planner comparisons confirming P2-Self superiority (Table 5).\n   - Code: consistent improvements on HumanEval/MBPP (e.g., 18.5→20.8 pass@1; 31.1→38.4 pass@10) and better infilling (Tables 3–4).\n\n6. Robustness and optimization benefits quantified. Figure 2 shows faster convergence, stronger performance across sampling steps, and greater resilience to temperature, both from-scratch and fine-tuning. Hyperparameter sweeps (τ, α) reveal actionable guidance (Figure 4), with sharper planners (lower τ) and moderate α improving outcomes.\n\n7. Analytical insights beyond the main bound. The paper characterizes the form of the optimal planner for a fixed denoiser (Proposition A.8), clarifying how planner mass should align with path likelihoods under the current denoiser. This offers a theoretically grounded target for future planner learning.\n\n8. Methodological transparency via ablations of approximations. The impact of detaching the planner and reusing uniform-masked states is explicitly measured (Table 7), and instability of the pure PAPL loss is documented (Figure 5). This candor clarifies why the final recipe diverges from the exact ELBO while still yielding consistent gains.\n\n9. Thorough experimental and evaluation detail enabling reproducibility. Appendix B provides concrete dataset, training, and evaluation protocols—e.g., precise protein foldability criterion combining pLDDT, pTM, and pAE (B.1), OWT setup and metrics (B.2.1), and code benchmarks/protocols (B.3.1)—facilitating independent verification."
+    },
+    "weaknesses": {
+      "value": "Weaknesses and actionable suggestions\n\n1. Theory–practice gap in the deployed objective\n   - The practical loss departs materially from the derived P-ELBO: it (i) reuses uniformly masked xk rather than planner-driven states, and (ii) drops the Eθ,ϕ2 correction by detaching gradients through the planner (§3.4; §A.2.3). Table 7 quantifies loss-level effects but does not show sample-quality consequences.\n   - Action: Evaluate tighter approximations to the P-ELBO: (a) truncated planned rollouts that simulate j planned steps to form xk (small j), with importance weighting to control variance; (b) a stop-grad schedule that keeps gradients for E2 early and detaches late; (c) k-step “greedy-unroll” on toy lengths where the exact greedy ELBO (Cor. A.9) is tractable, reporting both loss and generation quality.\n\n2. Training–inference planner mismatch remains in experiments\n   - Models are trained with soft-greedy self-planning but evaluated with P2 at inference (§4.1), while the P2-aware ELBO is only analyzed (not used) due to computational cost (§A.4, last paragraph).\n   - Action: Add at least one planner-matched setting: train with a P2-style approximation (e.g., P2-TopK with small k or low η) and decode with the same P2; report a 2×2 matrix (train-planner × test-planner) to confirm alignment benefits beyond soft-greedy→P2 transfer (cf. Table 5).\n\n3. Unclear impact of planner weighting on rare/hard tokens\n   - PAPL emphasizes high-confidence positions (Eq. 7; Fig. 1). While entropy/diversity are reported, they do not reveal long-tail behavior (Table 1; Table 2).\n   - Action: Report token-level (or n-gram) accuracy stratified by frequency bins for text/code, amino-acid usage drift for proteins, and rare-token perplexity to ensure the weighting does not erode recall on infrequent symbols.\n\n4. Instability and lack of stabilization ablations beyond proteins\n   - Pure PAPL is unstable (Figure 5), and stabilization uses interpolation with the vanilla loss (α) and a soft-greedy temperature τ (§3.4; §C.1–C.2). The only hyperparameter sweeps are on protein foldability (Figure 4).\n   - Action: Provide τ and α sweeps and training curves on text and code to establish robustness across domains; consider weight clipping/normalization for wi, or curricula that increase α over training.\n\n5. Statistical rigor and novelty checks in protein evaluation\n   - Only 100 sequences per length are generated (§4.1 Setup), and results are reported without uncertainty; novelty vs. training data is not assessed.\n   - Action: Report confidence intervals via bootstrap per length and on the aggregated “foldability.” Add homology filtering/nearest-neighbor identity to UniRef50 to quantify novelty. Provide per-length distributions of pLDDT/pTM/pAE to rule out length-specific artifacts.\n\n6. Planner-aware evaluation is not isolated from planner quality\n   - Gains are reported under P2 inference (Tables 1–2, 4), which itself is strong (Table 5), making it hard to attribute improvements purely to planner-aware training.\n   - Action: Evaluate under multiple inference planners (uniform ancestral, greedy, probability margin, P2) for the same denoisers, showing whether PAPL consistently improves each decoding rule (beyond the text-only Table 5).\n\n7. Baseline comparability and reporting for code and text\n   - Text: “All checkpoints are reused from prior work” (B.2.1), and AR results are not trained under the same recipe. Code: DLM (0.5B) is compared to AR and edit-flow models at 1.3B with different data/training (Table 4).\n   - Action: Include matched-size AR and diffusion baselines trained under the same corpus/recipe (e.g., a 0.5B AR on FineCode, and a 0.5B MDLM without PAPL). Report decoding budgets (samples per prompt for pass@10), and wall-clock/compute to contextualize pass@k gains.\n\n8. Efficiency claims lack quantitative support\n   - PAPL is claimed to be a “one-line code change” with “no additional computational overhead” (§3.4; §6), but no throughput or memory numbers are provided.\n   - Action: Report training speed (tokens/sec), GPU memory, and step time versus MDLM across domains. If overhead is negligible, numbers will substantiate the claim.\n\n9. Limited validation of P2-style extensions\n   - The P2 generalization is developed theoretically (Proposition A.14; Corollary A.15) but not instantiated due to perceived cost (§A.4).\n   - Action: Implement a lightweight P2-aware training variant (e.g., TopK with small K or stochastic subsetting) and evaluate how much additional alignment it buys over soft-greedy PAPL, especially under high-remasking regimes (vary η as in §A.4).\n\n10. Oracle settings in code infilling can be misleading\n   - Table 3 includes “DLM (0.5B) + PAPL (Oracle length)” with very large gains, which is an unrealistic setting for deployment.\n   - Action: Move oracle results to the appendix and add non-oracle length-control baselines (e.g., learned length predictors or P2-based length heuristics) to quantify practical benefits.\n\n11. No small-scale validation of bound tightness\n   - The paper shows loss values for different approximations (Table 7) but does not measure how training under the exact greedy ELBO (Cor. A.9) versus PAPL changes sample quality when tractable.\n   - Action: On synthetic small-L tasks, compare ELBO-tight training (exact or near-exact) against PAPL, reporting likelihood along the planned path and generation quality, to validate that the approximations preserve benefits.\n\n12. Scope of text evaluation is narrow\n   - Only unconditional OWT is considered; MAUVE gains (Table 2) are still far from AR and may not translate to conditional tasks.\n   - Action: Add at least one conditional text task (e.g., short-form continuation or summarization) to demonstrate that planner-aware training helps when conditioning constrains the path, or clarify limits to unconditional generation."
+    },
+    "questions": {
+      "value": "1. Clarify how planner weights are computed in practice. Algorithm 1 (step 5) sets wi ← Cat(i; Gτϕ(x0, xk)), which depends on the ground-truth x0, whereas the text describes “self-planning” using the denoiser’s confidence (§3.4; Figure 1). Are weights computed from oracle x0 or from Dθ(xk) (e.g., z ~ Dθ)? Please reconcile this and report performance/stability for both choices.\n\n2. Explain the role of the Eθ,ϕ2 term and the detachment choice. Proposition 3.2 introduces E2 when the planner can depend on x0, and §3.4 states “detaching gradients through the planner removes the correction term.” Could you (i) formally show which gradients are detached and why E2 disappears, and (ii) quantify, beyond Table 7, how keeping partial gradients (e.g., Gumbel-softmax planner) affects quality/variance on small-L tasks?\n\n3. Quantify the remaining planner mismatch at training vs inference. You train with soft-greedy self-planning but decode with P2 (§4.1; B.2.1). Can you add a 2×2 matrix (train planner × test planner) on at least one domain (text or code) to isolate alignment benefits (cf. Table 5 only varies inference planners at test time)?\n\n4. Tighter but tractable P-ELBO approximations. In §3.4 you reuse uniform masking and drop E2 for efficiency. Could you test a truncated planned rollout that simulates j planned steps (small j) to sample xk and compares to uniform xk, including generation metrics? This would help assess how much of the gain comes from path simulation versus weighting.\n\n5. Stability beyond proteins. Figure 5 and Figure 4 analyze instability and α/τ only for proteins. Can you provide analogous training curves and sweeps for text and code to establish robustness of α and τ across domains? Did you try weight normalization/clipping of wi or α-curricula, and with what effect?\n\n6. Long-tail effects of planner weighting. Since PAPL upweights high-confidence positions (Eq. 7), can you report token- (or n-gram-) level accuracy split by frequency bins for text/code, and amino-acid usage drift for proteins? This would allay concerns that planner weighting harms rare/hard symbols despite similar entropy/diversity (Tables 1–2).\n\n7. Protein evaluation rigor. In §4.1 you generate 100 sequences per length without uncertainty estimates. Please add CIs (bootstrap) per-length and on the aggregate “foldability,” and a novelty analysis (e.g., nearest-neighbor sequence identity to UniRef50) to confirm gains are not due to memorization. Also show distributions of pLDDT/pTM/pAE by length.\n\n8. P2-specific analysis. Appendix A.4 derives a P2-aware ELBO but it is not instantiated due to cost. Could you implement a lightweight P2-aware training variant (e.g., P2-TopK with small K or stochastic subsetting, small η) and compare against PAPL under matched P2 inference? Also report the fraction of remasking events used at inference under your P2 settings.\n\n9. Efficiency claim substantiation. You state “one-line change” and “no additional overhead” (§3.4; §6). Please report training throughput (tokens/s), per-step wall-clock, and memory vs. MDLM across domains. If weights are computed from Dθ(xk), confirm no extra forward passes are needed.\n\n10. Exact/near-exact bound validation at small scale. On a synthetic small-L task where Corollary A.9 (greedy ELBO) is tractable, could you compare training under the exact greedy ELBO vs. PAPL vs. vanilla, reporting both the bound value and generation quality along the planned path?\n\n11. Gen PPL protocol details. In Table 2, AR† has Gen PPL ≈ 1.21 while diffusion models have 24–300. Please detail (B.2.1): the scoring model/tokenizer, normalization (per-token vs per-byte), and temperature/decoding settings used for Gen PPL to ensure scale comparability.\n\n12. Statistical stability of MAUVE. For Table 2 and Table 5, please report MAUVE variability (seeds or bootstraps). Are gains like 0.067 vs 0.057 at T=128 consistently reproducible?\n\n13. Code evaluation specifics. For Tables 3–4 and Table 6, please specify: the number of samples per prompt for pass@10, decoding budgets (P2 parameters), and whether pass@k uses standard unbiased estimators. Also confirm training steps and compute are matched between DLM and DLM+PAPL.\n\n14. Oracle length results. Table 3 includes “DLM (0.5B) + PAPL (Oracle length)” with very large improvements. Could you move oracle numbers to the appendix and provide non-oracle length-control baselines (e.g., learned length predictor or P2-based heuristics) to quantify deployable benefits?\n\n15. Interplay with mask-ratio weighting in code training. Open-dLLM uses inverse mask-ratio weighting (B.3.1), and PAPL introduces 1/(L−k)(1+αwi) (Alg. 1). Please clarify how these interact (multiplicative/additive) and whether their combination biases toward short/long masked spans.\n\n16. Choice of k sampling distribution. You sample k ∼ Unif([0:L−1]) (Alg. 1), while A.3.4 argues ELBO independence of the time schedule. Did you test alternative k schedules (e.g., CTMC-induced or curriculum) and observe any material effect on stability/performance?\n\n17. Planner weight calibration. Proposition A.11 shows Lτ decreases as τ decreases (sharper planner). Beyond Figure 4 (proteins), have you explored adaptive τ schedules (e.g., higher early, lower late) or temperature tied to model calibration? Any evidence of over-sharpening harming tail recall?\n\n18. Measuring alignment on-path. Can you report, during training, the fraction of planner-selected positions that match the ground-truth token at each step (i.e., agreement along the denoising path)? This would directly track how PAPL improves path consistency relative to vanilla.\n\n19. Additional protein sanity checks. Since ESMFold is the evaluator, could you add secondary measures (e.g., predicted secondary structure distributions, contact map statistics) to ensure gains are not artifacts of a single model’s inductive biases?\n\n20. Reproducibility artifacts. The paper mentions code/model release upon publication (Ethics/Replicability block). For review, can you share: (i) exact α, τ, and planner parameters per domain; (ii) seeds and data splits; (iii) inference-time settings for P2 (η, TopK), to facilitate independent verification?"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "Ethics review needed: Inappropriate Potential Applications & Impact (e.g.",
+        "human rights concerns)\n\nRationale (with pointers):\n- The work explicitly targets protein sequence generation with strong foldability (Table 1",
+        "§4.1",
+        "Figure 3)",
+        "which raises dual‑use/biosecurity risks if models or sequences are released.\n- The Ethics Statement acknowledges potential misuse “e.g.",
+        "generating harmful biological sequences or insecure code” and plans to release code/models",
+        "but does not specify concrete safeguards (access controls",
+        "sequence screening",
+        "user vetting).\n\nSuggested ethics reviewer expertise:\n- Biosecurity and dual‑use risk in computational protein design\n- Computational biology/protein generation\n- Responsible model release and access governance"
+      ]
+    },
+    "rating": {
+      "value": 7
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "PLANNER AWARE PATH LEARNING IN DIFFUSION LANGUAGE MODELS TRAINING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Q . How should we adapt the training of denoisers in diffusion language models when inference inevitably proceeds under a planner?",
+    "2 BACKGROUND AND PRELIMINARIES",
+    "2.1 MASKED DIFFUSION LANGUAGE MODELS",
+    "3 METHOD: PATH LEARNING",
+    "3.1 REVERSE DYNAMICS WITH A PLANNER",
+    "3.2 GREEDY ANCESTRAL VIOLATES THE VANILLA DLM ELBO",
+    "3.4 EFFICIENT IMPLEMENTATION:PAPL",
+    "3.3 PLANNER-AWARE EVIDENCE LOWER BOUND",
+    "Algorithm 1 PAPL Training",
+    "4 EXPERIMENTS",
+    "4.1 PROTEIN SEQUENCE GENERATION",
+    "4.2 TEXT GENERATION",
+    "4.3 CODE GENERATION",
+    "4.4 ABLATION",
+    "5 RELATED WORK",
+    "6 CONCLUSION",
+    "810 APPENDIX OUTLINE",
+    "A THEORETICAL DERIVATIONS AND PROOFS",
+    "Corollary A.4. Inequality for Marginalization of Discrete Distributions:",
+    "A.1.2 DISCRETE TIME MARKOV CHAINS",
+    "A.1.3 APPLICATION TO THE ELBO",
+    "A.1.4 PROOF OF PROPOSITION 3.2: A SIMPLE, DISCRETE TIME PERSPECTIVE",
+    "A.1.5 FORM OF THE OPTIMAL PLANNER FOR A FIXED DENOISER: PROOF OF PROPOSITION A.8",
+    "A.1.7 PROOF OF PROPOSITION 3.1 (GREEDY ANCESTRAL VIOLATES THE VANILLA ELBO)",
+    "A.2 INSTANTIATIONS",
+    "A.2.1 PROOF OF COROLLARY A.9 (ELBO FOR GREEDY PLANNER)",
+    "A.2.2 PROOF OF COROLLARY A.10 (ELBO FOR SOFTMAX PLANNER)",
+    "A.2.3 CONNECTION BETWEEN COROLLARY A.10 AND THE PAPL LOSS EQUATION 7",
+    "A.2.4 COMPARING RELATIVE SIZE OF THE APPROXIMATE LOSSES",
+    "A.3 ALTERNATIVE PROOF OF PROPOSITION 3.2: CONTINUOUS TIME MARKOV CHAINS PERSPECTIVE",
+    "A.3.1 TIME-INHOMOGENEOUS CONTINUOUS TIME MARKOV CHAINS (CTMC)",
+    "A.3.2 DLMS IN THE CTMC FRAMEWORK",
+    "Algorithm 3 Gillespie Sampler for Masked Diffusion Models",
+    "A.3.3 SETUP AND ELBO IN THE CTMC FRAMEWORK",
+    "1777 A.3.4 TIME INDEPENDENT FORMULATION OF THE ELBO",
+    "A.4 GENERALIZATION TO PLANNERS WITH REMASKING (P2-STYLE)",
+    "Algorithm 4 Gillespie Sampler with a P2-Planner",
+    "A.4.1 DERIVING THE TRANSITION PROBABILITIES",
+    "A.4.2 MARKOV CHAIN SETUP AND ELBO FOR P2 PLANNER",
+    "A.5 OTHER SAMPLING METHODS WITH MULTIPLE DENOISING POSITIONS AND/OR REMASKING",
+    "B EXPERIMENTAL DETAILS",
+    "B.1 PROTEIN SEQUENCE GENERATION",
+    "2097 B.2 TEXT GENERATION",
+    "2099 B.2.1 SETUP",
+    "2148 B.2.2 ABLATION OF SAMPLING METHODS",
+    "B.3 CODE GENERATION",
+    "B.3.1 SETUP",
+    "B.3.2 ABLATION OF SAMPLING METHODS",
+    "C ADDITIONAL RESULTS",
+    "C.1 UNSTABLE TRAINING WITH PURE PAPL LOSS",
+    "C.2 COMPARISON OF TRAINING CURVES WITH VANILLA MDM LOSS",
+    "C.3 EMPIRICAL ESTIMATION OF THE EFFECT OF THE APPROXIMATION STEPS",
+    "C.4 HUMANEVAL PERFORMANCE ANALYSIS"
+  ],
+  "images_used": 5,
+  "model": "gpt-5"
+}

@@ -1,0 +1,81 @@
+{
+  "pdfname": "xmsbFPmsOz",
+  "content": {
+    "summary": {
+      "value": "The paper introduces Marginal Girsanov Reweighting (MGR), a method that addresses the variance explosion problem in classical Girsanov reweighting for long-horizon dynamics. MGR estimates transition-based density ratios by marginalizing over intermediate paths rather than relying on pathwise ratios, implementing an iterative learning approach that combines short-lag Girsanov weights with neural classifier-based ratio estimation. The authors demonstrate MGR's effectiveness in two applications: recovering unbiased thermodynamic and kinetic properties from biased molecular dynamics simulations and enabling efficient Bayesian parameter inference for stochastic differential equations with temporally sparse observations. Experimental results show that MGR maintains stable effective sample sizes across long lag times, accurately recovers eigenfunctions and implied timescales, and outperforms traditional Girsanov reweighting which fails at longer time horizons. The approach enables reliable inference in domains where traditional estimators break down, particularly for long timescales and large systems. MGR provides a practical framework for reweighting biased simulations in molecular dynamics and parameter inference in stochastic systems."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Novel mathematical formulation of marginal transition density ratios**: The paper makes a significant conceptual advance by recognizing that the transition density ratio can be expressed as the expectation of pathwise Girsanov weights over intermediate paths (Eq. 3 in Section 4.1). This insight directly addresses the \"path dependence\" limitation of classical Girsanov reweighting, where weights are tied to specific trajectories rather than representing true marginal quantities. The derivation in Appendix B provides rigorous theoretical justification for this approach.\n\n2. **Effective solution to the variance explosion problem**: The paper identifies and solves the core limitation of classical Girsanov reweighting - the exponential variance growth with trajectory length (Appendix A). Unlike previous approaches that attempt to work with the unstable pathwise weights, MGR fundamentally changes the estimation target to marginal ratios, which inherently avoid the accumulation of noise terms that cause variance explosion.\n\n3. **Creative iterative composition framework**: The three-step training algorithm (Figure 2) that progressively builds long-lag marginal ratios from short-lag Girsanov weights represents a novel methodological contribution. This approach cleverly combines the mathematical foundation of Girsanov theory with neural ratio estimation, creating a scalable solution that maintains stability across increasing time horizons where traditional methods fail.\n\n4. **Demonstrated cross-domain applicability with concrete results**: The paper successfully applies MGR to two fundamentally different domains - molecular dynamics (with alanine dipeptide and four-well potential) and Bayesian inference for SDEs (Graph OU and Lotka-Volterra systems). The experimental results consistently show MGR maintaining high effective sample sizes and accurate kinetic properties at long lag times where classical Girsanov reweighting becomes unusable (e.g., Figure 4c where GR fails to construct a convergent Markov state model beyond 400 fs).\n\n5. **Practical implementation with actionable guidelines**: The paper provides specific, implementable guidance for practitioners, including the short-lag selection criterion (relative ESS in range 0.3-0.5) and the weighted cross-entropy formulation for ratio estimation. These practical contributions make the method immediately applicable to real-world problems, as demonstrated by the successful implementation with OpenMM for molecular dynamics simulations."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Lack of theoretical error propagation analysis**: The iterative nature of MGR creates a critical gap in understanding how errors accumulate across iterations. While the method builds on short-lag estimates to construct long-lag ratios, the paper provides no theoretical bounds on error propagation. This omission makes it difficult to determine when the method becomes unreliable as lag time increases. For instance, in Figure S.11 (Appendix F.2), the authors observe that larger short-lag τ values produce less stable results, but without theoretical analysis, it's unclear whether this is due to accumulated approximation error or variance from insufficient training data. Adding a theoretical analysis of how errors propagate through the iterative process would strengthen the paper's foundation and provide practical guidance on the maximum reliable lag time for a given problem.\n\n2. **Insufficient exploration of failure cases**: The paper demonstrates success in four specific scenarios but lacks systematic investigation of failure modes. For example, when the perturbation between reference and target dynamics is substantial (as hinted in Appendix F.3 where ESS decays sharply with parameter deviation), MGR's performance degrades, but the paper doesn't characterize the threshold where the method becomes unreliable. The authors should include experiments where they deliberately increase the perturbation magnitude until MGR fails, and identify the critical ESS value below which the method breaks down. This would provide concrete guidance for practitioners on when MGR is applicable.\n\n3. **Limited comparison with alternative variance reduction techniques**: While the paper thoroughly compares MGR against classical Girsanov reweighting (GR), it omits comparisons with other established variance reduction methods in path space. For instance, sequential Monte Carlo (SMC) methods (Andrieu et al., 2010) and adaptive importance sampling techniques have been developed specifically to address variance explosion in path space. Without comparing against these alternatives, it's difficult to assess whether MGR's improvements come from the marginalization approach specifically or simply from using neural density ratio estimation. The authors should include comparisons with SMC and other relevant techniques to better position MGR within the broader variance reduction landscape.\n\n4. **Inadequate scalability analysis for high-dimensional systems**: The molecular dynamics experiments are limited to low-dimensional systems (1D potential and alanine dipeptide with just 2 reaction coordinates). The paper doesn't explore how MGR performs as dimensionality increases, which is critical for real-world molecular dynamics applications. The variance analysis in Appendix A shows that Girsanov weight variance grows with dimension d, but MGR's performance in high dimensions remains unexplored. The authors should include experiments with larger molecular systems (e.g., proteins with hundreds of atoms) to demonstrate whether the neural classifier can effectively learn marginal ratios in high-dimensional spaces, where the curse of dimensionality might limit performance.\n\n5. **Lack of computational efficiency characterization**: The iterative training procedure (Algorithm 1) suggests potential computational costs, but the paper provides no analysis of training time, memory requirements, or inference speed compared to baseline methods. For practical adoption, readers need to understand the trade-off between MGR's improved accuracy and computational cost. The authors should report wall-clock times for training and inference across different lag times and compare with GR and other methods to establish when the accuracy gains justify the computational investment."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions for Clarification\n\n1. **Error propagation analysis across iterations**: The iterative nature of MGR raises important questions about error accumulation. While Figure S.11 (Appendix F.2) shows empirical results for different short-lag choices, could you provide theoretical bounds or more detailed empirical evidence on how estimation errors propagate through iterations? Specifically, how does the error in $w_{(k-1)\\tau}$ affect the accuracy of $w_{k\\tau}$, and is there a point where accumulated errors make the method unreliable regardless of good short-lag weights?\n\n2. **High-dimensional scalability limits**: Your experiments focus on low-dimensional systems (1D/2D molecular dynamics, 2D SDEs). Could you elaborate on expected performance in higher-dimensional settings? For instance, how would MGR perform on full molecular systems with hundreds of degrees of freedom, where the curse of dimensionality might severely impact the neural ratio estimator? Are there specific modifications needed for such cases?\n\n3. **Comparison with established reweighting methods**: While you compare MGR with classical Girsanov reweighting, how does MGR perform relative to standard techniques like WHAM or MBAR in molecular dynamics? Could you provide a direct comparison on one of your benchmark systems to better contextualize MGR's advantages over existing methods that are already designed to handle multiple biased simulations?\n\n4. **Practical limits of drift deviation**: Section 4.9 mentions that \"when the perturbed drift deviates substantially from the reference dynamics, GR weights become unstable.\" Could you quantify this limitation with empirical evidence? For example, what magnitude of drift difference (e.g., relative to the diffusion coefficient) typically causes MGR to fail, and are there strategies to extend this range (e.g., adaptive short-lag selection or intermediate reference parameters)?\n\n## Constructive Suggestions\n\n1. **Parameter space efficiency**: In the Bayesian inference experiments, you use a grid of 225 candidate parameters. For higher-dimensional parameter spaces, this approach becomes computationally prohibitive. Could you discuss how MGR might be integrated with adaptive sampling techniques (e.g., sequential Monte Carlo) to efficiently explore parameter spaces without exhaustive grid evaluation?\n\n2. **Computational cost analysis**: While MGR addresses the variance issue of classical GR, it requires multiple training iterations. Could you provide a more detailed comparison of computational costs between MGR and GR for long time horizons? Specifically, how does the training time scale with the target lag time, and at what point does the additional computational cost become justified by the improved stability?\n\n3. **Broader application scope**: The paper focuses on molecular dynamics and SDE parameter inference, but the approach seems more general. Could you elaborate on other potential applications where MGR could be valuable, such as reinforcement learning (e.g., off-policy evaluation with long horizons) or other domains where path-space reweighting is needed?\n\nThese questions target specific limitations that could strengthen the paper's impact if addressed. Responses could significantly improve my assessment of the method's practical utility and theoretical foundation, particularly regarding scalability to more complex systems and clearer guidance on when the method is applicable."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "MARGINAL GIRSANOV REWEIGHTING: STABLE VARIANCE REDUCTION VIA NEURAL RATIO ESTIMATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 PRELIMINARIES",
+    "3.1 BROWNIAN DYNAMICS AND MIXING",
+    "3.2 GIRSANOV REWEIGHTING THEORY",
+    "4 MARGINAL GIRSANOV REWEIGHTING",
+    "4.1 SETUP",
+    "4.2 TRAINING ALGORITHM",
+    "4.3 CLASSIFIER-BASED DENSITY RATIO ESTIMATION",
+    "5.1.2 ALANINE DIPEPTIDE",
+    "5.2 BAYESIAN INFERENCE OF SDE PARAMETERS",
+    "5.2.1 GRAPH ORNSTEIN-UHLENBECK",
+    "5.2.2 STOCHASTIC LOTKA-VOLTERRA",
+    "A VARIANCE OF GIRSANOV REWEIGHTING",
+    "B RATIO OF TRANSITION DENSITY",
+    "C CONSISTENCY OF THE APPROXIMATE ρ kτ ( x, y )",
+    "D TRAINING ALGORITHM",
+    "Algorithm 1 Marginal Girsanov Reweighting (MGR)",
+    "Step 3: Train density ratio estimator",
+    "E EXPERIMENTAL DETAILS",
+    "E.1 MOLECULAR DYNAMICS",
+    "E.1.1 1 DIMENSIONAL FOUR WELL",
+    "E.1.2 ALANINE DIPEPTIDE",
+    "E.2 BAYESIAN INFERENCE OF SDE PARAMETERS",
+    "E.2.1 GRAPH ORNSTEIN-UHLENBECK",
+    "E.2.2 STOCHASTIC LOTKA-VOLTERRA",
+    "E.3 MODEL ARCHITECTURE",
+    "F ABLATION",
+    "F.1 NEURAL RATIO ESTIMATION",
+    "F.2 LAGTIME CHOSEN",
+    "F.3 THE RANGE OF CANDIDATE PARAMETERS",
+    "F.4 MODEL ARCHITECTURE",
+    "Sum of the First 5 Eigenvalues"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

@@ -1,0 +1,80 @@
+{
+  "pdfname": "gpeXJ9UI07",
+  "content": {
+    "summary": {
+      "value": "The paper proposes LOTION, a novel framework for optimizing neural networks under quantized objectives. The main goal of LOTION is to address the challenges of training neural networks with quantized loss functions, which are piece-wise constant and yield zero gradients almost everywhere. LOTION replaces the raw quantized loss with its expectation under unbiased randomized-rounding noise, resulting in a continuous, almost-everywhere differentiable surrogate objective. This approach preserves all global minima of the original quantized problem and provides theoretical guarantees of convergence. The authors derive a closed-form expression for the second-order approximation of the obtained loss and show that it can be interpreted as a curvature-aware regularizer. The paper presents empirical results on synthetic testbeds and large language models, demonstrating that LOTION outperforms standard QAT and PTQ methods at various precision levels, including INT4, INT8, and FP4. Overall, LOTION offers a principled and effective approach to optimizing neural networks under quantized objectives."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "The paper has several strengths:\n\n1. **Novel and Principled Approach**: The authors introduce LOTION, a novel framework that replaces the raw quantized loss with its expectation under unbiased randomized-rounding noise. This approach is principled, theoretically sound, and provides a detailed analysis of its properties.\n\n2. **Theoretical Guarantees**: The paper provides theoretical guarantees of convergence and preserves all global minima of the original quantized problem. The authors derive a closed-form expression for the second-order approximation of the obtained loss and show that it can be interpreted as a curvature-aware regularizer.\n\n3. **Extensive Empirical Evaluations**: The paper presents extensive empirical results on synthetic testbeds and large language models, demonstrating that LOTION outperforms standard QAT and PTQ methods at various precision levels, including INT4, INT8, and FP4.\n\n4. **Clear Writing and Presentation**: The paper is well-written, with clear and concise presentation of the proposed framework, theoretical foundations, and empirical evaluations.\n\n5. **Originality and Significance**: The paper brings significant originality of ideas and execution, addressing an important challenge in machine learning. The results presented are valuable to share with the broader NeurIPS community, providing a new perspective on the challenge of optimizing neural networks under quantized objectives.\n\n6. **Curvature-Aware Regularization**: The paper provides a transparent interpretation of how randomized rounding stabilizes quantized training by relating quantization noise to second-order structure.\n\n7. **Applicability to Various Precision Levels**: LOTION demonstrates effectiveness across various precision levels (INT4, INT8, FP4) and model sizes (150M and 300M parameter language models)."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Analysis of Hyperparameter Sensitivity**: The paper could benefit from a more comprehensive analysis of hyperparameter sensitivity. The authors mention that they used a grid search for hyperparameters, but they do not provide detailed results on how different hyperparameters affect the performance of LOTION.\n\n2. **Comparison to Recent Works**: The paper could benefit from a comparison to more recent works in the field of quantized training. For example, the authors could compare LOTION to NIPQ (Shin et al., 2023) or other recent methods that use noise-based proxies for quantization-aware training.\n\n3. **Theoretical Analysis of Randomized Rounding**: While the paper provides a detailed analysis of the theoretical properties of LOTION, it could benefit from a more in-depth analysis of the randomized rounding scheme. For example, the authors could provide more details on the optimal choice of noise distribution for randomized rounding.\n\n4. **Activation Quantization**: The paper focuses on weight quantization, but it does not explore activation quantization. Extending LOTION to activation quantization could further improve compute and memory efficiency.\n\n5. **Convergence Guarantees**: While the paper provides theoretical guarantees of convergence, it could benefit from a more detailed analysis of the convergence rate of LOTION. This could help to better understand the practical implications of the method.\n\n## Suggestions for Improvement\n\n1. **Additional Experiments**: The authors could perform additional experiments to evaluate the sensitivity of LOTION to different hyperparameters, such as learning rate, batch size, and number of epochs.\n\n2. **Comparison to More Recent Works**: The authors could compare LOTION to more recent works in the field of quantized training, such as NIPQ (Shin et al., 2023) or other noise-based methods.\n\n3. **Theoretical Analysis of Randomized Rounding**: The authors could provide a more in-depth analysis of the randomized rounding scheme, including the optimal choice of noise distribution and its implications for convergence.\n\n4. **Extension to Activation Quantization**: The authors could explore extending LOTION to activation quantization, which could further improve compute and memory efficiency.\n\n5. **Convergence Rate Analysis**: The authors could provide a more detailed analysis of the convergence rate of LOTION, which could help to better understand the practical implications of the method."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Hyperparameter Sensitivity Analysis**: The authors mention using a grid search for hyperparameters, but a more comprehensive analysis of hyperparameter sensitivity would be beneficial. How do different hyperparameters, such as learning rate and batch size, affect the performance of LOTION?\n\n2. **Comparison to Recent Works**: It would be helpful to compare LOTION to more recent works in quantized training, such as NIPQ (Shin et al., 2023). How does LOTION differ from and perform compared to these recent methods?\n\n3. **Theoretical Analysis of Randomized Rounding**: A more in-depth analysis of the randomized rounding scheme would be beneficial. What is the optimal choice of noise distribution for randomized rounding, and what are its implications for convergence?\n\n4. **Activation Quantization**: The paper focuses on weight quantization; exploring activation quantization could further improve compute and memory efficiency. How can LOTION be extended to activation quantization?\n\n5. **Convergence Rate Analysis**: A more detailed analysis of LOTION's convergence rate would help understand its practical implications. What are the theoretical and empirical convergence rates of LOTION compared to other methods?\n\n6. **Noise Distribution**: The authors use randomized rounding noise; are there other noise distributions that could provide better results? What are the implications of using different noise distributions on the performance of LOTION?\n\n7. **Large-Scale Experiments**: While the authors perform experiments on 150M and 300M parameter models, larger-scale experiments (e.g., 1B parameter models) could further validate the effectiveness of LOTION.\n\n8. **Ablation Study**: An ablation study on the components of LOTION (e.g., the effect of randomized rounding and curvature-aware regularization) could provide deeper insights into its performance.\n\n## Suggestions for Improvement\n\n1. **Additional Experiments**: Perform additional experiments to evaluate LOTION's sensitivity to different hyperparameters and its performance on larger-scale models.\n\n2. **Comparative Analysis**: Compare LOTION to more recent works in quantized training to demonstrate its advantages and disadvantages.\n\n3. **Theoretical Analysis**: Provide a more in-depth analysis of the randomized rounding scheme and its implications for convergence.\n\n4. **Extension to Activation Quantization**: Explore extending LOTION to activation quantization to further improve compute and memory efficiency.\n\n5. **Convergence Rate Analysis**: Provide a more detailed analysis of LOTION's convergence rate to better understand its practical implications.\n\nBy addressing these questions and suggestions, the authors can provide further clarification, improve their method, and strengthen their paper."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "LOTION: SMOOTHING THE OPTIMIZATION LANDSCAPE FOR QUANTIZED TRAINING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "1.1 RELATED WORK",
+    "2 PROBLEM SETTING",
+    "2.1 FINE-GRAINED SHARED-SCALE INTEGER QUANTIZATION",
+    "3 LOTION: SMOOTHING THE LOSS",
+    "3.1 RANDOMIZED ROUNDING",
+    "3.2 WARM-UP: QUADRATIC LOSSES",
+    "3.3 GENERAL CASE AND A GAUSS-NEWTON REGULARIZER",
+    "4 EXPERIMENTS",
+    "4.1 QUADRATIC LOSS",
+    "4.2 LINEAR NETWORK",
+    "4.3 LARGE LANGUAGE MODELS",
+    "4.3.1 150M MODELS",
+    "4.3.2 300M MODELS",
+    "4.3.3 FP4 QUANTIZATION",
+    "5 DISCUSSION AND LIMITATIONS",
+    "A APPENDIX",
+    "A.1 VISUALIZATION OF LOTION",
+    "A.2 ADDITIONAL DETAILS ON RANDOMIZED ROUNDING",
+    "A.2.1 PROOF FOR LEMMA 1",
+    "700 A.2.2 PROOF FOR LEMMA 2",
+    "A.2.3 PROOF FOR LEMMA 3",
+    "A.2.4 EXAMPLE: SHARED-SCALE INTEGER ROUNDING",
+    "A.3 ADDITIONAL RESULTS FOR SYNTHETIC EXPERIMENTS",
+    "A.4 ADDITIONAL RESULTS FOR LARGE LANGUAGE MODEL EXPERIMENTS",
+    "A.4.1 150M-PARAMETER MODEL",
+    "A.4.2 300M-PARAMETER MODEL",
+    "A.4.3 FP4 QUANTIZATION",
+    "A.5 HYPERPARAMETERS",
+    "A.5.1 LINEAR REGRESSION",
+    "A.5.2 TWO LAYER NETWORK",
+    "A.5.3 LANGUAGE MODEL"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

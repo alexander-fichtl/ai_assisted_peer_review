@@ -1,0 +1,72 @@
+{
+  "pdfname": "GP5RHZnEsw",
+  "content": {
+    "summary": {
+      "value": "This paper addresses the \"overthinking\" problem in Large Reasoning Models (LRMs), where models generate unnecessarily long and redundant reasoning paths even for simple questions. The authors identify a fundamental limitation in existing RL-based efficient reasoning methods: when length penalties are incorporated, the group-relative advantage calculation can assign negative advantages to correct but lengthy answers, actively discouraging valid reasoning. To solve this, they propose Decoupled Reward Policy Optimization (DRPO), a novel framework that decouples learning signal calculation for correct and incorrect answers, ensuring length penalties only reduce but never reverse positive signals for correct reasoning. DRPO integrates an optimized positive data distribution under KL regularization into a discriminative objective, with a closed-form solution enabling efficient computation using only on-policy data. The method achieves significant reasoning length reduction (77% for 1.5B models on simple questions) with minimal performance degradation (only 1.1% loss), substantially outperforming six state-of-the-art baselines. Experiments across multiple model sizes (1.5B, 7B, 8B) and reasoning tasks (mathematical and logical puzzles) demonstrate DRPO's consistent superiority in balancing efficiency and accuracy. The approach is generalizable beyond length rewards to incorporate other preference rewards for positive data."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Fundamental Insight into RL-Based Reasoning Limitations**: The paper identifies a critical, previously overlooked flaw in existing RL-based efficient reasoning methods: when length penalties are incorporated into group-relative advantage calculations, correct but lengthy responses can receive negative advantages (as clearly demonstrated in Figure 1). This insight explains why prior methods struggle to balance efficiency and accuracy—a problem that has plagued the field but lacked proper diagnosis.\n\n2. **Theoretically Grounded Framework with Closed-Form Solution**: DRPO's innovation isn't merely empirical but stems from a rigorous theoretical foundation. The authors derive a closed-form solution for the optimized positive data distribution under KL regularization (Section 4.2), which enables efficient computation using only on-policy data. This mathematical contribution is non-trivial and directly addresses the identified limitation.\n\n3. **Decoupling Mechanism as a General Solution**: The core idea of decoupling learning signals for positive and negative samples (rather than normalizing across all responses) is a conceptually clean solution that ensures length penalties never push correct answers into negative territory. This approach is fundamentally different from existing methods and provides a principled way to integrate multiple reward types while preserving learning signals.\n\n4. **Empirical Superiority Across Multiple Dimensions**: The paper demonstrates consistent positive Accuracy Efficiency Scores (AES) across model sizes (1.5B, 7B, 8B), while all baselines yield negative scores (Table 1). This metric, which explicitly balances performance and efficiency, shows DRPO achieves 77% length reduction with only 1.1% performance loss on simple questions—a substantially better trade-off than any baseline.\n\n5. **Compelling Case Studies**: The detailed reasoning path comparisons (Figures 8-10) provide concrete evidence of DRPO's effectiveness. For instance, on a simple \"2+3\" question, DRPO achieves 6× token reduction (526 vs. 89 tokens) while eliminating redundant reflections and repeated answers, yet preserving correct reasoning—a direct demonstration of the method's practical impact."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Limited model size evaluation**: The experiments are confined to 1.5B, 7B, and 8B models, while state-of-the-art reasoning models (e.g., DeepSeek-R1, Qwen-3) often operate at larger scales. The authors acknowledge this limitation in section 5.2: \"A limitation of this study is that experiments were confined to 1.5B and 7B models due to computational constraints.\" This is significant because larger models may exhibit different overthinking behaviors and the λ parameter's optimal value might scale differently with model capacity. The authors should expand experiments to include 13B+ models or provide theoretical justification for why the approach would generalize to larger scales.\n\n2. **Narrow task domain focus**: The evaluation focuses almost exclusively on mathematical reasoning tasks (GSM8K, MATH-500, OlympiadBench, AIME), with only a brief logic puzzle experiment in the appendix. This doesn't fully demonstrate the method's applicability to broader reasoning domains like commonsense reasoning (e.g., ARC), scientific reasoning (e.g., SciQ), or multi-step planning tasks. The authors should include more diverse reasoning benchmarks to strengthen claims about generalizability.\n\n3. **Lack of adaptive λ strategy**: While the paper explores different fixed λ values (0.5, 0.2, 0.1), it doesn't investigate how to dynamically adjust λ based on problem difficulty or question characteristics. Figure 4 shows that performance degradation increases with problem difficulty, suggesting that a one-size-fits-all λ is suboptimal. The authors could develop a mechanism to automatically adjust λ based on features like expected solution length or problem complexity metrics.\n\n4. **Limited exploration of reward design alternatives**: The ablation study in Appendix A.5 examines only three reward designs (linear, concave, cosine) without analyzing why the linear design performs best or how to optimally design length rewards for specific problem types. Given that Table 2 shows various reward formulations in the literature, a more systematic investigation of reward design principles would strengthen the method's practical utility.\n\n5. **No comparison with non-RL approaches**: The paper focuses solely on RL-based methods but doesn't compare with supervised fine-tuning approaches that might address overthinking (e.g., token-level compression or step-level filtering). This omission makes it difficult to assess whether the benefits of DRPO stem from the RL framework itself or could be achieved through simpler supervised methods. Including comparisons with SFT-based efficient reasoning approaches would provide a more comprehensive evaluation."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **Generalization to other reward types**: The abstract mentions DRPO can \"incorporate other preference rewards of positive data beyond length,\" but the paper only demonstrates length rewards. Could you provide concrete examples or theoretical justification for how this would work with other reward types (e.g., diversity rewards, step efficiency rewards)? A brief explanation of how the framework would accommodate different reward functions would strengthen the claim about the method's generality.\n\n2. **Adaptive λ strategy**: In Section 5.3, you mention adapting λ to question difficulty as a promising direction. Given Figure 4 shows different performance degradation across difficulty levels (with easier problems benefiting more from smaller λ), could you share preliminary insights on implementation? For instance, would using the base model's pass@1 as a difficulty proxy for λ adaptation be viable, and what performance gains might this yield?\n\n3. **Real-world computational impact**: While the paper demonstrates significant token reduction (e.g., 77% for simple questions), token count doesn't directly translate to inference time or computational cost. Could you provide measurements of actual inference time reduction or GPU memory savings with DRPO? This would better establish the practical value of the approach for deployment scenarios.\n\n4. **Error analysis for difficult problems**: Tables 4-6 show DRPO still experiences performance degradation on AIME problems (though less than baselines). Could you analyze what specific error patterns emerge with DRPO on these challenging problems? Does the method fail in particular reasoning domains or patterns that might be addressed with targeted improvements?\n\n5. **Theoretical convergence guarantees**: The paper provides a rigorous derivation of the closed-form solution, but are there theoretical guarantees comparing DRPO to GRPO in terms of convergence rate or final performance bounds? Such guarantees would strengthen the theoretical contribution beyond the current empirical validation.\n\n6. **Comparison to non-RL efficient reasoning methods**: The paper compares to RL-based baselines, but how does DRPO compare to non-RL approaches like training-free methods or SFT for efficient reasoning? Adding this comparison would provide a more comprehensive view of where DRPO stands in the broader efficient reasoning landscape, particularly since some non-RL methods might achieve comparable efficiency with less complexity."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "DRPO: EFFICIENT REASONING VIA DECOUPLED REWARD POLICY OPTIMIZATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "3 LIMITATION OF INCORPORATING LENGTH PENALTY INTO GRPO",
+    "4 DRPO: DECOUPLED REWARD POLICY OPTIMIZATION",
+    "4.1 DISCRIMINATIVE CONSTRAINED POLICY OPTIMIZATION (DISCO)",
+    "4.2 DECOUPLED REWARD POLICY OPTIMIZATION",
+    "5 EXPERIMENTS",
+    "5.1 VISUALIZATION OF LEARNING PROCESS",
+    "5.2 COMPARISON WITH BASELINES",
+    "5.3 LENGTH REDUCTION FOR DIFFERENT PROBLEM DIFFICULTY",
+    "A APPENDIX",
+    "A.1 DERIVING THE OPTIMUM OF THE KL-CONSTRAINED REWARD MAXIMIZATION OBJECTIVE",
+    "A.2 DETAILED HYPERPARAMETER SETTING",
+    "A.3 LIMITATION OF INCORPORATING LENGTH REWARD WITH GROUP ADVANTAGE",
+    "A.4 EXPERIMENTS ON NON-MATHEMATICAL REASONING TASK",
+    "1.5B Model",
+    "A.5 ABLATION STUDY ON LENGTH REWARD DESIGN",
+    "1023 A.6 DETAILED AES PERFORMANCE",
+    "A.7 PERFORMANCE IN TERMS OF PASS@K",
+    "1075 A.8 CASE STUDY",
+    "Algorithm 1 Decoupled Reward Policy Optimization (DRPO)",
+    "Under review as a conference paper at ICLR 2026",
+    "Prompt 2",
+    "Answer from DisCO (DRPO with 𝝀 = +∞) 4497 tokens",
+    "Prompt 2"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

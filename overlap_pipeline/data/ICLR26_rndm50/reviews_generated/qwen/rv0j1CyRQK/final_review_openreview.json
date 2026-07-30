@@ -1,0 +1,70 @@
+{
+  "pdfname": "rv0j1CyRQK",
+  "content": {
+    "summary": {
+      "value": "The paper introduces LAYS (Line-Aligning Yaw Scoring), a novel approach for cross-view yaw estimation that treats yaw as an independent 1-DoF problem rather than a byproduct of full 3-DoF pose estimation. The method leverages line correspondence between ground-view columns and BEV radial lines, using column-wise feature extraction, ground-BEV matching, and pairwise yaw voting to isolate yaw from location uncertainty without requiring ground-height assumptions. LAYS achieves state-of-the-art sub-degree accuracy across multiple datasets (Mapillary, Ford, KITTI, and VIGOR), with improvements from 6.55% to 34.81% on Mapillary, 41.36% to 67.05% on Ford, 3.14% to 45.51% on KITTI, and 12.39% to 23.67% on VIGOR. The framework demonstrates that precise yaw estimation can serve as a reusable module to enhance downstream localization pipelines by reducing the problem space from 3-DoF to 2-DoF. By focusing on line alignment rather than pixel-level correspondence, the approach handles location ambiguity while maintaining robust performance under high orientation uncertainty. The paper establishes yaw as a tractable subproblem in global pose estimation, with significant implications for autonomous navigation and AR/MR applications where small angular errors can lead to major misalignment."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. **Novel problem re-conceptualization**: The paper makes a fundamental shift by treating yaw estimation as an independent 1-DoF problem rather than a residual of full 3-DoF pose estimation. This is clearly articulated in Section 1 where the authors state: \"we argue that yaw should be treated as an independent and tractable subproblem rather than a residual of full 3-DoF estimation, and reformulate it as a standalone 1-DoF problem.\" This reframing addresses a critical limitation in prior work that \"treats yaw as a byproduct of translation or assumed to be approximately known.\"\n\n2. **Elimination of ground-height dependency**: Unlike previous methods that \"assume flat ground\" or \"hypothesize height\" to map two views (Section 1), LAYS operates without requiring ground-truth position or ground height assumptions. The method's ability to \"handle location ambiguity without requiring ground-view height or distance for explicit mapping\" (Section 1) represents a significant technical advance that removes a fundamental constraint in cross-view localization.\n\n3. **Line-based correspondence framework**: The core innovation of using \"one line correspondence between two views, a ground column and a BEV radial line, [that] is sufficient to estimate yaw\" (Section 1) provides a more robust foundation than pixel-level matching. This is effectively visualized in Fig. 1, which demonstrates how \"same column matches from multiple pixels along a line... result in the same yaw being voted for pixels along the line.\"\n\n4. **Substantial empirical improvement**: The paper demonstrates remarkable performance gains across all tested datasets. For instance, on the challenging MGL dataset with ±180° yaw noise, LAYS achieves 34.81% sub-degree accuracy compared to 6.55% for the previous best method (Table 1). Similarly, on the KITTI dataset with unknown yaw, LAYS achieves 45.51% sub-degree accuracy while the second-best method (CCVPE) reaches only 3.14% (Table 3).\n\n5. **Practical utility for downstream tasks**: The paper shows that isolating yaw estimation improves full 3-DoF localization methods, with a 14% improvement in localization accuracy when using LAYS to fix yaw (Table 6). This demonstrates the approach isn't just theoretically interesting but has direct practical value for existing systems.\n\n6. **Robustness to real-world imperfections**: The method maintains strong performance even with ±10° pitch and roll noise (Table 7), showing only a 1.66% drop in sub-degree accuracy compared to perfect alignment. This addresses a critical limitation of prior approaches that \"assume undistorted images, rectified along the gravity and horizon direction\" (Section F)."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Limited failure mode analysis**: While the paper reports impressive accuracy metrics across multiple datasets, it lacks a systematic analysis of failure cases. The visualizations (Figs. 3-9) exclusively show successful examples, providing no insight into when and why the method fails. For instance, the approach's reliance on linear structures isn't tested in environments with minimal linear features (e.g., dense forests, plazas, or indoor settings where the method would struggle). The authors should include failure case analysis to better understand the method's limitations and guide practical deployment scenarios.\n\n2. **Computational efficiency concerns**: The exhaustive search over the entire pose space (Section 3.4) likely imposes significant computational costs that aren't addressed in the paper. For AR/MR applications where the paper claims relevance (Abstract, Introduction), real-time performance is critical. The authors should report inference time metrics and explore potential optimizations such as coarse-to-fine search strategies or learnable priors to reduce the search space while maintaining accuracy.\n\n3. **Insufficient environmental diversity in evaluation**: All datasets used (MGL, Ford, KITTI, VIGOR) represent urban driving scenarios with clear road structures. The method's core assumption about linear structures isn't validated in environments with minimal linear features. The authors should evaluate on more diverse scenarios (e.g., rural areas, dense forests, or indoor environments) to properly assess generalizability and identify the method's operational boundaries.\n\n4. **Inadequate isolation of the core innovation**: While Table 5 presents an ablation study, it doesn't specifically isolate the contribution of the line alignment strategy from other components. The \"Point-to-Point Match\" alternative compares to a different scoring approach but doesn't quantify how much the line alignment specifically contributes to the performance gains. The authors should perform additional ablation to directly measure the impact of line alignment versus other aspects like column feature extraction or probabilistic matching.\n\n5. **Lack of comparison to specialized yaw estimation methods**: The baselines (CCVPE, BoostAcc, G2S, FG2) are all general cross-view localization methods rather than approaches specifically designed for rotation estimation. The authors should compare against methods focused on rotation estimation (e.g., horizon line detection approaches like Xian et al. (2019) or gravity-aligned rotation methods) to better position their contribution in the yaw estimation literature."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **Failure mode analysis**: The paper presents impressive quantitative results but lacks systematic analysis of failure cases. Could you provide specific examples where LAYS fails (beyond the successful visualizations in Figs. 3-9) and explain why these failures occur? For instance, does the method struggle when there are multiple parallel linear structures (e.g., multiple lanes on a highway) that could create ambiguous line correspondences? Understanding failure modes would strengthen the practical applicability claims.\n\n2. **Non-urban environments**: The experiments focus exclusively on urban/road datasets (MGL, Ford, KITTI, VIGOR). Could you provide qualitative analysis or preliminary results showing how LAYS would perform in environments with minimal linear structures, such as dense forests, plazas, or indoor settings? The paper's claim that \"one line correspondence... is sufficient to determine yaw\" (Sec. 1) seems dependent on the presence of such structures, and understanding the method's limitations in their absence would be valuable.\n\n3. **Computational efficiency comparison**: While the paper emphasizes accuracy improvements, it doesn't address computational trade-offs. Could you provide timing comparisons between LAYS and baseline methods (e.g., inference time per frame)? The exhaustive 2D pose search space (Sec. 3.4) appears computationally intensive—how does this impact real-time applicability in navigation or AR/MR scenarios?\n\n4. **Sensitivity to column width**: The column feature extraction (Sec. 3.2) is a critical component, but the paper doesn't discuss how column width was selected or its impact on performance. Could you provide an ablation study showing how varying column width affects accuracy? This would help readers understand the robustness of this design choice and guide potential adaptations.\n\n5. **Theoretical justification for voting mechanism**: The pairwise yaw voting (Sec. 3.4) works well empirically, but could you provide more formal analysis of why this mechanism is robust to location uncertainty? Specifically, how does the mathematical formulation ensure that multiple votes from a single linear structure consistently converge to the correct yaw despite positional uncertainty along that line?\n\n6. **3DoF integration details**: While Section 4.4.3 shows LAYS can improve FG2's accuracy, the integration is superficially described. Could you elaborate on how a complete 3DoF pipeline would incorporate LAYS, including potential challenges in handling the transition from 1-DoF yaw estimation to 2-DoF localization? This would strengthen the claim that \"isolation of yaw estimation... has more potential to explore\" (Sec. 4.4.3)."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "CROSS-VIEW YAW ESTIMATION IN LOCATION UNCERTAINTY WITH LINE-ALIGNING YAW SCORING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORKS",
+    "3 METHOD",
+    "3.1 OVERVIEW",
+    "3.2 COLUMN FEATURE EXTRACTION",
+    "3.3 GROUND-BEV MATCHING",
+    "3.4 PAIR-WISE YAW VOTING",
+    "4.3.1 RESULTS",
+    "4.4 ANALYSIS",
+    "4.4.1 MATCHING PROCESS AND LOCATION",
+    "4.4.2 ABLATION STUDY",
+    "A TRAINING SETUP",
+    "B PSEUDO-CODE FOR PAIR-WISE YAW VOTING",
+    "Algorithm 1 Pair-wise Yaw Voting with Distance Constraint",
+    "C IMPLEMENTATION DETAIL",
+    "C.1 FEATURE EXTRACTION",
+    "C.2 PAIR-WISE YAW VOTING WITH DISTANCE CONSTRAINT",
+    "C.3 POSE PLAUSIBILITY SCORE MODEL",
+    "C.4 MULTI RESOLUTION SCORING",
+    "C.5 LOSS TERM",
+    "D PREPROCESS FOR MAPILLARY GEO-LOCALIZATION DATASET",
+    "E VISUALIZATION OF MATCHING PROCESS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

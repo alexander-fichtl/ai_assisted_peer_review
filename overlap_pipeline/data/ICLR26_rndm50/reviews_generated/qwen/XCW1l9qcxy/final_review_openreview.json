@@ -1,0 +1,76 @@
+{
+  "pdfname": "XCW1l9qcxy",
+  "content": {
+    "summary": {
+      "value": "The paper introduces Transductive Visual Programming (TVP), a novel framework that dynamically evolves reusable visual reasoning tools through experience rather than creating them speculatively. TVP maintains a dual-library system where successful program solutions are stored in an Example Library and recurring patterns are abstracted into higher-level tools in a Tool Library, creating a closed-loop learning process. The approach significantly outperforms prior methods on the Omni3D-Bench, achieving 33.3% overall accuracy (11.4% better than VADAR) while demonstrating strong generalization to unseen spatial reasoning tasks across multiple benchmarks. TVP's transductive tool creation leads to progressive self-improvement across iterations, with programs becoming both simpler (reducing cyclomatic complexity by 17.7%) and more accurate (+3.4% when switching to abstracted tools). The framework demonstrates robustness across different LLM backbones and requires no dataset-specific priors, with evolved tools showing high utilization (36.3% used as sole functions in solutions versus 5.8% for VADAR). This work establishes that learning tools from concrete problem-solving experience, rather than inducing them in advance, creates more effective and reusable visual reasoning capabilities. The system's ability to transfer knowledge to out-of-domain queries validates the generality of transductive tool evolution for complex spatial reasoning tasks."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Novel transductive learning paradigm**: The paper's core innovation—creating tools *after* solving concrete problems rather than speculatively before (as in VADAR)—represents a fundamental shift in visual programming. This approach mirrors human learning patterns (solve problems first, then abstract patterns) and is validated by Fig. 2, which shows 36.3% of TVP's created tools are used as the sole functions in final solutions versus only 5.8% for VADAR's inductively generated tools. This demonstrates the approach isn't just theoretically different but empirically more effective.\n\n2. **Self-improving dual-library architecture**: The closed-loop system (Fig. 3) with its Example Library and Tool Library creates a genuine learning cycle where better tools produce better examples, which in turn enable better tools. This is quantitatively demonstrated in Fig. 4(c), where accuracy using new APIs increases from 22.4% to 31.0% across iterations—a 38% relative improvement—proving the system doesn't just create tools but learns to use them more effectively over time.\n\n3. **Meaningful program simplification**: The framework achieves substantial reduction in program complexity (Fig. 4(a)), with median cyclomatic complexity dropping from 3.0 to 1.0 across iterations—a 66% reduction. This isn't merely code compression; it represents genuine abstraction where entire solution patterns become single function calls, making programs both more efficient and interpretable while improving accuracy by +3.4% (Fig. 4(b)).\n\n4. **Strong generalization without adaptation**: The evolved tools transfer effectively to completely unseen benchmarks (3DSRBench, SpatialSense, VG-Bench) with zero-shot application, achieving 52.3% overall accuracy versus 32.8% for VADAR (which creates tools specifically for these test sets). This demonstrates the tools capture fundamental reasoning patterns rather than dataset-specific solutions, with particularly strong performance on 3D positional relations (59.2% vs. VADAR's 40.8%).\n\n5. **Resilience to data ordering**: Unlike curriculum-dependent methods (e.g., Skillweaver), TVP performs equally well with random or curriculum-ordered data processing (Fig. 13), making it more practical for real-world applications where data order isn't controllable. The random ordering even produces more diverse tools (61 total vs. 51 with curriculum ordering), showing the approach benefits from varied exploration."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Insufficient analysis of tool generalization beyond the 36.3% metric**: While Fig. 2 demonstrates TVP's superior tool usage rate (36.3% vs. VADAR's 5.8%), the paper lacks deeper analysis of how effectively these tools generalize. The authors don't quantify how many newly created tools actually apply to *new* problems outside their original cluster, nor do they measure the \"reusability distance\" (how many steps removed from the original examples a tool gets applied). A more rigorous analysis of tool generalization patterns would strengthen the core claim that TVP creates genuinely reusable abstractions rather than dataset-specific shortcuts.\n\n2. **No ablation study on clustering parameters**: The clustering mechanism (Algorithm 2) is central to TVP's tool abstraction, yet the paper provides no sensitivity analysis of key parameters like similarity threshold τ_sim or minimum cluster size τ_cluster. For instance, Fig. 9 shows TVP created 61 total tools but maintained only 11 active ones through merging, but without ablation studies, it's unclear whether this specific parameter configuration (τ_sim=0.8, τ_cluster=4) represents an optimal balance between tool diversity and redundancy. The authors should test how varying these parameters affects both tool quality and final performance.\n\n3. **Lack of analysis on the diminishing returns of iterative abstraction**: While Fig. 4c shows performance improvement with new APIs (+38% relative improvement from iter1 to iter3), the paper doesn't investigate whether there are diminishing returns to additional iterations. The authors could have measured the marginal gain per iteration and identified a point of convergence where further tool abstraction yields minimal benefit. This would provide practical guidance for real-world deployment where computational resources are constrained.\n\n4. **No exploration of alternative tool creation triggers**: The paper uses a fixed abstraction interval (n_a=1) that triggers tool creation after every processed question. This approach may be suboptimal for diverse problem distributions. A more adaptive mechanism—such as creating tools only when the Example Library reaches sufficient diversity or when program complexity exceeds a threshold—might yield better results. The authors could have compared different triggering strategies to demonstrate the robustness of their design choice.\n\n5. **Limited investigation of initial tool set impact**: TVP inherits its basic tool set from Marsili et al. (2025), but the paper doesn't explore how the system would perform with a more minimal or differently structured initial toolkit. For instance, would TVP still achieve strong results with only core vision capabilities (e.g., just object detection and depth estimation) without higher-level functions like same_obj()? A systematic study of initial tool set requirements would strengthen the claim that TVP is a general framework rather than one dependent on specific foundational capabilities."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## Key Questions for Rebuttal\n\n1. **Cross-cluster tool generalization**: Figure 2 shows TVP's impressive 36.3% tool usage rate, but I'm interested in understanding *how broadly* these tools generalize. Could you quantify what percentage of your created tools get successfully applied to questions *outside their original cluster*? For example, if a tool was abstracted from 5 examples about height comparisons, how many of its subsequent uses were for non-height-related spatial reasoning? This would help distinguish between high usage rates within similar problems versus true cross-problem generalization.\n\n2. **Scalability with library growth**: As the Example Library grows (reaching 304 solutions in iteration 3), does the retrieval process become a bottleneck? Could you share timing data showing how query processing time scales with Example Library size? Specifically, does the 7-hour per-iteration runtime (§D.2) grow linearly or superlinearly as the library expands?\n\n3. **Failure mode analysis**: The paper focuses on successes, but understanding limitations is equally valuable. Could you characterize the types of spatial reasoning problems where TVP consistently fails? For example, are failures concentrated in specific question categories (e.g., multi-object relations vs. single-object properties) or complexity levels? A failure analysis would strengthen the paper's contribution.\n\n4. **Ablation of transductive vs. implementation differences**: TVP outperforms VADAR by 11.4% on Omni3D-Bench, but this gap could stem from both the transductive philosophy and other implementation choices. Could you isolate the contribution of the transductive approach through an ablation where VADAR's framework is modified to use TVP's experience-based tool creation (rather than speculative induction), holding other components constant?\n\n## Constructive Suggestions\n\n1. **Tool generalization metrics**: Consider adding metrics that track how far tools travel from their origin cluster. For instance, you could measure the semantic distance between the questions where a tool was created versus where it's later applied. This would strengthen your claim about the transferability of learned tools beyond the usage rate metric.\n\n2. **Hybrid ordering strategy**: Your analysis in §D.1 shows curriculum ordering provides faster initial progress while random ordering yields more diverse tools long-term. Could you explore a hybrid approach—starting with easier examples to build foundational tools, then transitioning to random ordering for broader exploration? This might combine the best of both worlds and further improve performance.\n\n3. **Domain transfer experiments**: Since TVP's framework appears domain-agnostic, consider adding a brief exploration of how the evolved tools might transfer to other reasoning domains (e.g., temporal reasoning). Even preliminary results showing whether tools from spatial reasoning help with time-based questions would significantly broaden the paper's impact.\n\n4. **Tool deprecation analysis**: The paper mentions tools can become deprecated through merging (Algorithm 4), but doesn't analyze this process. Could you characterize how often tools become obsolete, and whether certain types of tools (e.g., more specialized ones) get deprecated faster? This would provide valuable insight into the library's evolutionary dynamics.\n\nThese questions and suggestions would help me better understand the boundaries of your approach, its scalability, and potential for broader application—factors that could significantly influence my assessment of the work's contribution and impact."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "TRANSDUCTIVE VISUAL PROGRAMMING: EVOLVING TOOL LIBRARIES FROM EXPERIENCE FOR SPATIAL REASONING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 TRANSDUCTIVE VISUAL PROGRAMMING",
+    "2.1 PROGRAM GENERATION AND EXECUTION",
+    "2.2 EXAMPLE LIBRARY: ADDING HIGH-QUALITY PROGRAMS",
+    "3 EXPERIMENTS",
+    "3.1 3D SPATIAL REASONING PERFORMANCE",
+    "Tool abstraction facilitates progressive self-improvement, especially on hard problems. To iso-",
+    "TVP is robust to backbone LLM choice, showing a",
+    "3.2 GENERALIZING ACROSS UNSEEN SPATIAL REASONING QUERIES",
+    "3.3 QUALITATIVE ANALYSIS ON TOOL UTILIZATION AND EVOLUTION",
+    "4 RELATED WORK",
+    "4.1 SPATIAL REASONING",
+    "4.2 TOOL USE AND ABSTRACTION",
+    "5 CONCLUSION",
+    "A THE USE OF LARGE LANGUAGE MODELS (LLMS)",
+    "B FURTHER COMPARISON WITH RELATED TOOL-USE WORK",
+    "C IMPLEMENTATION DETAILS",
+    "C.1 VADAR REPRODUCING CONFIGURATIONS",
+    "C.2 TVP CONFIGURATIONS",
+    "C.3 CRITERIA IN TVP'S JUDGE COMPONENTS",
+    "C.4 COMPLEXITY RATING OF 3D SPATIAL REASONING QUESTIONS",
+    "D ADDITIONAL EMPIRICAL ANALYSES AND DISCUSSION",
+    "D.1 TVP'S RESILIENCE TO RANDOM DATAPOINT ORDERING",
+    "D.2 COMPUTATIONAL COST AND EFFICIENCY",
+    "E PROMPT TEMPLATES",
+    "1090 F COMPLETE TVP ALGORITHM",
+    "Algorithm 2 AbstractTools - Tool Abstraction from Example Clusters",
+    "1296 1297 1298 1299 1300 1301 1302 1303 1304 1305 1306 1307 1308 1309 1310 1311 1312 1313 1314 1315 1316 1317 1318 1319 1320 1321 1322 1323 1324 1325 1326 1327 1328 1329 1330 1331 1332 1333 1334 1335 1336 1337 1338 1339 1340 1341 1342 1343 1344 1345 1346 1347 1348 1349 Algorithm 4 DeduplicateTools - Merge Similar Tools Input: Tool Library T 1: # Filter eligible tools 2: T eligible ←{ t ∈ T : t. level &gt; 0 ∧ ¬ t. deprecated } 3: # Find duplicate groups 4: M← LLMdedup ( T eligible ) ▷ Groups with similarity ≥ 0 . 95 5: for each merge group M ∈ M do 6: # Get examples using these tools 7: E M ←{ e ∈ E : ∃ t ∈ M,t ∈ e. tools used } 8: for retry = 1 to R merge do 9: if retry = 1 then 10: t merged ← LLMmerge ( M, strategy ) 11: else 12: t merged ← LLMmerge ( M, strategy , feedback ) 13: end if 14: val ← ValidateTool ( t merged , E M , T ) 15: if val.passed then 16: T ← T ∪ { t merged } 17: for each t ∈ M do 18: t. deprecated ← True 19: t. reason ← 'Merged into t merged' 20: end for 21: # Update examples 22: for each e ∈ E M with successful rewrite do 23: Update e with merged tool 24: end for 25: break 26: else 27: feedback ← val.errors 28: end if 29: end for 30: end for 31: return T"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

@@ -1,0 +1,80 @@
+{
+  "pdfname": "Obefq4k8iG",
+  "content": {
+    "summary": {
+      "value": "The paper proposes Horizon Imagination (HI), an efficient on-policy imagination process for diffusion-based world models in reinforcement learning. HI denoises multiple future observations in parallel, reducing the sequential burden of diffusion generation. The authors introduce a stabilization mechanism to mitigate policy-induced instability and a novel sampling schedule that decouples the denoising budget from the effective horizon. This approach enables sub-frame budgets and supports parallel generation. The authors validate HI on Atari 100K and Craftium environments, showing that it maintains control performance with a sub-frame budget of half the denoising steps. The method also achieves superior generation quality under varied schedules. Overall, HI makes diffusion world models more practical for training deployable policies."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Efficient On-Policy Imagination Process**: The paper introduces Horizon Imagination (HI), an efficient on-policy imagination process for diffusion-based world models in reinforcement learning. This approach denoises multiple future observations in parallel, reducing the sequential burden of diffusion generation.\n\n2. **Novel Sampling Schedule**: The authors propose a novel sampling schedule that decouples the denoising budget from the effective horizon, enabling sub-frame budgets and supporting parallel generation. This design provides precise and independent control over both parameters.\n\n3. **Stabilization Mechanism**: The paper presents a stabilization mechanism to mitigate policy-induced instability during horizon imagination. This mechanism ensures consistent action selection and stabilizes the denoising process.\n\n4. **Improved Generation Quality**: The authors demonstrate that HI achieves superior generation quality under varied schedules, with parallel configurations proving advantageous, especially under low to medium budgets.\n\n5. **Significant Originality and Execution**: The proposed method brings a significant originality of ideas and execution, addressing the critical efficiency challenges in control faced by diffusion world models.\n\n6. **Well-Motivated and Thorough Analysis**: The paper provides a thorough analysis of the proposed method, including a comparison to prior work, and demonstrates its effectiveness on Atari 100K and Craftium environments.\n\n7. **Clear and Concise Writing Style**: The paper is exceptionally well-written, with clear and concise explanations of the proposed method, making it a pleasure to read and review.\n\n8. **Effective Use of Visual Aids**: The authors' use of visual aids, such as figures and diagrams, effectively supports the presentation of complex ideas, enhancing the clarity and readability of the paper.\n\n## Conclusion\n\nThe paper presents a significant contribution to the research area of reinforcement learning and diffusion-based world models, addressing an important question of efficiently training deployable policies. The proposed method, Horizon Imagination, brings a significant originality of ideas and execution, and the results are valuable to share with the broader NeurIPS community."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Environmental Evaluation**: The paper primarily evaluates the proposed method, Horizon Imagination (HI), on Atari 100K and Craftium environments. While these environments provide valuable insights, a more extensive evaluation across a broader range of environments would strengthen the claims and provide a more comprehensive understanding of the method's effectiveness.\n\n2. **Comparative Analysis with Recent Works**: Although the paper discusses related works, such as Diffusion Forcing (Chen et al., 2024) and other concurrent multi-step generation methods, a more detailed comparative analysis with recent works, especially those addressing efficiency and generation quality in diffusion world models, would be beneficial. This could include comparisons with methods like Rigter et al. (2024) and Jackson et al. (2024) that propose policy-guided imagination methods.\n\n3. **Ablation Study on Hyperparameters**: The paper mentions the use of fixed hyperparameters across all experiments, but a more in-depth ablation study on the sensitivity of the method to different hyperparameters, particularly the decay horizon $\\nu$ and denoising budget $B$, would provide valuable insights into the robustness of the proposed approach.\n\n4. **Theoretical Analysis of Action Consistency**: While the paper provides empirical evidence for the action consistency of the stable sampling mechanism, a more rigorous theoretical analysis of the action consistency and its implications on the denoising process could further solidify the contributions.\n\n5. **Generalization to Continuous Action Spaces**: The paper focuses on discrete action spaces, and although a potential extension to continuous action spaces is mentioned, exploring and evaluating this extension could broaden the applicability of the proposed method.\n\n## Conclusion\n\nThe paper presents a significant contribution to the field of reinforcement learning and diffusion-based world models. However, addressing these weaknesses could further enhance the validity, applicability, and comprehensiveness of the proposed method, Horizon Imagination."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Broader Environmental Evaluation**: The paper primarily evaluates Horizon Imagination (HI) on Atari 100K and Craftium environments. Could the authors provide additional results on other environments, such as Mujoco or more complex Atari games, to further validate the effectiveness of HI across different domains?\n\n2. **Comparative Analysis with Recent Works**: Although the paper discusses related works, such as Diffusion Forcing and other concurrent multi-step generation methods, could the authors provide a more detailed comparative analysis with recent works, especially those addressing efficiency and generation quality in diffusion world models?\n\n3. **Ablation Study on Hyperparameters**: The paper mentions the use of fixed hyperparameters across all experiments. Could the authors perform a more in-depth ablation study on the sensitivity of the method to different hyperparameters, particularly the decay horizon $\\nu$ and denoising budget $B$, to provide valuable insights into the robustness of the proposed approach?\n\n4. **Theoretical Analysis of Action Consistency**: While the paper provides empirical evidence for the action consistency of the stable sampling mechanism, could the authors provide a more rigorous theoretical analysis of the action consistency and its implications on the denoising process?\n\n5. **Generalization to Continuous Action Spaces**: The paper focuses on discrete action spaces. Could the authors explore and evaluate the extension of HI to continuous action spaces, which would broaden the applicability of the proposed method?\n\n6. **Additional Experimental Details**: Some experimental details, such as the specific hardware used for training and the exact training times, are not fully provided. Could the authors provide more detailed information on the experimental setup to facilitate reproducibility?\n\n7. **Impact of Denoising Budget on Control Performance**: The paper shows that HI maintains control performance with a sub-frame budget of half the denoising steps. Could the authors analyze the impact of varying denoising budgets on control performance in more detail, providing insights into the trade-off between efficiency and effectiveness?\n\n8. **Visualization of Generation Quality**: While the paper provides some qualitative visualizations of generated sequences, could the authors provide more visualizations or quantitative metrics (e.g., FVD, MSE) to further demonstrate the superiority of HI in terms of generation quality under varied schedules?\n\n## Conclusion\n\nAddressing these questions and suggestions could further enhance the validity, applicability, and comprehensiveness of the proposed method, Horizon Imagination. The authors' responses could provide additional insights, clarify potential confusions, and address limitations, ultimately contributing to a more productive rebuttal and discussion phase."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "## Overall Score: 8\n\nThe paper, \"HORIZON IMAGINATION: EFFICIENT ON-POLICY ROLLOUT IN DIFFUSION WORLD MODELS,\" presents a technically strong and innovative approach to improving the efficiency of on-policy imagination in diffusion-based world models. The authors introduce Horizon Imagination (HI), which denoises multiple future observations in parallel, reducing the sequential burden of diffusion generation. The method includes a stabilization mechanism and a novel sampling schedule that decouples the denoising budget from the effective horizon, enabling sub-frame budgets and supporting parallel generation.\n\nThe paper's strengths include:\n\n*   **Technically Flawless**: The paper is technically sound, with a clear and well-motivated approach.\n*   **Novel Ideas**: The introduction of HI, a stabilization mechanism, and a novel sampling schedule provides significant originality.\n*   **Excellent Impact**: The method shows high impact on at least one area (reinforcement learning with diffusion-based world models) and excellent impact on multiple areas (efficiency, generation quality, and control performance).\n*   **Good Evaluation**: The authors provide a thorough evaluation of HI on Atari 100K and Craftium environments, demonstrating its effectiveness.\n*   **Resources and Reproducibility**: The paper includes detailed experimental setups and provides code, supporting reproducibility.\n\nHowever, there are minor areas for improvement:\n\n*   **Limited Environmental Evaluation**: A broader range of environments could further validate HI's effectiveness.\n*   **Comparative Analysis**: A more detailed comparison with recent works addressing efficiency and generation quality in diffusion world models would be beneficial.\n\nOverall, the paper's strengths in technical soundness, novelty, impact, evaluation, and resources warrant a score of 8, indicating a strong accept. The minor areas for improvement do not detract from the paper's overall quality and contribution to the research area."
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "HORIZON IMAGINATION: EFFICIENT ON-POLICY ROLLOUT IN DIFFUSION WORLD MODELS",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 PRELIMINARIES",
+    "4 METHOD",
+    "4.1 WORLD MODEL TRAINING",
+    "4.2 HORIZON IMAGINATION (WORLD MODEL INFERENCE)",
+    "Proposition 1. The sampling scheme a ( · , · ) satisfies the following properties:",
+    "Algorithm 1 Horizon Imagination",
+    "4.3 ACTOR-CRITIC TRAINING",
+    "5 EXPERIMENTS",
+    "5.1 EMPIRICAL ANALYSIS OF ACTION CONSISTENCY",
+    "5.2 CONTROL PERFORMANCE",
+    "5.2.1 SETUP",
+    "5.2.2 RESULTS",
+    "5.2.3 ABLATION STUDY: STABLE ACTION SAMPLING",
+    "5.3 PARALLEL VS. SEQUENTIAL GENERATION QUALITY",
+    "6 LIMITATIONS",
+    "7 CONCLUSIONS",
+    "A EXPERIMENTAL SETUP",
+    "A.1 MODEL ARCHITECTURES",
+    "A.1.1 REPRESENTATION MODEL (TOKENIZER)",
+    "A.1.2 WORLD MODEL",
+    "A.1.3 ACTOR-CRITIC",
+    "A.2 HYPERPARAMETERS",
+    "A.3 IMPLEMENTATION DETAILS",
+    "B RUNTIME ANALYSIS",
+    "C ALGORITHM PSEUDOCODE",
+    "D ADDITIONAL RESULTS",
+    "E PROOF FOR PROPOSITION 1",
+    "E.1 PROOF TO PROPOSITION 1.1",
+    "E.2 PROOF TO PROPOSITION 1.2",
+    "F POTENTIAL EXTENSION TO CONTINUOUS ACTION SPACES",
+    "G DECOUPLED CLEAN AND NOISY ACTOR VARIANT",
+    "H USE OF LARGE LANGUAGE MODELS (LLMS)"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

@@ -1,0 +1,72 @@
+{
+  "pdfname": "ifC1qxP5rS",
+  "content": {
+    "summary": {
+      "value": "This paper introduces SESA (Sequential Sampling), a novel framework that addresses the entropy collapse problem in reinforcement learning for large language models. SESA employs a two-stage approach where the model first generates diverse method sketches sequentially (each conditioned on previous outputs) and then expands these sketches into full solutions in parallel. This sequential sampling paradigm maintains greater solution diversity throughout training, preventing policy collapse that commonly occurs with traditional parallel sampling methods. The authors demonstrate that their approach uncovers strategies missed by parallel sampling, retains more correct outputs, and can even revive collapsed policies. On synthetic path exploration tasks, SESA achieves 77% coverage of correct paths compared to parallel methods that plateau at 5%. Across real-world benchmarks including Sudoku, AIME24 math problems, and agent tasks (Sokoban, Countdown, FrozenLake), SESA consistently outperforms baselines like DAPO and RAGEN, lifting success rates by +0.25, +0.42, and +0.07 absolute over the base model (up to 211% relative improvement). The work establishes that structured sequential exploration significantly enhances both diversity and performance in RL-trained LLMs."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Novel sampling paradigm with practical two-stage design**: The paper introduces a fundamentally different approach to sampling in RL for LLMs by conditioning each new output on previous ones, but crucially implements it through a clever two-stage framework (Section 3.1). This design overcomes the practical limitations of fully sequential sampling for complex tasks while preserving diversity benefits—first generating concise method sketches sequentially (which are short and context-efficient), then expanding them in parallel. This addresses the key challenge that \"a fully sequential response stream can become excessively long, potentially exceeding the model's context length\" (p. 263).\n\n2. **Compelling synthetic validation**: The Path Exploration task (Section 2.1) is a well-designed controlled experiment that directly isolates and validates the core hypothesis. Figure 2 demonstrates that sequential sampling discovers significantly more unique paths (80 vs. 11 for parallel sampling), while Figure 3 shows it can recover from policy collapse when traditional RL methods stall—a critical capability for sustained learning.\n\n3. **Demonstrated recovery from \"dead policies\"**: The paper provides unique evidence that sequential sampling can revive collapsed policies (Figure 6), where \"the Pass@16/Pass@1 ratio increased, indicating a return to greater diversity.\" This addresses a fundamental limitation in current RL approaches where \"continuing RL training with parallel sampling no longer yielded performance improvements\" once diversity is lost (Section 5.1).\n\n4. **Substantial practical impact on agent benchmarks**: The results on real-world agent tasks (Table 1) show meaningful improvements that go beyond incremental gains—SESA achieves a 211% relative improvement over the entropy-regularized baseline on Sokoban (0.25 absolute improvement vs. 0.07 for RAGEN+Entropy), demonstrating the approach's practical value for complex decision-making tasks.\n\n5. **Theoretical grounding with empirical validation**: The paper connects sequential sampling to fundamental RL principles while providing supporting evidence through policy entropy analysis (Figure 7) and in-group reward standard deviation (Figure 8), showing SESA \"relatively maintains higher entropy\" and \"maintains a significantly higher [reward] standard deviation\" compared to parallel sampling baselines."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Insufficient comparison with state-of-the-art diversity-promoting methods**: While the paper compares SESA with RAGEN and RAGEN+Entropy, it omits comparisons with other recent approaches specifically designed to address exploration in RL for LLMs. The related work mentions \"GRPO variants (Yu et al., 2025; Liu et al., 2025b), adjust magnitude based on token-level or sentence-level entropy (Chen et al., 2025b), or reward shaping (Chen et al., 2025c)\" but the experiments don't include these methods. For example, SEED-GRPO (Chen et al., 2025b) explicitly addresses semantic entropy in policy optimization, which directly targets the same entropy collapse problem. Without this comparison, it's unclear whether SESA's gains stem from its sequential paradigm or simply from having more sophisticated diversity mechanisms than the limited baselines used. The authors should benchmark against these methods to isolate the contribution of the sequential sampling approach.\n\n2. **Lack of systematic ablation studies on design choices**: The paper presents the two-stage framework without analyzing how critical design parameters affect performance. Specifically, there's no examination of: (1) the optimal number of sketches (G) across different task complexities, (2) how sketch length impacts solution diversity versus computational cost, and (3) the trade-off between sequential sketching and parallel expansion. Figure 5 shows the Pass@16/Pass@1 ratio but doesn't correlate this with specific design choices. An ablation study varying these parameters (e.g., testing with 5 vs 10 vs 15 sketches on the agent tasks) would reveal what aspects of the framework are most responsible for the observed improvements and provide practical guidance for implementation.\n\n3. **No quantification of computational overhead**: While the paper acknowledges that \"a fully sequential response stream can become excessively long, potentially exceeding the model's context length and causing high generation latency\" (Section 3.1), it fails to quantify the actual computational cost of the two-stage approach compared to parallel sampling. The training curves in Figures 7-9 show performance metrics but omit timing information. For practical adoption, readers need to understand the speed/accuracy trade-off: how much slower is SESA per training step? Does the diversity benefit outweigh the computational cost in real-world applications? Adding timing metrics to the training curves would strengthen the practical relevance of the findings.\n\n4. **Limited theoretical justification for the sequential mechanism**: The paper demonstrates empirically that sequential sampling maintains diversity better than parallel sampling (Figures 2-3), but lacks theoretical analysis of why this occurs. A formal treatment of how sequential conditioning affects policy entropy or exploration properties would strengthen the contribution beyond empirical observation. For instance, could the authors analyze how the mutual information between sequentially generated samples compares to parallel samples, or provide bounds on the diversity gain? The current presentation reads more like an engineering solution than a principled advance in understanding RL for LLMs."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **Comparison with state-of-the-art diversity methods**: While the paper compares SESA with RAGEN and RAGEN+Entropy, it omits comparisons with other recent diversity-promoting techniques mentioned in the related work (e.g., GRPO variants with token-level entropy adjustments or reward shaping methods). Could you provide results comparing SESA with these more recent approaches? This would clarify whether SESA's improvements are truly novel beyond existing diversity techniques or if similar benefits could be achieved through other means.\n\n2. **Computational overhead quantification**: The paper mentions that the two-stage approach addresses efficiency concerns of fully sequential sampling, but doesn't quantify the actual computational cost difference. Could you provide timing comparisons between SESA and parallel methods (e.g., samples/second or training time per iteration) for your benchmarks? Understanding the practical trade-offs between diversity gains and computational cost is crucial for adoption.\n\n3. **Statistical significance of results**: Table 1 shows absolute improvements over baseline methods, but without statistical significance tests, it's unclear whether these improvements are meaningful or could be due to random variation. Could you provide confidence intervals or statistical tests for the results across multiple runs? This would strengthen the claim that the observed improvements are consistent and reliable.\n\n4. **Ablation of two-stage design**: The paper presents the two-stage approach as a solution to efficiency concerns, but doesn't isolate the contribution of each component. Could you provide an ablation study comparing: (a) fully sequential sampling, (b) two-stage sampling, and (c) parallel sampling with identical computational budgets? This would clarify whether the sketch generation stage is essential or if simpler sequential approaches would suffice.\n\n5. **Generalization evidence**: The paper demonstrates improved diversity metrics, but it would be valuable to see evidence that this diversity translates to better generalization. Could you test whether SESA-trained models perform better on out-of-distribution examples or transfer to related tasks? This would strengthen the claim that diversity is beneficial beyond immediate benchmark performance.\n\n6. **Failure mode analysis**: The paper focuses on successful cases where sequential sampling helps, but doesn't discuss when it might be less effective. Could you share examples or analysis of scenarios where sequential sampling provides minimal or no benefit compared to parallel methods? Understanding the limitations would help the community determine when to apply this approach.\n\n7. **Synthetic-to-real-world transfer**: The Path Exploration task provides clear evidence of diversity benefits, but it's unclear how well these insights transfer to complex real-world scenarios. Could you elaborate on the specific mechanisms that make sequential sampling effective in real tasks beyond the controlled synthetic environment? This would strengthen the theoretical foundation of the approach."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "THE ROAD LESS TRAVELED: ENHANCING EXPLORATION IN LLMS VIA SEQUENTIAL SAMPLING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Synthetic Path Exploration",
+    "3 METHOD",
+    "3.1 TRAINING STAGE",
+    "3.2 EVALUATION STAGE",
+    "4 SEQUENTIAL SAMPLING BENEFITS RL TRAINING",
+    "4.1 AGENT RESULTS",
+    "4.2 GENERAL TASK",
+    "5 HOW SAMPLING DIVERSITY BENEFITS RL TRAINING",
+    "5.1 SEQUENTIAL SAMPLING CAN SAVE DEAD POLICY",
+    "6 RELATED WORK",
+    "7 CONCLUSION",
+    "A TASK DESCRIPTION",
+    "Model Prompt",
+    "A.2 AGENTIC TASKS",
+    "B TRAINING DETAILS",
+    "B.1 TRAINING CURVES",
+    "B.1.1 POLICY ENTROPY",
+    "B.1.2 IN-GROUP STD",
+    "B.1.3 PASS@16 METRIC",
+    "C CASE STUDY: SOKOBAN STRATEGIES DISCOVERED BY SESA",
+    "###P##",
+    "810",
+    "D THE USE OF LARGE LANGUAGE MODELS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

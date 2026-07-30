@@ -1,0 +1,118 @@
+{
+  "pdfname": "jKcHPxRvk9",
+  "content": {
+    "summary": {
+      "value": "The paper investigates the usage of Large Language Models (LLMs) in collecting high-quality data to warm-start Reinforcement Learning (RL) algorithms for learning in Markov Decision Processes (MDPs). The proposed algorithm, LORO (LLM Offline, RL Online), leverages the in-context decision-making capability of LLMs to generate an \"offline\" dataset that sufficiently covers state-actions visited by some good policy. This dataset is then used to further explore the environment and fine-tune its policy in a black-box manner. The authors empirically demonstrate that LORO outperforms baseline algorithms, such as pure LLM-based policies, pure RL, and a naive combination of the two, in multiple OpenAI Gym environments. LORO achieves significantly better cumulative rewards, up to four times that of other baselines. The algorithm converges to an optimal policy and has high sample efficiency due to the good data coverage collected by the LLM. The authors also verify that LORO's performance boost is algorithm-agnostic and robust to different environments and LLM model sizes. Overall, the paper presents a novel approach to improving the sample efficiency of RL algorithms by leveraging the strengths of LLMs."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Novel Approach**: The paper proposes a novel approach, LORO (LLM Offline, RL Online), which leverages Large Language Models (LLMs) to collect high-quality data for warm-starting Reinforcement Learning (RL) algorithms. This approach effectively combines the strengths of LLMs and RL, demonstrating a creative combination of existing ideas.\n\n2. **Significant Improvement in Sample Efficiency**: The authors empirically demonstrate that LORO significantly improves the sample efficiency of RL algorithms, achieving up to four times better cumulative rewards than other baselines in multiple OpenAI Gym environments. This is a substantial improvement that addresses a critical problem in RL.\n\n3. **Algorithm-Agnostic Performance Boost**: The paper verifies that LORO's performance boost is algorithm-agnostic, meaning it can be applied to different RL algorithms, such as Double-DQN and AWAC. This flexibility is a significant strength, as it allows LORO to be widely adopted.\n\n4. **Robustness to Different Environments and LLM Model Sizes**: The authors show that LORO's performance is robust to different environments and LLM model sizes. This is crucial for practical applications, as it indicates that LORO can be applied to a variety of problems without significant modifications.\n\n5. **Clear and Well-Structured Presentation**: The paper is well-written and clear in its presentation. The authors provide a good overview of their approach and the empirical results, making it easy to follow and understand.\n\n6. **Rigorously Evaluated**: The paper provides extensive empirical evaluations across multiple OpenAI Gym environments, demonstrating that LORO outperforms baseline algorithms. The methodology is rigorous, and the technical claims are adequately supported by evidence.\n\n## Conclusion\n\nThe paper has several significant strengths, including its novel approach, substantial improvement in sample efficiency, algorithm-agnostic performance boost, robustness to different environments and LLM model sizes, clear presentation, and rigorous evaluation. These strengths make the paper a valuable contribution to the research area of Reinforcement Learning and demonstrate its potential to inspire further research and improve practical applications."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Analysis of Assumption 1**: The paper assumes that the LLM can produce a good coverage dataset to boost data efficiency in RL via warm-starting (Assumption 1). However, the analysis of this assumption is limited to a few environments and LLMs. A more thorough analysis of when this assumption holds and when it fails would be beneficial. This could involve exploring different types of environments, LLMs, and tasks to understand the limitations of Assumption 1.\n\n2. **Lack of Theoretical Guarantees**: While the paper provides empirical evidence of the effectiveness of LORO, it lacks theoretical guarantees on the performance of LORO. Providing theoretical guarantees, such as bounds on the cumulative regret or sample complexity, would strengthen the paper and provide a deeper understanding of the algorithm's behavior.\n\n3. **Sensitivity to Hyperparameters**: The paper does not provide a detailed analysis of the sensitivity of LORO to hyperparameters. The performance of LORO may depend on the choice of hyperparameters, such as the number of episodes for LLM data collection, the episode length, and the off-policy RL algorithm used. A more thorough analysis of the sensitivity of LORO to hyperparameters would be beneficial.\n\n4. **Comparison to State-of-the-Art Methods**: The paper compares LORO to baseline algorithms, such as pure LLM-based policies, pure RL, and a naive combination of the two. However, it would be beneficial to compare LORO to state-of-the-art methods in offline-to-online RL, such as Song et al. (2022) and Nair et al. (2020). This would provide a clearer understanding of the strengths and weaknesses of LORO.\n\n5. **Limited Exploration of LLM Capabilities**: The paper explores the use of LLMs in collecting high-quality data for warm-starting RL algorithms. However, it would be beneficial to explore the use of LLMs in other aspects of RL, such as exploration or reward design.\n\n## Conclusion\n\nThe paper has several weaknesses, including a limited analysis of Assumption 1, a lack of theoretical guarantees, sensitivity to hyperparameters, limited comparison to state-of-the-art methods, and limited exploration of LLM capabilities. Addressing these weaknesses would strengthen the paper and provide a more comprehensive understanding of the effectiveness of LORO."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Assumption 1**: The paper assumes that the LLM can produce a good coverage dataset to boost data efficiency in RL via warm-starting (Assumption 1). Can the authors provide more insights into when this assumption holds and when it fails? A more thorough analysis of the limitations of Assumption 1 would be beneficial.\n\n2. **Theoretical Guarantees**: The paper provides empirical evidence of the effectiveness of LORO, but lacks theoretical guarantees on its performance. Can the authors provide theoretical guarantees, such as bounds on the cumulative regret or sample complexity, to strengthen the paper?\n\n3. **Sensitivity to Hyperparameters**: The paper does not provide a detailed analysis of the sensitivity of LORO to hyperparameters. Can the authors provide a more thorough analysis of how LORO's performance depends on the choice of hyperparameters, such as the number of episodes for LLM data collection, the episode length, and the off-policy RL algorithm used?\n\n4. **Comparison to State-of-the-Art Methods**: The paper compares LORO to baseline algorithms, but not to state-of-the-art methods in offline-to-online RL. Can the authors provide a comparison to state-of-the-art methods, such as Song et al. (2022) and Nair et al. (2020), to provide a clearer understanding of LORO's strengths and weaknesses?\n\n5. **LLM Capabilities**: The paper explores the use of LLMs in collecting high-quality data for warm-starting RL algorithms. Can the authors explore the use of LLMs in other aspects of RL, such as exploration or reward design, to further demonstrate the potential of LLMs in RL?\n\n6. **Robustness to Different Environments**: The paper demonstrates the effectiveness of LORO in multiple OpenAI Gym environments. Can the authors provide more insights into the robustness of LORO to different environments, such as environments with high-dimensional state and action spaces?\n\n7. **Effect of LLM Model Size**: The paper explores the effect of LLM model size on the performance of LORO. Can the authors provide more insights into how the performance of LORO depends on the model size of the LLM, and whether there is a minimum model size required for LORO to be effective?\n\n## Suggestions for Improvement\n\n1. **Provide More Details on LLM Training**: The paper mentions that the LLM was trained with LoRA Hu et al. (2021) with rank 8, alpha 16, dropout 0.05, batch size 1, and using 8-bit quantization. Can the authors provide more details on the LLM training process, such as the training data, training time, and hardware used?\n\n2. **Include More Experimental Results**: The paper provides experimental results for six OpenAI Gym environments. Can the authors provide more experimental results for other environments, such as environments with high-dimensional state and action spaces?\n\n3. **Provide a More Detailed Analysis of Primacy Bias**: The paper mentions that pretraining may accumulate primacy bias Nikishin et al. (2022). Can the authors provide a more detailed analysis of the effect of primacy bias on the performance of LORO, and whether combining LORO with the resetting trick in Nikishin et al. (2022) can help address this issue?\n\n## Conclusion\n\nThe authors can address the above questions and suggestions to provide a more comprehensive understanding of the effectiveness of LORO, and to further improve the paper. By providing more insights into the limitations of Assumption 1, theoretical guarantees, sensitivity to hyperparameters, and comparison to state-of-the-art methods, the authors can strengthen the paper and demonstrate the potential of LORO in improving the sample efficiency of RL algorithms."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "SAMPLE-EFFICIENT REINFORCEMENT LEARNING BY WARMSTARTING WITH LLMS",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "5 EXPERIMENTS",
+    "5.1 SAMPLE EFFICIENCY",
+    "of episodes",
+    "of episodes",
+    "of episodes",
+    "of episodes",
+    "of episodes",
+    "5.2 JUSTIFYING THE COVERAGE ASSUMPTION 1",
+    "5.3 EFFECT OF PRE-TRAINING",
+    "5.4 EFFECT OF LLM'S DATA",
+    "5.5 VERIFYING LORO'S AGNOSTICITY TO BASE RL LEARNER CHOICES",
+    "5.6 EFFECTS OF THE LLM'S CAPABILITY",
+    "5.7 OTHER FINDINGS",
+    "6 CONCLUSION AND FUTURE WORK",
+    "A EXTENED RELATED WORK",
+    "B THE ENVIRONMENTS AND IMPLEMENTATION DETAILS",
+    "B.1 THE ENVIRONMENTS",
+    "B.2 IMPLEMENTATION DETAILS",
+    "C JUSTIFYING THE COVERAGE ASSUMPTION 1",
+    "D CUMULATIVE REWARDS TABLE",
+    "E ABLATION STUDY",
+    "E.1 ALGORITHM AGNOSTIC VERIFICATION",
+    "E.2 EFFECTS OF LLM'S MODEL SIZE",
+    "E.3 EFFECTS OF THE NUMBER OF PRE-TRAINING STEPS",
+    "E.4 EFFECTS OF THE AMOUNT OF LLM DATA",
+    "E.5 EFFECTS OF SFT AND LONG COT",
+    "E.6 EFFECTS OF THE HISTORY SUMMARY",
+    "F WALL CLOCK TIME",
+    "G LLM SETUP",
+    "H PROMPTS",
+    "H.1 CHAIN-OF-THOUGH PROMPTS",
+    "H.1.1 TASK 1: CLIFF WALKING",
+    "A Sample of Cliff Walking",
+    "▶ System:",
+    "1710 ▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "H.1.2 TASK 2: CARTPOLE",
+    "A Sample of CartPole",
+    "▶ System:",
+    "1728 ▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "Action: 1 (Push the cart to the left)",
+    "H.1.3 TASK 3: MOUNTAIN CAR",
+    "A Sample of Mauntain Car",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "H.1.4 TASK 4: FROZENLAKE",
+    "A Sample of FrozenLake (CoT)",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "A Sample of FrozenLake (Long CoT)",
+    "▶ System:",
+    "▶ User:",
+    "▶ DeepSeek-R1-Distill-Qwen-7B:",
+    "Let me think about each action:",
+    "H.1.5 TASK 5: PONG",
+    "A Sample of Pong",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:",
+    "Step-by-step reasoning:",
+    "Action Plan:",
+    "H.1.6 TASK 6: PENDULUM",
+    "A Sample of Pendulum",
+    "▶ System:",
+    "▶ User:",
+    "▶ Qwen2.5-7B-Instruct:"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

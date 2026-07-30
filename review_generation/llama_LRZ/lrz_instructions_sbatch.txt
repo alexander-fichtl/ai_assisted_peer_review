@@ -1,0 +1,99 @@
+#Login on terminal
+ssh xx00xxx2@login.ai.lrz.de
+
+
+
+########## One time stuff ##########################################################################
+#----- Hugging Face Token -------------------------------------------------------------------------#
+#Request access to models on Hugging Face (https://huggingface.co/meta-llama/Llama-4-Scout-17B-16E-Instruct). Took ~30 min for me.
+
+#Create Hugging Face READ token (https://huggingface.co/settings/tokens).
+
+#Set Hugging Face Token (Replace 'hf_XXXXXXXXXXXXXXXXXXXXXXXX' with your token)
+umask 077
+printf '%s' 'hf_XXXXXXXXXXXXXXXXXXXXXXXX' > ~/.hf_token
+chmod 600 ~/.hf_token
+#--------------------------------------------------------------------------------------------------#
+
+
+
+#----- Nvidia Credentials -------------------------------------------------------------------------#
+#Create credentials for using Nvidia NGC containers
+#Create keys at https://ngc.nvidia.com/setup/api-key 
+mkdir -p ~/enroot
+nano ~/enroot/.credentials
+machine nvcr.io login $oauthtoken password <your api-key>
+machine authn.nvidia.com login $oauthtoken password <your api-key>
+#--------------------------------------------------------------------------------------------------#
+
+
+
+#----- Build Container ----------------------------------------------------------------------------#
+cat > build_llama_env.sh <<'EOF'
+#!/bin/bash
+#SBATCH --job-name=build_llama_env
+#SBATCH --partition=lrz-cpu
+#SBATCH --qos=cpu
+#SBATCH --time=01:30:00
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --output=build_llama_log.txt
+
+set -euo pipefail
+set -x
+
+cd "$HOME"
+export PIP_CACHE_DIR="$HOME/.cache/pip"; mkdir -p "$PIP_CACHE_DIR"
+
+# Clean old artifacts
+enroot remove --force llama_base || true
+rm -f llama_base.sqsh llama_ready.sqsh
+
+# Base image
+enroot import -o llama_base.sqsh docker://nvcr.io/nvidia/pytorch:24.03-py3
+enroot create --name llama_base llama_base.sqsh
+
+# Install into a venv inside the image
+enroot start --root llama_base << 'IN'
+set -euo pipefail
+python -m pip install --upgrade pip virtualenv
+python -m virtualenv /opt/llamaenv
+. /opt/llamaenv/bin/activate
+pip install --upgrade \
+  llama-stack vllm huggingface-hub accelerate \
+  "transformers>=4.55.0" "tokenizers>=0.21.1" \
+  "scikit-learn>=1.5.0" "pandas>=2.2.2" "pyarrow>=16.0.0"
+deactivate
+IN
+
+# Export final image
+enroot export --output "$HOME/llama_ready.sqsh" llama_base
+
+# Cleanup
+rm -f llama_base.sqsh
+enroot remove --force llama_base || true
+EOF
+
+
+
+#Submit (Building takes 25-30 min; Building on a GPU is faster but has longer time until allocation)
+#(Optional:   sed -i 's/\r$//' build_llama_env.sh)
+sbatch build_llama_env.sh
+#--------------------------------------------------------------------------------------------------#
+####################################################################################################
+
+
+
+
+
+#Upload the whole pdf_preprocessing folder
+##Add new pdf files by running preprocesser_docling for it and setting "attentionIsAllYouNeed" to the name of the new pdf
+
+#Upload reviewer.py
+#Set <HF_TOKEN> to your hf token in reviewer.py
+sed -i 's/\r$//' reviewer.py
+
+#Upload run_review.sbatch
+sed -i 's/\r$//' run_review.sbatch
+
+sbatch run_review.sbatch

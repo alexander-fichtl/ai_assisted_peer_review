@@ -1,0 +1,63 @@
+{
+  "pdfname": "w0rVXs6QJM",
+  "content": {
+    "summary": {
+      "value": "This paper introduces EucliFold, a synthetic visual question-answering benchmark focused on cube net folding in Euclidean space, requiring genuine spatial understanding. The authors propose a cognitively-stratified evaluation framework that decomposes spatial reasoning into three hierarchical levels: Perception, Operation, and Imagination. This framework isolates genuine spatial reasoning from superficial pattern matching. The authors evaluate state-of-the-art Vision-Language Models (VLMs) and find that they demonstrate reasonable perceptual capabilities but fail significantly at operational and imagination-level spatial reasoning. The paper provides a rigorous testbed for probing emergent spatial priors in future models and demonstrates how systematic cognitive decomposition can reveal nuanced capability gaps in VLMs. The authors' evaluation reveals fundamental limitations in current VLMs' spatial reasoning capabilities, suggesting that achieving human-level spatial intelligence may require architectural innovations or training paradigms that explicitly incorporate geometric inductive biases. Overall, the paper contributes to the understanding of VLMs' spatial reasoning capabilities and provides a benchmark for future research. \n\nRating: 5"
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "1. **Cognitively-Stratified Evaluation Framework**: The paper introduces a systematic and hierarchical evaluation framework that decomposes spatial reasoning into three distinct cognitive levels: Perception, Operation, and Imagination. This framework provides a nuanced assessment of Vision-Language Models' (VLMs) spatial capabilities, allowing for a precise characterization of their strengths and weaknesses.\n\n2. **Synthetic Visual Question-Answering Benchmark (EucliFold)**: The authors develop EucliFold, a synthetic benchmark focused on cube net folding in Euclidean space. This benchmark is specifically designed to require genuine spatial understanding, providing a controlled and precise evaluation of VLMs' spatial reasoning capabilities.\n\n3. **Winograd-Style Accuracy and Minimal-Pair Contrastive Samples**: The paper employs Winograd-style accuracy and minimal-pair contrastive samples to mitigate biases and ensure a more accurate evaluation of VLMs' spatial reasoning capabilities. This approach isolates genuine spatial reasoning from statistical artifacts, providing a more robust assessment.\n\n4. **Comprehensive Analysis of VLM Limitations**: The authors provide a thorough analysis of state-of-the-art VLMs, revealing their limitations in operational and imagination-level spatial reasoning. This analysis highlights the reliance of current VLMs on superficial pattern matching rather than genuine geometric understanding.\n\n5. **Systematic Cognitive Decomposition**: The paper demonstrates how systematic cognitive decomposition can reveal nuanced capability gaps in VLMs. This approach offers a principled way to assess VLMs' spatial reasoning capabilities and could be adapted to other cognitive domains.\n\n6. **Significant Originality and Execution**: The paper brings significant originality of ideas and execution, as evidenced by the introduction of EucliFold and the cognitively-stratified evaluation framework. The thorough evaluation of state-of-the-art VLMs and the analysis of their limitations provide valuable insights and directions for future research."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Generalizability to Real-World Scenarios**: The paper focuses on cube net folding in Euclidean space, which, although mathematically precise, may not directly translate to real-world spatial reasoning tasks. Future work should consider more diverse and complex scenarios.\n\n2. **Potential Biases in Negative Sample Generation**: The mutation-validation approach used to generate negative samples might introduce biases, particularly if the mutations are not comprehensive enough. Ensuring that negative samples are generated in a way that covers a wide range of possibilities could strengthen the evaluation.\n\n3. **Lack of Comparison to Human Performance on All Tasks**: While human performance is reported for some tasks, a more comprehensive comparison across all levels (Perception, Operation, Imagination) would provide a clearer understanding of the gap between human and VLM capabilities.\n\n4. **Dependence on Specific Prompting Strategies**: The paper's results might be influenced by the choice of prompting strategies. Exploring a wider range of prompting methods could help ensure that the findings are robust and not overly dependent on specific prompts.\n\n5. **Limited Exploration of Architectural Innovations**: The paper suggests that architectural innovations or training paradigms might be necessary to improve VLMs' spatial reasoning. A more detailed exploration of potential architectural changes or training methods could provide valuable insights.\n\n6. **Validation of Cognitive Levels**: While the paper proposes a hierarchical framework of cognitive levels, further validation or justification of these levels through cognitive science research could strengthen the paper's foundation.\n\n## Actionable Insights for Improvement\n\n- **Broaden the Benchmark**: Consider adding more diverse tasks or scenarios to EucliFold to enhance its generalizability.\n- **Mitigate Biases in Negative Sample Generation**: Implement a more comprehensive method for generating negative samples to reduce potential biases.\n- **Comprehensive Human Performance Comparison**: Extend the human performance comparison to all cognitive levels and tasks to provide a holistic view of VLM limitations.\n- **Explore Prompting Strategies**: Systematically evaluate the impact of different prompting strategies on VLM performance.\n- **Architectural and Training Paradigm Exploration**: Investigate specific architectural innovations or training paradigms that could enhance VLMs' spatial reasoning capabilities.\n\nBy addressing these weaknesses and incorporating actionable insights, the paper could further contribute to understanding and improving the spatial reasoning capabilities of Vision-Language Models."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Cognitive Levels**: The authors propose a hierarchical framework of cognitive levels (Perception, Operation, Imagination). Could they provide further validation or justification of these levels through cognitive science research? This would strengthen the foundation of their evaluation framework.\n\n2. **Generalizability to Real-World Scenarios**: The focus on cube net folding in Euclidean space is mathematically precise but may not translate directly to real-world spatial reasoning tasks. How do the authors plan to extend or adapt their benchmark (EucliFold) to more diverse and complex scenarios?\n\n3. **Mitigating Biases in Negative Sample Generation**: The mutation-validation approach for generating negative samples might introduce biases if not comprehensive. What steps can the authors take to ensure that negative samples cover a wide range of possibilities and minimize potential biases?\n\n4. **Human Performance Comparison Across Tasks**: While human performance is reported for some tasks, a comprehensive comparison across all levels (Perception, Operation, Imagination) would provide a clearer understanding of the gap between human and VLM capabilities. Could the authors consider extending their human performance evaluation?\n\n5. **Impact of Prompting Strategies**: The results might be influenced by the choice of prompting strategies. Have the authors explored a wider range of prompting methods to ensure that their findings are robust and not overly dependent on specific prompts?\n\n6. **Architectural Innovations and Training Paradigms**: The authors suggest that architectural innovations or training paradigms might improve VLMs' spatial reasoning. Could they explore or propose specific architectural changes or training methods that could enhance VLMs' capabilities in this area?\n\n7. **Broader Implications and Applications**: How do the authors envision their work extending beyond the domain of cube net folding and Euclidean space? What are the broader implications of their findings for real-world applications of VLMs?\n\n8. **Addressing Potential Overfitting**: Given that InternVL-2.5 achieves high accuracy on certain tasks, there's a possibility of overfitting. What steps have the authors taken to validate their models against overfitting, and how do they plan to address this issue in future work?\n\n## Actionable Insights for Productive Rebuttal and Discussion\n\n- **Provide Cognitive Science Backing**: Offer research supporting the hierarchical cognitive levels proposed.\n- **Outline Future Benchmarks**: Describe plans for adapting EucliFold to more diverse scenarios.\n- **Detail Negative Sample Generation**: Explain the process to ensure comprehensiveness and minimize bias.\n- **Expand Human Performance Evaluation**: Include all cognitive levels for a holistic comparison.\n- **Discuss Prompting Strategies**: Evaluate various prompting methods for robustness.\n- **Explore Architectural and Training Solutions**: Propose specific solutions to enhance VLMs' spatial reasoning.\n- **Clarify Broader Implications**: Discuss applications and extensions beyond the current scope.\n- **Address Overfitting**: Validate models against overfitting and discuss mitigation strategies.\n\nBy addressing these questions and suggestions, the authors can provide clarifications, address limitations, and potentially change opinions or address confusions, leading to a productive rebuttal and discussion phase."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "EUCLIFOLD: PROBING 3D EUCLIDEAN PRIOR IN VLMS VIA COGNITIVELY-STRATIFIED FOLDING TASKS",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "2.1 LARGE LANGUAGE MODEL-BASED VISUAL LANGUAGE MODELS",
+    "2.2 SPATIAL REASONING BENCHMARKS FOR VLMS",
+    "3 SPATIAL PRIORS OF THREE COGNITIVE LEVELS",
+    "4 EUCLIFOLD DATASET",
+    "4.1 SPATIAL REPRESENTATION DESIGN AND IMAGE GENERATION",
+    "5 EXPERIMENTS AND ANALYSIS",
+    "5.1 GENERAL PERFORMANCE AND THE EFFECT OF SCALING",
+    "5.1.2 IMAGINATION TASKS: FAILURE IN COMPLEX SPATIAL REASONING",
+    "E APPENDIX: EUCLIDEAN STYLE QUESTIONS",
+    "F APPENDIX: COMPLETE RESULTS",
+    "G APPENDIX: HUMAN PERFORMANCE",
+    "H APPENDIX: CASE STUDY ON THE PARTIAL SOLUTION OF FOLDING TASK",
+    "I APPENDIX: LLM USAGE"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

@@ -1,0 +1,112 @@
+{
+  "pdfname": "EFOMez9cBW",
+  "content": {
+    "summary": {
+      "value": "The paper proposes GLaVE-Cap, a novel framework for video detailed captioning that addresses the limitations of existing local-to-global paradigms through vision expert integration and local-global interaction. GLaVE-Cap comprises two core modules: TrackFusion, which leverages vision experts and a dual-stream architecture to produce fine-grained, object-aware local captions, and CaptionBridge, which incorporates global context and performs adaptive scene-level summarization to generate coherent and detailed video-level captions. To enable more comprehensive evaluation of video understanding, the authors introduce GLaVE-Bench, a benchmark that spans diverse visual dimensions. They also release GLaVE-1.2M, a large-scale dataset with high-quality captions and QA pairs to support training and analysis. Extensive experiments demonstrate that GLaVE-Cap achieves state-of-the-art performance across various benchmarks. Further ablation studies and student model analyses validate the effectiveness of each proposed module and highlight the practical utility of GLaVE-1.2M. The source code, model weights, benchmark, and dataset will be open-sourced. The contributions include a new framework for video captioning, a comprehensive benchmark, and a large-scale dataset. The authors provide extensive experiments and analyses to validate their approach."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "1. **Novel Framework for Video Captioning**: The paper proposes a novel framework, GLaVE-Cap, which addresses the limitations of existing local-to-global paradigms through vision expert integration and local-global interaction. This framework consists of two core modules: TrackFusion and CaptionBridge, making it a comprehensive approach to video detailed captioning.\n\n2. **Vision Expert Integration**: The integration of vision experts, specifically Grounding DINO and SAM-2, for object tracking and segmentation across frames is a significant strength. This approach enhances the model's ability to capture object counts and spatial relationships, leading to more accurate and fine-grained local captions.\n\n3. **Dual-Stream Architecture**: The dual-stream structure in TrackFusion, which separately encodes dynamic variations and static details, is a creative combination of existing ideas. This design maximizes the detail-capturing capacity of VLMs enhanced by vision experts.\n\n4. **Global Context Injection**: The introduction of an overview caption that summarizes the global context and injects it into the local captioning process is a valuable addition. This enhances the consistency of local descriptions and ensures semantic coherence within the scene.\n\n5. **Adaptive Scene-Level Summarization**: The adaptive scene-level summarization strategy that leverages the semantics of local captions to guide the video caption generation process is effective. It mitigates information loss caused by suboptimal scene segmentation and summarization.\n\n6. **Comprehensive Benchmark and Dataset**: The construction of GLaVE-Bench, a benchmark with 5 × more queries per video than existing benchmarks, and GLaVE-1.2M, a large-scale dataset with fine-grained video captions and QA pairs, are significant contributions. These resources provide a robust foundation for advancing research on fine-grained video understanding.\n\n7. **State-of-the-Art Performance**: The achievement of state-of-the-art performance across various benchmarks, including GLaVE-Bench, VidCapBench, Video-MME-S, and MVBench, demonstrates the effectiveness of GLaVE-Cap.\n\n8. **Ablation Studies and Student Model Analyses**: The thorough ablation studies and student model analyses validate the effectiveness of each proposed module and highlight the practical utility of GLaVE-1.2M, adding credibility to the proposed framework.\n\n9. **Clarity and Quality of Writing**: The paper is well-written, with clear and concise descriptions of the proposed framework, experiments, and results. The writing style and clarity are excellent, making it easy to understand and contextualize the work relative to prior research.\n\n10. **Significance and Originality**: The paper brings significant originality through its novel framework, comprehensive benchmark, and large-scale dataset. The questions being asked are important, and the results are valuable to share with the broader research community."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Evaluation on Diverse Video Domains**: While the paper evaluates GLaVE-Cap on multiple benchmarks, including GLaVE-Bench, VidCapBench, Video-MME-S, and MVBench, the diversity of video domains is still limited. For instance, the paper could benefit from evaluations on videos with complex scenes, such as those with multiple objects, occlusions, or dynamic camera movements.\n\n2. **Dependence on High-Quality Vision Experts**: The performance of GLaVE-Cap heavily relies on the quality of vision experts used for object tracking and segmentation. The paper could explore the robustness of GLaVE-Cap to noisy or imperfect vision experts, which could be a potential weakness in real-world applications.\n\n3. **Computational Cost**: The paper mentions that GLaVE-Cap achieves state-of-the-art performance, but it does not discuss the computational cost of the proposed framework. Providing an analysis of the computational requirements and comparing them to existing methods could help identify potential limitations.\n\n4. **Limited Analysis of Hallucination**: Although the paper mentions that GPT-4o and Qwen2.5-72B have low hallucination rates, a more in-depth analysis of hallucination in GLaVE-Cap would be beneficial. This could include evaluating the types of hallucinations that occur and their impact on the overall performance.\n\n5. **Ablation Study on Overview Caption**: The ablation study on the overview caption module shows that it does not significantly impact the performance on GLaVE-Bench. However, the paper could provide more insights into the role of the overview caption in ensuring contextual consistency and mitigating information loss.\n\n## Constructive Insights for Improvement\n\n1. **Evaluating GLaVE-Cap on More Diverse Video Domains**: To further validate the effectiveness of GLaVE-Cap, it would be beneficial to evaluate it on a broader range of video domains, including those with complex scenes.\n\n2. **Analyzing Robustness to Noisy Vision Experts**: Investigating the robustness of GLaVE-Cap to noisy or imperfect vision experts could provide valuable insights into its practical applicability.\n\n3. **Optimizing Computational Cost**: Exploring ways to optimize the computational cost of GLaVE-Cap, such as model pruning or knowledge distillation, could make it more efficient and practical for real-world applications.\n\n4. **In-Depth Hallucination Analysis**: Conducting a more in-depth analysis of hallucination in GLaVE-Cap could help identify potential weaknesses and areas for improvement.\n\n5. **Further Investigating the Role of Overview Caption**: Providing more insights into the role of the overview caption in ensuring contextual consistency and mitigating information loss could help refine the proposed framework."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Vision Expert Integration**: The authors mention using Grounding DINO and SAM-2 for object tracking and segmentation. Can they provide more details on how these vision experts are integrated into TrackFusion, and how they handle complex scenes with multiple objects and occlusions?\n\n2. **Analysis of Computational Cost**: The paper achieves state-of-the-art performance, but there is no discussion on the computational cost of GLaVE-Cap. Can the authors provide an analysis of the computational requirements and compare them to existing methods?\n\n3. **Further Investigation on Hallucination**: Although GPT-4o and Qwen2.5-72B have low hallucination rates, can the authors conduct a more in-depth analysis of hallucination in GLaVE-Cap, including evaluating the types of hallucinations that occur and their impact on overall performance?\n\n4. **Ablation Study on Overview Caption**: The ablation study on the overview caption module shows that it does not significantly impact performance on GLaVE-Bench. Can the authors provide more insights into the role of the overview caption in ensuring contextual consistency and mitigating information loss?\n\n5. **Evaluation on Diverse Video Domains**: Can the authors evaluate GLaVE-Cap on a broader range of video domains, including those with complex scenes, such as multiple objects, occlusions, or dynamic camera movements?\n\n6. **Robustness to Noisy Vision Experts**: How does GLaVE-Cap perform with noisy or imperfect vision experts? Can the authors investigate the robustness of GLaVE-Cap to such scenarios?\n\n7. **Optimization of Computational Cost**: Are there any potential ways to optimize the computational cost of GLaVE-Cap, such as model pruning or knowledge distillation?\n\n8. **Comparison to Other Video Captioning Methods**: Can the authors compare GLaVE-Cap to other video captioning methods, such as those that use different architectures or training objectives?\n\n9. **Additional Ablation Studies**: Are there any additional ablation studies that can be conducted to further validate the effectiveness of each proposed module in GLaVE-Cap?\n\n10. **Impact of GLaVE-1.2M on Student Model Performance**: Can the authors provide more insights into the impact of GLaVE-1.2M on the performance of the student model, GLaVE-7B?"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 9
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "GLAVE-CAP: GLOBAL-LOCAL ALIGNED VIDEO CAPTIONING WITH VISION EXPERT INTEGRATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "ShareGPT4Video",
+    "ShareGPT4Video: 16 words",
+    "3 METHOD",
+    "3.1 PIPELINE OVERVIEW",
+    "3.2 TRACKFUSION",
+    "3.3 CAPTIONBRIDGE",
+    "4 BENCHMARK &amp; DATASET",
+    "4.1 GLAVE-BENCH",
+    "4.2 GLAVE-1.2M",
+    "5 EXPERIMENTS",
+    "5.1 VIDEO-CAPTIONING STRATEGY COMPARISON",
+    "5.2 STUDENT MODEL",
+    "5.3 ABLATION STUDIES",
+    "6 CONCLUSION",
+    "702 A APPENDIX OVERVIEW",
+    "B SELECTION OF VIDEO SEGMENTATION MODELS IN TRACKFUSION",
+    "C MORE INFORMATION OF GLAVE-BENCH",
+    "753 C.1 QUESTION-OPTION PAIRS GENERATION",
+    "C.2 EXAMPLES OF SCENE-HINTS IN GLAVE-BENCH",
+    "C.3 HUMAN REVIEW",
+    "C.4 SHOWCASE &amp; VISUALIZATION OF DATA DISTRIBUTIONS",
+    "C.5 FAIRNESS, FIDELITY AND DIVERSITY OF GLAVE-BENCH",
+    "D VISUALIZATION OF DATA DISTRIBUTIONS IN GLAVE-1.2M",
+    "E IMPLEMENTATION DETAILS OF BASELINE CAPTIONING METHODS",
+    "Caption of GLaVE-Cap:",
+    "F EFFECTIVENESS OF GLAVE-CAP IN VIDEO GENERATION",
+    "G HALLUCINATION ACCUMULATION ANALYSIS",
+    "H ADDITIONAL EVALUATION ANALYSIS",
+    "H.1 SAMPLE FRAME COUNT COMPARISON",
+    "H.2 EVALUATION STABILITY",
+    "I TRAINING DETAILS",
+    "J ABLATION SETTINGS",
+    "K DIRECT EVALUATION OF MODULE EFFECTS",
+    "K.2 OVERVIEW CAPTION ADDRESSES POOR CONTEXTUAL CONSISTENCY.",
+    "K.3 ADAPTIVE SCENE-SPLIT ADDRESSES INFORMATION LOSS DURING SUMMARIZATION.",
+    "L IMPACT OF PROMPT DESIGN AND BASE MODEL CAPABILITY",
+    "L.1 ANALYSIS OF HOW DIFFERENT TYPES OF PROMPTS AFFECT MODEL PERFORMANCE",
+    "1293 L.2 ANALYSIS OF HOW THE CAPABILITIES OF (M)LLMS AFFECT VIDEO CAPTIONING",
+    "M MORE ABLATION STUDIES",
+    "N SHOWCASE CAPTION",
+    "O SHOWCASE KEYFRAME SAMPLING FOR FAST-CHANGING VS. SLOW VIDEOS",
+    "1455 1456 P GLAVE-CAP FRAMEWORK PROMPT TEMPLATE",
+    "Q BENCHMARK EVALUATION PROMPT TEMPLATE",
+    "1463 1464 R LIMITATION",
+    "S LICENSE",
+    "· Code: Apache 2.0",
+    "· Training dataset: Apache 2.0",
+    "· Pretrained Model: Apache 2.0",
+    "1501 T USE OF LARGE LANGUAGE MODELS",
+    "ShareGPT4Video",
+    "Ours",
+    "1786",
+    "# Task Description",
+    "# Guidelines For Description",
+    "1793 Important Notes:",
+    "1801 # Character",
+    "# Task",
+    "# Constraints",
+    "# Output Format",
+    "1816 {",
+    "1829",
+    "# Notes",
+    "# Structured Input"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

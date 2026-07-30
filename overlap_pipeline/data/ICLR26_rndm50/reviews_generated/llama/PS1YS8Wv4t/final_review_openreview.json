@@ -1,0 +1,72 @@
+{
+  "pdfname": "PS1YS8Wv4t",
+  "content": {
+    "summary": {
+      "value": "The paper introduces HELM, a scalable Hamiltonian matrix prediction network that enables transfer learning to energy prediction tasks from a unified atomic orbital basis. HELM is state-of-the-art on Hamiltonian matrix benchmarks and can handle structure sizes and chemical diversity comparable to current machine-learned interatomic potentials (MLIPs). The authors also release OMol CSH 58k, a curated Hamiltonian matrix dataset with unprecedented elemental diversity (58 elements), molecular size (up to 150 atoms), and basis set (def2-TZVPD). They propose \"Hamiltonian pretraining\" as a method to extract meaningful descriptors of atomic environments from a limited number of atomic structures. This approach improves energy-prediction accuracy in low-data regimes by up to 2x. The paper provides a recipe for integrating orbital interaction data within H towards training pipelines for atomic-level properties. The authors demonstrate the use of electronic interactions as a rich and transferable data source for representing chemical space."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Scalable Hamiltonian Matrix Prediction**: The paper introduces HELM, a scalable Hamiltonian matrix prediction network that can handle large structure sizes (up to 150 atoms) and high elemental diversity (58 elements). This is a significant advancement over existing models, which are often limited to smaller systems.\n\n2. **Novel Dataset**: The authors release OMol CSH 58k, a curated Hamiltonian matrix dataset with unprecedented elemental diversity, molecular size, and basis set (def2-TZVPD). This dataset provides a realistic and challenging target for Hamiltonian pretraining approaches.\n\n3. **Hamiltonian Pretraining**: The paper proposes \"Hamiltonian pretraining\" as a method to extract meaningful descriptors of atomic environments from a limited number of atomic structures. This approach leverages the electronic structure data in the Hamiltonian matrix to improve energy-prediction accuracy in low-data regimes.\n\n4. **State-of-the-Art Performance**: HELM achieves state-of-the-art performance on Hamiltonian matrix benchmarks, such as MD17/QM7 and ∇ 2 DFT. The authors also demonstrate that using the predicted Hamiltonian matrices to recompute the total energy yields accurate results, with errors within 30 meV per molecule.\n\n5. **Improved Energy Prediction**: The paper shows that Hamiltonian pretraining can improve energy-prediction accuracy in low-data regimes by up to 2x. This is a significant improvement over existing methods, which often require large amounts of training data to achieve accurate results.\n\n6. **Clear and Concise Writing**: The paper is well-written, with clear and concise descriptions of the methodology, experiments, and results. The authors provide a thorough contextualization of their work relative to prior research, highlighting the advancements and improvements achieved by their approach.\n\n7. **Originality and Significance**: The paper brings significant originality to the field of machine-learned interatomic potentials (MLIPs) by leveraging electronic structure data to improve performance. The results have significant implications for the development of more accurate and efficient MLIPs, which can be applied to a wide range of materials science and chemistry applications."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Experimental Validation**: While the paper presents results on several benchmarks, including MD17/QM7 and ∇ 2 DFT, the experimental validation is limited to a relatively small number of molecules and structures. Additional experiments on larger and more diverse systems would help to further validate the performance and generalizability of HELM.\n\n2. **Ablation Studies**: Although the paper presents some ablation studies to understand the impact of specific features of HELM, such as the node parity expansion block and l = 0 component scaling, these studies are limited to a single benchmark (∇ 2 DFT). More comprehensive ablation studies across multiple benchmarks would provide a more thorough understanding of the importance of these features.\n\n3. **Computational Cost**: The paper mentions that training HELM on OMol CSH 58k requires significant computational resources, but does not provide a detailed analysis of the computational cost. A more thorough discussion of the computational requirements and potential limitations of scaling up the training phase to larger datasets would be helpful.\n\n4. **Comparison to Other Methods**: While the paper compares HELM to several existing models, including SchNOrb, PhiSNet, QHNet, and SPHNet, it would be beneficial to compare HELM to other state-of-the-art methods, such as UMA (Wood et al., 2025) and other recent electronic structure prediction models.\n\n5. **Analysis of Failure Cases**: The paper presents a correlation analysis between matrix element errors and eigenvalue errors, but does not provide a detailed analysis of failure cases, such as molecules or structures where HELM performs poorly. A more thorough analysis of failure cases would help to identify potential areas for improvement.\n\n6. **Impact of Effective Core Potentials (ECPs)**: The paper mentions that the use of ECPs for heavy elements causes a shift in the energies of the lowest-lying core electronic states. However, it would be beneficial to provide a more detailed analysis of the impact of ECPs on the performance of HELM and potential limitations.\n\n7. **Extension to Other Quantum Chemistry Methods**: While the paper focuses on DFT, it would be interesting to explore the applicability of HELM to other quantum chemistry methods, such as post-DFT methods (e.g., MP2, CCSD(T)) or wavefunction-based methods (e.g., CI, CCSD). This could help to further demonstrate the versatility and generalizability of the approach.\n\n8. **Uncertainty Quantification**: The paper presents a deterministic approach to Hamiltonian matrix prediction, but it would be beneficial to explore methods for uncertainty quantification, such as Bayesian neural networks or ensemble methods. This could help to provide a more thorough understanding of the uncertainty associated with the predicted Hamiltonian matrices and energies."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Additional Experimental Validation**: You mention that HELM is scalable and can handle large structure sizes and high elemental diversity. To further validate this claim, could you provide additional experimental results on larger and more diverse systems, such as molecules with more than 150 atoms or systems with complex chemical environments?\n\n2. **Ablation Studies on Multiple Benchmarks**: Your ablation studies on the ∇ 2 DFT benchmark show the importance of the node parity expansion block and l = 0 component scaling. To strengthen your claims, could you perform similar ablation studies on other benchmarks, such as MD17/QM7 or OMol CSH 58k?\n\n3. **Computational Cost Analysis**: You mention that training HELM on OMol CSH 58k requires significant computational resources. Could you provide a more detailed analysis of the computational cost, including the number of GPU hours required for training and the memory requirements for storing the OMol CSH 58k dataset?\n\n4. **Comparison to Recent Methods**: You compare HELM to several existing models, including SchNOrb, PhiSNet, QHNet, and SPHNet. Could you also compare HELM to more recent electronic structure prediction models, such as UMA (Wood et al., 2025) or other state-of-the-art methods?\n\n5. **Analysis of Failure Cases**: Your correlation analysis between matrix element errors and eigenvalue errors provides valuable insights into the performance of HELM. Could you provide a more detailed analysis of failure cases, such as molecules or structures where HELM performs poorly, and discuss potential areas for improvement?\n\n6. **Impact of Effective Core Potentials (ECPs)**: You mention that the use of ECPs for heavy elements causes a shift in the energies of the lowest-lying core electronic states. Could you provide a more detailed analysis of the impact of ECPs on the performance of HELM and potential limitations?\n\n7. **Extension to Other Quantum Chemistry Methods**: You focus on DFT in this paper, but could you explore the applicability of HELM to other quantum chemistry methods, such as post-DFT methods (e.g., MP2, CCSD(T)) or wavefunction-based methods (e.g., CI, CCSD)?\n\n8. **Uncertainty Quantification**: You present a deterministic approach to Hamiltonian matrix prediction. Could you explore methods for uncertainty quantification, such as Bayesian neural networks or ensemble methods, to provide a more thorough understanding of the uncertainty associated with the predicted Hamiltonian matrices and energies?\n\n9. **Scalability of Pretraining Phase**: You mention that scaling up the pretraining phase to a larger number of structures is currently constrained by memory requirements. Could you discuss potential computational innovations that could help to overcome these limitations and enable larger-scale pretraining?\n\n10. **Incorporation of Eigenvalue-Based Loss Functions**: You mention that eigenvalue-based loss functions could be used to improve the performance of HELM. Could you explore the incorporation of such loss functions into your approach and discuss potential benefits and challenges?"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "LEARNING FROM THE ELECTRONIC STRUCTURE OF MOLECULES ACROSS THE PERIODIC TABLE",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 BACKGROUND AND PREVIOUS WORK",
+    "3 METHODS",
+    "3.1 OMOL CLOSED-SHELL 58K",
+    "4 RESULTS",
+    "4.1 HAMILTONIAN MATRIX BENCHMARKS",
+    "4.2 HAMILTONIAN PRETRAINING",
+    "5 CONCLUSION",
+    "REPRODUCIBILITY STATEMENT",
+    "A BACKGROUND",
+    "A.1 THE ELECTRONIC STRUCTURE PROBLEM IN DFT",
+    "A.2 EXTRACTING ATOMIC-LEVEL OBSERVABLES FROM THE HAMILTONIAN MATRIX",
+    "B HAMILTONIAN DATA PROCESSING",
+    "B.1 PROCESSING THE HAMILTONIAN MATRIX INTO LEARNING TARGETS",
+    "B.2 DECAY OF ORBITAL INTERACTIONS WITH INTER-ATOMIC DISTANCE",
+    "B.3 NORMALIZING SCALAR NODE BLOCK IRREPS",
+    "C MODEL &amp; TRAINING",
+    "C.1 MODEL PARAMETERS",
+    "C.2 TRAINING PARAMETERS",
+    "C.3 ABLATIONS ON NODE-PARITY EXPANSION AND l = 0 SCALING",
+    "D ADDITIONAL RESULTS",
+    "D.1 HAMILTONIAN MATRIX ERROR ANALYSIS -∇ 2 DFT",
+    "D.2 OMOL CSH 58K HAMILTONIAN PREDICTIONS",
+    "D.3 ENERGY PREDICTION ON DIFFERENT CONFORMERS SPLITS -∇ 2 DFT",
+    "D.4 EXTENDED UMAP EMBEDDING ANALYSIS",
+    "E USE OF LLMS"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

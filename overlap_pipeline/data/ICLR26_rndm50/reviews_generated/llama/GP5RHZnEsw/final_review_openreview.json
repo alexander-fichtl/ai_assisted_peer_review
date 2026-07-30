@@ -1,0 +1,72 @@
+{
+  "pdfname": "GP5RHZnEsw",
+  "content": {
+    "summary": {
+      "value": "This paper proposes Decoupled Reward Policy Optimization (DRPO), a novel framework for efficient reasoning in large reasoning models (LRMs) driven by reinforcement learning. DRPO addresses the issue of overthinking in LRMs, which generates unnecessarily long and redundant reasoning, increasing computational cost and response latency. The authors identify the root cause of this issue in existing methods, particularly in Group Relative Policy Optimization (GRPO), and propose a decoupled approach that normalizes length-based learning signals for correct rollouts within the positive group. DRPO's objective is grounded in integrating an optimized positive data distribution that maximizes length-based rewards under KL regularization into a discriminative objective. The paper derives a closed-form solution for this distribution, enabling efficient computation of the objective and its gradients using only on-policy data and importance weighting. Experiments on mathematical reasoning tasks demonstrate DRPO's significant superiority over six efficient reasoning baselines. Notably, with a 1.5B model, DRPO achieves 77% length reduction with only 1.1% performance loss on simple questions. The method provides a more favorable trade-off between efficiency and accuracy, shielding correct reasoning from interference by negative samples. DRPO is a general framework that can incorporate other preference rewards beyond length."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Novel Framework**: The paper proposes Decoupled Reward Policy Optimization (DRPO), a novel framework that fundamentally rethinks how learning signals for positive and negative data are constructed. This approach addresses the issue of overthinking in large reasoning models (LRMs) driven by reinforcement learning.\n\n2. **Sound Technical Claims**: The technical claims presented are sound, and the experimental methodology is rigorous. The paper compares DRPO with six state-of-the-art efficient reasoning baselines across different model sizes and mathematical reasoning benchmarks, demonstrating significant improvements in efficiency while maintaining performance.\n\n3. **Significant Originality**: The paper brings significant originality to the field, particularly in its approach to decoupling the learning signal calculation for correct and incorrect answers. The derivation of a closed-form solution for the optimized positive data distribution under KL regularization is a notable contribution.\n\n4. **Well-Motivated Approach**: The approach is well-motivated, and the authors provide a thorough contextualization of their work relative to prior research. The paper effectively highlights the advantages of DRPO over existing methods.\n\n5. **Clear and Concise Writing**: The paper is well-written, with clear and concise explanations of the proposed method. The writing style is good, making it easy to follow the technical details and understand the contributions of the paper.\n\n6. **Valuable Results**: The results presented are valuable and demonstrate significant improvements in efficiency while maintaining performance. For instance, DRPO achieves a 77% length reduction with only a 1.1% performance loss on simple questions using a 1.5B model.\n\n7. **Generalizability**: DRPO is a general framework that can incorporate other preference rewards beyond length, making it a versatile and impactful contribution to the research area.\n\n8. **Effective Use of Visualizations**: The paper includes effective visualizations, such as Figure 1 and Figure 3, which help illustrate the limitations of previous approaches and the benefits of DRPO.\n\n## Conclusion\n\nThe paper presents a significant and original approach to addressing the issue of overthinking in LRMs driven by reinforcement learning. The proposed framework, DRPO, is well-motivated, and the results demonstrate significant improvements in efficiency while maintaining performance. The paper's clear and concise writing, effective use of visualizations, and valuable results make it a strong contribution to the research area."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Evaluation on Non-Mathematical Reasoning Tasks**: The paper primarily focuses on mathematical reasoning tasks and only provides limited evaluation on non-mathematical reasoning tasks, such as logic puzzle reasoning. Further experiments on a broader range of tasks would help establish the generalizability of DRPO.\n\n2. **Computational Constraints**: The paper mentions that experiments were confined to 1.5B and 7B models due to computational constraints. Extending the proposed approach to larger models or broader reasoning tasks remains an interesting direction for future work.\n\n3. **Lack of Analysis on the Impact of Hyperparameters**: While the paper provides a detailed hyperparameter setting, it lacks an in-depth analysis of the impact of hyperparameters on the performance of DRPO. A more thorough analysis of hyperparameter sensitivity would help improve the robustness of the method.\n\n4. **Comparison to Recent Works**: The paper compares DRPO with six state-of-the-art efficient reasoning methods. However, it would be beneficial to compare DRPO with more recent works, such as those that have been published in the last few months, to further establish its superiority.\n\n5. **Ablation Study on Length Reward Design**: The paper conducts an ablation study on different length reward designs but only considers a limited number of designs. Further exploration of more sophisticated length rewards could help improve the performance of DRPO.\n\n6. **Case Study on Efficient Reasoning Behavior**: While the paper provides a case study on efficient reasoning behavior, it would be beneficial to conduct further case studies to analyze the efficient reasoning behavior after training, compared with existing methods.\n\n## Conclusion\n\nThe paper presents a significant and original approach to addressing the issue of overthinking in LRMs driven by reinforcement learning. However, there are areas for improvement, including limited evaluation on non-mathematical reasoning tasks, computational constraints, lack of analysis on the impact of hyperparameters, comparison to recent works, ablation study on length reward design, and case study on efficient reasoning behavior. Addressing these weaknesses would help further establish the effectiveness and robustness of DRPO."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Hyperparameter Sensitivity**: The authors mention that they tuned hyperparameters such as $\\lambda$ for DRPO, $\\alpha$ for RLOO-LP, $\\beta$ for ALP, and $w$ for HAPO. However, it would be beneficial to provide a more detailed analysis of how sensitive the performance of DRPO is to the choice of $\\lambda$ and other hyperparameters. A hyperparameter search plot or a sensitivity analysis would help clarify this.\n\n2. **Additional Experiments on Diverse Tasks**: While the paper provides results on mathematical reasoning tasks and a limited evaluation on logic puzzle reasoning tasks, it would be beneficial to conduct experiments on a broader range of tasks, such as commonsense reasoning, code generation, or scientific problem-solving. This would help establish the generalizability of DRPO across different domains.\n\n3. **Comparison to Recent and Contemporaneous Works**: The authors compare DRPO with six state-of-the-art efficient reasoning methods. However, it would be beneficial to compare DRPO with more recent works that have been published in the last few months to further establish its superiority.\n\n4. **Detailed Analysis of Computational Efficiency**: The paper mentions that DRPO achieves significant length reductions while maintaining performance. However, it would be beneficial to provide a more detailed analysis of the computational efficiency of DRPO, including training time, inference time, and computational resources required.\n\n5. **Ablation Study on Length Reward Design**: The authors conduct an ablation study on different length reward designs, but only consider a limited number of designs. Further exploration of more sophisticated length rewards, such as those that incorporate uncertainty or task-specific information, could help improve the performance of DRPO.\n\n6. **Case Study on Efficient Reasoning Behavior**: While the paper provides a case study on efficient reasoning behavior, it would be beneficial to conduct further case studies to analyze the efficient reasoning behavior after training, compared with existing methods. This would help clarify how DRPO reduces redundant back-and-forth reasoning.\n\n7. **Generalizability to Larger Models**: The paper focuses on 1.5B, 7B, and 8B models. However, it would be beneficial to explore the effectiveness of DRPO on even larger models (e.g., 13B or 22B) to further demonstrate its scalability.\n\n8. **Open-Source Implementation**: Providing an open-source implementation of DRPO would facilitate reproducibility and allow researchers to build upon and extend the proposed method.\n\n## Conclusion\n\nThe authors have proposed a significant and original approach to addressing the issue of overthinking in LRMs driven by reinforcement learning. However, there are areas for improvement, including conducting additional experiments on diverse tasks, providing a detailed analysis of computational efficiency, and exploring more sophisticated length rewards. Addressing these questions and suggestions would help further establish the effectiveness and robustness of DRPO."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "## Overall Score: 9\n\nThe paper \"DRPO: Efficient Reasoning via Decoupled Reward Policy Optimization\" presents a technically flawless approach to addressing the issue of overthinking in large reasoning models (LRMs) driven by reinforcement learning. The authors propose a novel framework, Decoupled Reward Policy Optimization (DRPO), which decouples the learning signal calculation for correct and incorrect answers. This approach is well-motivated, and the derivation of a closed-form solution for the optimized positive data distribution under KL regularization is a notable contribution.\n\nThe technical claims are sound, and the experimental methodology is rigorous, involving comparisons with six state-of-the-art efficient reasoning baselines across different model sizes and mathematical reasoning benchmarks. The central claims of the paper are adequately supported by evidence, demonstrating significant improvements in efficiency while maintaining performance.\n\nThe paper's presentation is clear and organized, effectively highlighting the advantages of DRPO over existing methods. The use of visualizations and detailed experimental results helps to illustrate the limitations of previous approaches and the benefits of DRPO.\n\nThe authors make a compelling case for DRPO, and the paper is well-structured, making it easy to follow and understand. Overall, the paper's technical quality, impact, and presentation warrant a very strong accept rating.\n\n### Justification\n\n* **Technically Flawless**: The paper presents a well-structured and clearly articulated approach to addressing the issue of overthinking in LRMs driven by reinforcement learning.\n* **Groundbreaking Impact**: The proposed framework, DRPO, has the potential to significantly impact the development of more efficient and effective LRMs.\n* **Excellent Evaluation**: The paper provides detailed experimental results, including comparisons with state-of-the-art efficient reasoning baselines.\n* **Flawless Evaluation, Resources, and Reproducibility**: The authors provide a thorough contextualization of their work relative to prior research, and the paper appears to comply with NeurIPS guidelines.\n* **No Unaddressed Ethical Considerations**: The paper does not raise significant ethical concerns, and the authors appear to follow standard research practices.\n\n### Recommendation\n\nI recommend that the paper be accepted for presentation at NeurIPS. The authors have demonstrated a thorough understanding of the NeurIPS guidelines and have taken steps to address potential biases and limitations in their work."
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "DRPO: EFFICIENT REASONING VIA DECOUPLED REWARD POLICY OPTIMIZATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "3 LIMITATION OF INCORPORATING LENGTH PENALTY INTO GRPO",
+    "4 DRPO: DECOUPLED REWARD POLICY OPTIMIZATION",
+    "4.1 DISCRIMINATIVE CONSTRAINED POLICY OPTIMIZATION (DISCO)",
+    "4.2 DECOUPLED REWARD POLICY OPTIMIZATION",
+    "5 EXPERIMENTS",
+    "5.1 VISUALIZATION OF LEARNING PROCESS",
+    "5.2 COMPARISON WITH BASELINES",
+    "5.3 LENGTH REDUCTION FOR DIFFERENT PROBLEM DIFFICULTY",
+    "A APPENDIX",
+    "A.1 DERIVING THE OPTIMUM OF THE KL-CONSTRAINED REWARD MAXIMIZATION OBJECTIVE",
+    "A.2 DETAILED HYPERPARAMETER SETTING",
+    "A.3 LIMITATION OF INCORPORATING LENGTH REWARD WITH GROUP ADVANTAGE",
+    "A.4 EXPERIMENTS ON NON-MATHEMATICAL REASONING TASK",
+    "1.5B Model",
+    "A.5 ABLATION STUDY ON LENGTH REWARD DESIGN",
+    "1023 A.6 DETAILED AES PERFORMANCE",
+    "A.7 PERFORMANCE IN TERMS OF PASS@K",
+    "1075 A.8 CASE STUDY",
+    "Algorithm 1 Decoupled Reward Policy Optimization (DRPO)",
+    "Under review as a conference paper at ICLR 2026",
+    "Prompt 2",
+    "Answer from DisCO (DRPO with 𝝀 = +∞) 4497 tokens",
+    "Prompt 2"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

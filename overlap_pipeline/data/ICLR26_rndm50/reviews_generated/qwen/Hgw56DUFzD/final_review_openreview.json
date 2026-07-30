@@ -1,0 +1,70 @@
+{
+  "pdfname": "Hgw56DUFzD",
+  "content": {
+    "summary": {
+      "value": "The paper introduces WARC-Bench, a novel benchmark for evaluating multimodal AI agents on GUI subtasks—short-horizon interactions with web UI components like date pickers, dropdowns, and forms. WARC-Bench leverages Web Archive (WARC) files to create realistic, interactive web environments that replicate actual websites while ensuring sandboxed evaluation with deterministic rewards. The benchmark contains 438 tasks across 15 subtask categories, with a manually curated test set of 200 real-world examples that pose significant challenges to current models, as evidenced by Claude-4.0's 64.8% success rate being the highest observed performance. The authors develop a simple yet effective Subtask Vision Agent (SVA) framework and demonstrate that training with supervised fine-tuning (SFT) and reinforcement learning with verifiable rewards (RLVR) significantly improves open-source model performance, with their 72B model achieving 52.3% accuracy—outperforming other open-source models and many frontier closed-source models. The paper shows that subtask performance on WARC-Bench better correlates with long-horizon web navigation capabilities compared to existing benchmarks like Screenspot-V2 and MiniWoB++. WARC-Bench addresses a critical gap between single-step visual grounding tasks and complex multi-step web navigation benchmarks, providing a scalable, high-fidelity evaluation framework that isolates and stresses specific GUI interaction capabilities. The benchmark's design enables easy extension with new web recordings while maintaining isolation between tasks, making it valuable for advancing GUI agent research toward more robust web automation capabilities."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. **Novel problem formulation**: The paper formally defines \"GUI subtasks\" as a distinct category of web interactions that fall between single-step visual grounding and long-horizon navigation tasks, filling a critical gap in the literature. This conceptual contribution is evidenced in Section 1 where the authors identify that \"this intermediate level of agentic complexity remains unaddressed in existing realistic GUI benchmarks\" (059-063).\n\n2. **Innovative benchmark design**: WARC-Bench uniquely leverages Web Archive (WARC) files to create realistic, interactive web environments while ensuring sandboxed evaluation with deterministic rewards. As stated in Section 2, \"Replaying WARC files instead of live websites also makes the benchmark easy and fast to run\" (156-157), solving the persistent challenge of evaluating on real websites without risking actual changes.\n\n3. **Practical validation of subtask importance**: The paper demonstrates that WARC-Bench performance correlates more strongly with long-horizon navigation capabilities than existing benchmarks. Table 3 shows that while GPT-5 and Claude 4 Sonnet have similar performance on WebArena (within 11% relative gap), their WARC-Bench performance differs by 26%, indicating the benchmark captures unique capabilities essential for real-world agent performance (430-437).\n\n4. **Effective synthetic-to-real transfer**: The RLVR approach demonstrates that training on synthetic subtasks significantly improves performance on real-world tasks, with Ours-72B-RLVR achieving +7.78% improvement on real tasks despite training only on synthetic data (353-358). This finding addresses a key challenge in web agent development.\n\n5. **Comprehensive analysis of frontier model limitations**: The paper provides specific, actionable insights into why even state-of-the-art models fail on subtasks, such as \"difficulty with complex input fields and widgets\" where models struggle with date-picker implementations and pre-filled text fields (1118-1122), as illustrated in Figures 6-7. This goes beyond simple performance metrics to identify concrete failure modes."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Lack of human performance baseline**: The paper doesn't provide human performance metrics on WARC-Bench, making it impossible to gauge the benchmark's difficulty ceiling or assess how close current models are to human-level performance. Without this reference point, claims about the benchmark being \"challenging\" (095-096) remain relative rather than absolute. The authors should include human performance data from controlled user studies to establish a meaningful performance ceiling and better contextualize model capabilities.\n\n2. **Insufficient failure mode analysis**: While Figure 4a shows success rate differences across subtask categories, the paper lacks systematic analysis of why models fail on specific categories. For instance, the 27.3% gap between SFT and RLVR in \"datepickers\" (Figure 4a) isn't explained with concrete failure examples or patterns. The authors should add a detailed qualitative analysis of failure cases across categories, perhaps with visual examples of common mistakes (e.g., incorrect date format interpretation as in Figure 6).\n\n3. **Unverified causal claim about long-horizon performance**: The paper claims that \"high-fidelity subtask performance on WARC-Bench better tracks long-horizon web navigation capabilities\" (097-099), but provides only correlational evidence in Table 3 rather than causal validation. The authors should conduct controlled experiments where models are explicitly trained on WARC-Bench and then evaluated on long-horizon tasks to demonstrate that subtask mastery directly improves complex navigation performance.\n\n4. **Limited analysis of synthetic-to-real transfer gap**: While the paper notes that \"agent performance is lower on real tasks when compared to synthetically generated tasks\" (216-218), it doesn't deeply investigate the specific domain gaps causing this discrepancy. The authors should analyze which synthetic data characteristics fail to generalize to real websites and propose targeted improvements to their synthetic data generation pipeline."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **Human performance baseline**: The paper states that Claude 4.0 achieves 64.83% success rate on WARC-Bench, but without human performance metrics, it's difficult to assess how challenging the benchmark truly is. Could you provide human performance data from controlled user studies? This would help establish whether the benchmark represents tasks that humans can reliably complete and would provide a meaningful ceiling for model performance.\n\n2. **Synthetic-to-real generalization mechanism**: Your results show that RLVR training on synthetic data improves performance on real-world tasks (Section 5). Could you elaborate on the specific mechanisms that enable this cross-domain transfer? What aspects of your synthetic data generation process ensure that models trained on synthetic tasks can effectively generalize to real websites, especially given the noted performance gap between synthetic and real tasks?\n\n3. **Failure mode analysis**: While Section J mentions frontier models struggle with date pickers and input fields, a more systematic failure analysis would be valuable. Could you categorize the top 3-5 failure modes across different model types (open-source vs. frontier) and provide specific examples? This would help identify whether certain failure patterns are fundamental limitations or solvable with targeted improvements.\n\n4. **Evidence for subtask-long-horizon connection**: The paper claims that \"solving subtasks well is a precursor to agent improvement on longer-horizon web navigation tasks\" (Section 5). Could you provide direct experimental evidence supporting this causal relationship? For instance, have you conducted ablation studies where models with varying subtask performance were evaluated on long-horizon benchmarks to demonstrate this correlation?\n\n5. **Generalization to unseen websites**: The paper doesn't address how well models trained on WARC-Bench generalize to websites not included in the benchmark. Could you provide evidence of performance on completely new websites (not from your training or test distributions) to demonstrate the transferability of subtask capabilities learned through WARC-Bench training?\n\n6. **Scalability metrics**: While the paper claims WARC-Bench is \"scalable,\" concrete metrics would strengthen this claim. Could you provide data on the time/cost required to add a new task to the benchmark? How many person-hours are needed to create a new real-world vs. synthetic task, and what is the quality control process for new tasks?\n\n7. **Action space limitations**: The paper uses a specific 8-action space (Table 5), but doesn't discuss limitations. Have you observed tasks where the current action space was insufficient? If so, what additional actions would be needed, and how would this affect model performance? This would help assess whether the benchmark fully captures the complexity of real-world web interactions."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "WARC-BENCH: WEB ARCHIVE BASED BENCHMARK FOR GUI SUBTASK EXECUTIONS",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 WARC-BENCH: WEB ARCHIVE BASED ENVIRONMENTS FOR TESTING SUBTASK EXECUTION BY GUI AGENTS",
+    "2.1 TASK BREAKDOWN",
+    "2.2 DATA COLLECTION METHODS",
+    "4 EXPERIMENTS",
+    "5 RESULTS AND ANALYSIS",
+    "6 RELATED WORK",
+    "7 CONCLUSION",
+    "B ACCURACY VS. LATENCY TRADEOFFS",
+    "Web Navigation Agent Performance Analysis on WARC-Bench",
+    "(b) Relative Throughput Performance",
+    "C HYPERPARAMETERS FOR SFT TRAINING",
+    "D HYPERPARAMETERS FOR RLVR TRAINING",
+    "E OFFLINE RL APPROACHES",
+    "Here is the system prompt used in Subtask Vision Agent design:",
+    "F SVA MODEL PROMPT",
+    "810 Here is the user prompt of the agent:",
+    "G SVA ACTION SPACE",
+    "H OPENCUA MODIFIED PROMPT",
+    "1071 I CLAUDE/OPENAI COMPUTER-USE AGENT PROMPT",
+    "J ANALYZING FRONTIER MODEL LIMITATIONS ON SUBTASK-BENCHMARK",
+    "Figure 6: Claude-Sonnet-4 model passed incorrect date format YYYY/MM/DD"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

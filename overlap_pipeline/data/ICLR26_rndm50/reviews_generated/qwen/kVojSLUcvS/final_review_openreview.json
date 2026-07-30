@@ -1,0 +1,95 @@
+{
+  "pdfname": "kVojSLUcvS",
+  "content": {
+    "summary": {
+      "value": "This paper introduces GlowQ, a group-shared low-rank approximation method for quantized large language models that addresses the efficiency limitations of existing low-rank correction techniques. Rather than attaching independent correction modules to every layer, GlowQ identifies input-sharing groups in transformer architectures and learns a single shared right factor per group, enabling one-time computation of high-precision projections that can be reused across multiple modules. The authors develop a covariance-aligned objective that aligns the shared subspace with data-preferred directions and propose a QR-reduced randomized SVD implementation that efficiently solves the optimization problem without materializing large matrices. They further introduce GlowQ-S, a selective variant that activates correction only for high-benefit groups under deployment constraints. The approach reduces time-to-first-byte by 5.6% and increases throughput by 9.6% on average while improving perplexity, with the selective variant achieving even greater latency reductions (23.4% TTFB reduction) with minimal accuracy trade-offs. GlowQ demonstrates compatibility with various PTQ methods and maintains effectiveness on MoE architectures, offering a practical solution for deploying quantized LLMs with improved efficiency-accuracy trade-offs."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Theoretically grounded group-sharing framework**: The paper provides a rigorous mathematical foundation for group-shared correction through Proposition 1, which formally establishes that a single shared right factor per input-sharing group (e.g., Q/K/V in attention blocks) is optimal for the joint least-squares objective. This fundamentally challenges the assumption in prior work (LQER, QERA, ASER) that independent correction modules per layer are necessary, with the proof showing that \"allowing per-module B_i adds no extra expressivity because any differences can be absorbed into invertible reparameterizations of A_i.\"\n\n2. **Covariance-aligned objective with practical justification**: The authors bridge usage-weighted risk with a right-weighted reconstruction criterion (Propositions 2-3), addressing the critical limitation of input anisotropy in LLMs. Figure 2 empirically validates this by showing heavy-tailed input spectra (with power-law decay exponents α_MLP≈0.77 and α_QKV≈1.19) and demonstrating how covariance alignment substantially improves energy capture compared to unweighted approaches.\n\n3. **QR-reduced randomized SVD implementation**: The paper introduces a novel solver that avoids materializing tall whitened matrices through a thin QR compression followed by randomized SVD on a d×d core. This approach maintains accuracy while achieving ~8.3× speedup over exact SVD (Table 11), with theoretical guarantees provided in Appendix A.4 showing how power iterations improve approximation quality.\n\n4. **Empirical validation of shared vs. layer-wise equivalence**: Table 7 demonstrates that GlowQ achieves essentially identical perplexity to layer-wise correction (mean gap of +0.001 ppl across 13 model-size combinations), validating the core premise that shared correction doesn't sacrifice accuracy. The cross-basis heatmaps (Figures 5-9) further show near-diagonal alignment between shared and module-specific subspaces after whitening, explaining why this equivalence holds.\n\n5. **Selective restore as practical deployment strategy**: GlowQ-S provides a flexible accuracy-latency trade-off by restoring only high-benefit groups, with Figure 3 showing family-specific restoration profiles (knee-shaped for LLaMA vs. gradual for Qwen). This enables substantial latency improvements (23.4% TTFB reduction) while maintaining accuracy within 0.2 percentage points, making the approach directly applicable to real-world deployment constraints."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Insufficient isolation of covariance alignment's contribution**: While Figure 2 demonstrates that covariance alignment improves energy capture, the paper doesn't provide a comprehensive ablation study isolating its specific contribution to final model performance. Table 7 shows nearly identical perplexity between GlowQ and layer-wise methods, but doesn't quantify how much of the benefit comes from group sharing versus covariance alignment. A direct comparison between GlowQ (group sharing + covariance alignment) and a \"GlowQ-NOCA\" variant (group sharing without covariance alignment) would clarify whether the covariance component is essential or merely incremental. The paper states that \"unweighted stacked SVD fails to reveal this alignment\" but doesn't measure how much this affects the final 0.17% perplexity reduction on WikiText-2. Without this analysis, it's difficult to assess whether the added complexity of covariance estimation is justified for practical deployment.\n\n2. **Lack of exploration of alternative grouping strategies**: The paper assumes standard input-sharing groups (Q/K/V in attention, gate/up in MLP) without investigating whether alternative groupings could yield better results. Figure 7-9 shows that covariance alignment enables strong alignment between shared subspaces and module-specific subspaces, but doesn't explore whether grouping across layers (e.g., all attention Q matrices across all layers) might provide additional efficiency gains. The theoretical Proposition 1 only establishes that input-sharing groups can share a right factor, but doesn't address whether the *particular grouping* used is optimal. An analysis of how different grouping strategies affect the trade-off between parameter count, latency reduction, and perplexity would strengthen the practical contribution.\n\n3. **Superficial treatment of the selective restore mechanism**: While GlowQ-S achieves significant latency improvements (23.4% TTFB reduction), the paper provides minimal guidance on how to select importance metrics for different model families. Section 4.6 notes that \"for LLaMA, the elbow (steep-drop) operating point\" is used while \"for Qwen, a fixed 50% of groups\" is applied, but doesn't explain why these strategies differ or provide general principles for practitioners. Figure 12 shows that gsvd and ner metrics outperform others, but doesn't analyze why certain metrics work better for specific architectures (e.g., why LLaMA benefits from gsvd while Qwen might prefer ner). A more systematic analysis of metric performance across diverse architectures would make the selective restore component more practically valuable.\n\n4. **Limited hardware diversity in latency measurements**: The latency results (Tables 3 and 8) are exclusively measured on RTX 4090 GPUs, with no analysis of how the benefits might vary across different hardware architectures. Given that GlowQ's efficiency gains come from reducing redundant computations, the relative benefits might differ significantly on hardware with different memory bandwidth characteristics (e.g., mobile devices with limited memory bandwidth versus data center GPUs). The paper claims \"GlowQ consistently reduces end-to-end latency\" but doesn't verify whether this holds across diverse deployment scenarios, which is critical for a method targeting real-world LLM deployment."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n## 1. Covariance alignment contribution quantification\nThe paper demonstrates that covariance alignment improves energy capture (Figure 2), but the specific contribution to final model performance isn't isolated. Could you provide an ablation study comparing: (a) layer-wise without covariance alignment, (b) layer-wise with covariance alignment, (c) group-shared without covariance alignment, and (d) group-shared with covariance alignment? Table 5 shows C4 perplexity differences, but a more comprehensive comparison across multiple benchmarks would help quantify whether the covariance alignment contributes 10% or 50% of the total accuracy improvement. This would clarify whether the group-sharing mechanism or the data-aware objective is the primary driver of performance.\n\n## 2. Selective restoration threshold determination\nThe paper states that GlowQ-S restores \"about half\" of units, but Figure 3 shows model families have different optimal restoration fractions (LLaMA has a clear elbow point while Qwen shows gradual improvement). Could you provide a principled method for determining the restoration threshold for new architectures beyond empirical evaluation? Is there a metric based on the input spectrum (Figure 2) or error characteristics that predicts the optimal point without full validation? Understanding this would significantly improve the method's practical utility.\n\n## 3. Calibration set requirements for diverse workloads\nSection D.1 demonstrates stability with small calibration sets (N=32-64), but what characteristics of a model or workload might require larger calibration sets? For example, would highly domain-specific models or those with more uniform input distributions need more calibration data? The paper mentions spectral gaps as a factor, but could you elaborate on failure cases where small calibration sets would be insufficient?\n\n## 4. Batch size and hardware scaling analysis\nThe latency measurements (Tables 3, 8) are presented for batch size 1. How do the latency benefits of GlowQ and GlowQ-S scale with larger batch sizes? Would the relative TTFB reduction (23.4% for GlowQ-S) increase or decrease at batch size 8 or 16? Additionally, would the benefits differ significantly on CPU inference or different GPU architectures (e.g., with tensor cores optimized for different precisions)?\n\n## 5. Non-transformer architecture applicability\nThe paper claims GlowQ is \"architecture-agnostic,\" but all evaluations are on transformer-based LLMs. Could you provide theoretical justification or preliminary results showing how GlowQ would apply to non-transformer architectures like CNNs or RNNs? Specifically, how would you define \"input-sharing groups\" in these architectures, and would the covariance alignment remain effective?\n\n## 6. Integration with advanced quantization methods\nThe paper shows compatibility with basic PTQ methods (Table 4), but recent work like ROSAQ (Yoon et al., 2025) and GuidedQuant (Kim et al., 2025) optimize quantization to reduce the need for post-quantization correction. Could you discuss how GlowQ might complement these approaches? Would applying GlowQ to models already quantized with these advanced methods still yield significant gains, or would the benefits be diminished?\n\n## 7. Bit-width interaction analysis\nThe paper evaluates W4A16, W4A8, and W4A4 configurations, but doesn't explore how GlowQ's effectiveness changes with different weight bit-widths. Does the method provide diminishing returns as weight bit-width increases (e.g., W6 vs W4)? Conversely, would GlowQ be even more valuable for extremely low bit-widths like W2 where quantization error is more severe? Understanding this relationship would help practitioners determine when GlowQ is most beneficial."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 7
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "GLOWQ: GROUP-SHARED LOW-RANK APPROXIMATION FOR QUANTIZED LLMS",
+    "Selim An",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 METHOD: GLOWQ",
+    "3.1 GROUPING QUANTIZATION-ERROR CORRECTION MODULES",
+    "3.1.1 UNWEIGHTED BASELINE: STACKED SVD",
+    "3.1.2 DATA-AWARE COVARIANCE ALIGNMENT",
+    "3.2 SCALABLE IMPLEMENTATION VIA QR-REDUCED RANDOMIZED SVD",
+    "3.2.1 ALGORITHM &amp; COMPLEXITY",
+    "3.3 CACHING AND SELECTIVE RESTORE",
+    "4 EXPERIMENTS",
+    "4.1 EXPERIMENTAL SETUP",
+    "4.2 MAIN RESULTS: PERPLEXITY AND ZERO-SHOT ACCURACY",
+    "4.3 LATENCY AND THROUGHPUT BENEFITS FROM CACHING AND SELECTIVE RESTORE",
+    "4.4 MEMORY OVERHEAD AND EFFICIENCY ANALYSIS",
+    "4.5 COMPATIBILITY WITH PTQ METHODS AND GENERALIZATION TO MOE",
+    "4.6 BEHAVIOR OF SELECTIVE RESTORATION ACROSS MODEL FAMILIES",
+    "4.7 IMPACT OF COVARIANCE ALIGNMENT ON ACCURACY",
+    "5 CONCLUSIONS",
+    "A APPENDIX",
+    "A.0 NOTATION &amp; SHAPES",
+    "A.1 STACKED SVD: SHARED RIGHT SUBSPACE AND GLOBAL OPTIMUM (PROOF)",
+    "Problem (Unweighted Frobenius Approximation).",
+    "A.2 COVARIANCE-ALIGNED OBJECTIVE: BRIDGE EQUIVALENCE AND GLOBAL MINIMIZER (PROOF)",
+    "A.3 QR REDUCTION: SMALL-CORE EQUIVALENCE AND GLOBAL SOLUTION (PROOF)",
+    "A.4 RSVD ACCURACY GUARANTEES",
+    "ALGORITHM A.4.1 - RSVD ON THE CORE M .",
+    "Procedure.",
+    "B EFFECT OF RIGHT-WEIGHTED SHARED B",
+    "B.1 GROUP-CACHED (WEIGHTED STACKED RSVD) VS. LAYER-WISE (WEIGHTED RSVD)",
+    "(a) MLP gate: no whiten",
+    "(b) MLP gate: whiten",
+    "(a) MLP gate: no whiten",
+    "(b) MLP gate: whiten",
+    "C TTFB &amp; THROUGHPUT AROUND OTHER MODELS",
+    "D HYPERPARAMETER CHANGE",
+    "D.1 CALIBRATION DIFFERENCE",
+    "D.1.1 SHRINK ALPHA DIFFERENCE",
+    "D.1.2 MEMORY USAGE",
+    "D.2 RANK DIFFERENCE",
+    "D.3 RANDOMIZED SVD PARAMETERS",
+    "D.3.1 PROOF OF QR REDUCTION &amp; RANDOMIZED SVD",
+    "D.3.2 POWER ITERATION &amp; OVERSAMPLING DIFFERENCE",
+    "E COMPATIBILITY ACROSS QUANTIZATION DATATYPES",
+    "F LONGBENCH RESULTS",
+    "G SELECTIVE RESTORATION ACROSS MODEL FAMILY",
+    "LLM USAGE DISCLOSURE",
+    "WRITING POLISH",
+    "RETRIEVAL AND DISCOVERY"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

@@ -1,0 +1,74 @@
+{
+  "pdfname": "IGcGUHEkM5",
+  "content": {
+    "summary": {
+      "value": "This paper introduces BARE (Base-Refine), a novel two-stage method for few-shot synthetic data generation that addresses the challenge of creating high-quality datasets from minimal seed examples (as few as 3). The authors demonstrate that base models (without instruction-tuning) offer substantially greater output diversity than instruction-tuned models, though with lower instruction-following capabilities. BARE leverages this diversity by first generating diverse initial data with a base model, then refining each example with an instruction-tuned model to ensure quality while preserving diversity. The method achieves significant improvements across multiple domains: a 101% improvement on GSM8K over instruction-model-only generation, an 18.4% improvement over RAFT for RAG data generation, and performance on LiveCodeBench comparable to state-of-the-art models trained with orders of magnitude more seed data. The paper provides quantitative evidence of the diversity-quality tradeoff between base and instruction-tuned models and demonstrates BARE's consistent outperformance of existing synthetic data generation methods in few-shot settings. BARE enables effective data generation without requiring large, curated seed sets, making synthetic data creation more accessible for specialized applications where collecting extensive seed data would be difficult or expensive. The approach is validated across diverse tasks including mathematical reasoning, code generation, and classification, showing robustness across model scales and architectures."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths\n\n1. **Novel problem formulation**: The paper identifies and rigorously addresses the previously unexplored \"few-shot synthetic data generation\" problem, where current methods require thousands of seed examples but practical scenarios (e.g., course-specific grading) may only have 3-5 available examples. This reframing of the synthetic data challenge addresses a critical bottleneck in real-world applications where seed data collection is expensive or impossible.\n\n2. **Key insight about model diversity**: The authors provide compelling evidence (Figure 1, Table 1, and Figure 3) that base models inherently produce more diverse outputs than instruction-tuned models, with pairwise embedding cosine similarity scores consistently lower (e.g., 0.313 vs 0.421 for GSM8K), while instruction-tuned models yield higher quality (Figure 4). This fundamental characterization of the diversity-quality tradeoff between model types is both novel and empirically well-supported.\n\n3. **Innovative BARE architecture**: The two-stage Base-Refine approach creatively leverages the complementary strengths of base and instruction-tuned models in a way no prior work has done. By using base models for diversity generation and instruction-tuned models for quality refinement (Figure 5), BARE achieves the best of both worlds while requiring only 3 seed examples—demonstrating 35.8% accuracy on GSM8K with GPT-4o refinement versus 26.6% with real training data (Figure 2).\n\n4. **Strong cross-domain validation**: The method's effectiveness is demonstrated across 6 diverse domains (classification, QA, mathematical reasoning, code generation), with consistent improvements over baselines. Notably, BARE achieves a 101% improvement for Llama 3.2 1B on GSM8K over instruction-model-only generation and an 18.4% improvement over RAFT for RAG data generation (Figure 8), proving its generalizability.\n\n5. **Novel evaluation metric**: The introduction of the \"indistinguishability rate\" (IR) provides a more nuanced assessment of synthetic data quality than downstream performance alone. This metric (Section 3.1) reveals how base models, while diverse, produce less realistic outputs (e.g., 44% IR vs 51% for Llama-70B Base vs Instruct on GSM8K), informing the design of the refinement stage."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Insufficient analysis of failure modes and boundary conditions**: While the paper demonstrates BARE's effectiveness across multiple domains, it doesn't thoroughly analyze when the approach fails or under what conditions it might not outperform instruction-tuned models. For instance, Table 8 (LCB TOP) shows BARE with Llama 3.1 70B actually performs worse (25.6% accuracy) than the instruction-tuned model (26.0%), but this counterexample isn't discussed. The paper would benefit from identifying specific failure cases (e.g., complex reasoning domains where base model generations become too noisy) and establishing clear boundary conditions for when BARE is advantageous. A systematic analysis of how different domains or task complexities affect the diversity-quality tradeoff would strengthen practical guidance for practitioners.\n\n2. **Lack of comparison with advanced diversity techniques**: The paper compares BARE against basic prompting methods but doesn't evaluate against more sophisticated diversity-inducing techniques that could be applied to instruction-tuned models. For example, methods like \"Diverse Beam Search\" (Vijayakumar et al., 2016) or \"Stochastic Paraphrasing\" (Kumar et al., 2020) might address the diversity limitations of instruction-tuned models without requiring the complexity of a two-stage approach. Without this comparison, it's unclear whether base models are truly necessary or if advanced diversity techniques on instruction-tuned models could achieve similar results with less implementation complexity.\n\n3. **Superficial exploration of the refinement process**: The refinement step is critical to BARE's success, but the paper uses relatively simple prompts (Section D) without exploring more sophisticated refinement strategies. The paper would benefit from investigating whether multi-step refinement, automated quality filtering, or more targeted prompts could further improve results. For instance, Figure 9 shows that BARE with Llama-3.1-8B Base and GPT-4o refiner outperforms all prompting methods, but doesn't explore whether the refinement process itself could be optimized to extract even more value from base model generations.\n\n4. **Unaddressed scalability concerns**: The two-stage approach doubles computational cost compared to single-model methods, but this trade-off isn't analyzed. The paper states that \"data generation for 10,000 examples for an 70B model using 90 cores takes approximately hour\" (p. 695), but doesn't compare this to single-stage methods or analyze whether the performance gains justify the additional computational cost for large-scale applications. A cost-benefit analysis would help practitioners determine when the quality improvements warrant the increased resource requirements."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **LCB TOP Performance Anomaly**: In Table 8, BARE with Llama-3.1-70B (25.6% accuracy) underperforms compared to direct instruction-tuned generation (26.0%). Could you elaborate on why the refinement step might be less effective for code generation tasks compared to other domains? Would domain-specific refinement prompts (beyond the general ones in Appendix D) resolve this issue, or is there a fundamental limitation in applying BARE to code-related tasks?\n\n2. **Refinement Quality Analysis**: The paper demonstrates that refinement improves quality (Figure 7), but doesn't analyze how much the refinement step actually changes the base model outputs. Could you provide statistics on the percentage of base model generations that required significant modification during refinement? This would help assess whether the refinement step is merely filtering out poor generations rather than meaningfully improving them.\n\n3. **Computational Cost Comparison**: While Section B.2 mentions data generation for 10,000 examples takes \"approximately an hour,\" this doesn't compare BARE's computational cost to standard instruction-tuned generation. Could you quantify the overhead of the two-stage process (e.g., \"BARE requires X% more compute than single-stage generation\")? This would help practitioners evaluate the cost-benefit tradeoff.\n\n4. **Seed Example Selection Guidance**: The paper uses exactly 3 seed examples across all experiments, but doesn't address how to select high-quality seed examples when only a few are available. Could you provide guidance or heuristics for selecting the most effective seed examples in few-shot scenarios? This would significantly enhance the practical applicability of your method.\n\n5. **Refiner Model Requirements**: The paper shows GPT-4o as a refiner substantially outperforms Llama-3.1-70B-Instruct (e.g., 35.8% vs 29.8% on GSM8K). What specific capabilities make a model an effective refiner? Are there minimum quality thresholds for the refiner, or could a weaker model be enhanced with specific prompting techniques to achieve similar results?\n\n6. **Human Evaluation Validation**: The indistinguishability rate metric relies on GPT-4o as a discriminator, which may reflect its own generation biases. Could you provide a small-scale human evaluation of a subset of generated examples to validate that the IR metric correlates with human perception of quality? This would strengthen confidence in your quality assessment methodology."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 5
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "BARE : LEVERAGING BASE LANGUAGE MODELS FOR FEW-SHOT SYNTHETIC DATA GENERATION",
+    "2 RELATED WORK",
+    "3 MOTIVATION",
+    "3.1 DIVERSITY &amp; QUALITY METRICS",
+    "3.2 EXPERIMENTAL SETUP",
+    "3.3 INVESTIGATION RESULTS",
+    "4 BASE-REFINE ( BARE )",
+    "5 EVALUATION",
+    "Seed Data Scale Ablation. We additionally",
+    "6 CONCLUSION",
+    "B.3 INDEPENDENT SAMPLING TEMPERATURE ABLATIONS - HOTPOTQA, PUBMEDQA, AND LCB TOP",
+    "B.4 BARE FIRST STAGE ABLATIONS - GSM8K",
+    "B.5 BARE TRAINING SET SCALE ABLATIONS",
+    "B.6 BARE MODEL FAMILY ABLATIONS",
+    "C ADDITIONAL DISCUSSION",
+    "D GSM8K PROMPT EXAMPLES",
+    "Example 1",
+    "Example 2",
+    "Example 3",
+    "Base Prompt",
+    "Instruct Few-shot Prompt",
+    "Refine Prompt",
+    "Sequential Prompt",
+    "In One Prompt",
+    "Persona Prompt",
+    "Indistinguishability Rate Prompt",
+    "E USE OF LLMS"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

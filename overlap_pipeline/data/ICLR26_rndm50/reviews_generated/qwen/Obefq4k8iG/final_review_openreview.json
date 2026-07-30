@@ -1,0 +1,80 @@
+{
+  "pdfname": "Obefq4k8iG",
+  "content": {
+    "summary": {
+      "value": "This paper introduces Horizon Imagination (HI), an efficient on-policy imagination method for diffusion-based world models in reinforcement learning that denoises multiple future observations in parallel rather than sequentially. HI features two key innovations: a stable discrete action sampling mechanism that minimizes unnecessary action changes during denoising, and a novel Horizon schedule that decouples denoising budget from the effective horizon, enabling sub-frame budgets. The approach maintains control performance with only half the denoising steps compared to traditional autoregressive methods while achieving superior generation quality across various configurations. The authors demonstrate HI's effectiveness on both Atari 100K and Craftium environments, showing consistent performance across different denoising budgets and horizon settings. The method is training-agnostic and applies to any pre-trained diffusion world model with observation-level time conditioning. The paper provides comprehensive empirical analysis of generation quality under different schedules, revealing that parallel variants with sub-frame budgets can achieve quality comparable to full-budget baselines. This work significantly reduces the computational overhead of diffusion world models, making them more practical for training deployable policies. The authors also provide open-source implementation to facilitate further research in this area."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "1. The Horizon schedule fundamentally decouples denoising budget from decay horizon, solving a critical limitation in prior approaches like Chen et al.'s pyramidal schedule where these parameters were entangled. As demonstrated in Figure 2, this allows consistent decay horizons across different budgets (e.g., ν=3 remains fixed at both budget=10 and budget=20), preventing the performance degradation observed in prior methods when increasing computational resources.\n\n2. The stable discrete action sampling mechanism provides theoretically grounded guarantees for minimizing unnecessary action changes during denoising. Proposition 1 (with proof in Appendix E) establishes that the method correctly samples from the policy distribution while bounding action changes by the total variation distance between distributions, as empirically validated in Figure 3a where the method achieves near-optimal performance close to the theoretical lower bound.\n\n3. The paper demonstrates that parallel imagination with sub-frame budgets (B < h) maintains control performance equivalent to autoregressive approaches, as shown in Figure 4 where B=16 (half the standard budget) achieves comparable returns across all environments. This represents a genuine 50% reduction in imagination cost without performance trade-offs, as quantified in Table 8 showing controller training time decreasing from 93.55s to 53.55s per epoch.\n\n4. The comprehensive generation quality analysis (Figure 6) reveals counterintuitive insights: parallel configurations (4 ≤ ν ≤ 16) consistently outperform sequential approaches under low-to-medium budgets, with some sub-frame budget variants achieving quality comparable to baselines using 16× more denoising steps. This challenges conventional wisdom that more denoising steps always improve quality.\n\n5. The method specifically addresses discrete action spaces—a gap in prior multi-step diffusion generation work that focused on continuous actions (Rigter et al., 2024; Jackson et al., 2024)—as evidenced by the catastrophic performance collapse of naive sampling in Figure 5, particularly on Atari Boxing and Gopher where stable sampling proves essential for maintaining control performance."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses\n\n1. **Limited exploration of the decay horizon parameter (ν)**: While the paper consistently uses ν=4 across experiments, it lacks a thorough ablation study examining how performance varies with different decay horizon values. The authors acknowledge this limitation in Section 6 (\"we did not extend our study to additional configurations\"), but without exploring how ν affects both generation quality and control performance across environments, practitioners cannot determine optimal settings for different scenarios. A systematic analysis of ν values (e.g., 2, 4, 8, 16) would strengthen the paper's practical utility and reveal whether the observed ν=4 preference is environment-specific or generalizable.\n\n2. **Narrow focus on discrete action spaces without meaningful exploration of continuous extensions**: Although Appendix F mentions a potential continuous action extension using Gaussian policies, the paper provides no empirical validation of this approach. Since many real-world RL applications (robotics, autonomous driving) rely on continuous control, this limitation significantly constrains the method's applicability. The authors should at least conduct preliminary experiments on a continuous benchmark (e.g., DMControl) to validate their proposed extension, even if limited to a single environment.\n\n3. **Insufficient exploration of extremely low budgets**: The paper demonstrates effectiveness at B=16 (half the standard budget) but doesn't explore more aggressive sub-frame budgets (e.g., B=1-4) that would better demonstrate practical utility for real-time deployment. The generation quality analysis in Figure 6 shows performance maintains down to B=4 in some cases, but the control performance experiments don't test these extremely low budgets. Adding results for B=4 would better support the paper's efficiency claims and provide clearer guidance for practitioners seeking maximum speedups.\n\n4. **Lack of comparison with alternative diffusion acceleration techniques**: The paper compares only with autoregressive baselines but doesn't benchmark against other established diffusion acceleration methods like progressive distillation (Salimans & Ho, 2022) or consistency models (Song et al., 2023) that could provide more competitive efficiency baselines. Without such comparisons, it's unclear whether Horizon Imagination offers advantages over these general-purpose acceleration techniques when adapted to world models.\n\n5. **No analysis of the trade-off between generation quality and control performance**: The paper separately evaluates generation quality (Section 5.3) and control performance (Section 5.2), but doesn't investigate cases where these metrics might conflict. For example, Figure 6 shows that higher budgets sometimes degrade MSE while improving FVD, but the paper doesn't examine whether these generation quality differences translate to meaningful control differences. A direct analysis correlating generation metrics with policy performance would strengthen the paper's practical guidance."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **Practical deployment implications**: Table 8 shows a 43% reduction in controller training time when halving the denoising budget (from 1871ms to 1071ms per step). Could you elaborate on the real-world deployment implications of this efficiency gain? Specifically, how would this translate to energy consumption, inference latency, or hardware requirements for edge devices where computational resources are constrained? Understanding the practical impact beyond training time would strengthen the paper's relevance to deployment scenarios.\n\n2. **Mechanism behind parallel generation superiority**: Figure 6 reveals that parallel configurations (ν=4-16) often achieve better FVD scores than sequential generation even at the same denoising budget. Could you provide a theoretical explanation for why parallel denoising might produce higher perceptual quality? Is this due to reduced error propagation compared to sequential methods, or does it reflect some regularization effect from processing multiple timesteps simultaneously? This insight could change my understanding of diffusion process dynamics in world models.\n\n3. **Breakout performance anomaly**: Appendix G mentions a decoupled clean/noisy actor variant that improved performance on Breakout. Since this game wasn't included in your main benchmarks, could you share more details about why the standard approach underperforms on Breakout specifically? Understanding the environmental characteristics that challenge your method would help identify limitations and guide future applications. This could significantly alter my assessment of the approach's generalizability.\n\n4. **Minimum viable denoising budget**: Your results show strong performance with B=16 (sub-frame budget), but don't explore how low the budget can go before performance degrades. Could you provide preliminary results or theoretical analysis on the minimum denoising steps required to maintain reasonable control performance? This would help practitioners understand the practical lower bounds of your approach and could address concerns about whether the efficiency gains come at a hidden cost.\n\n5. **Stable sampling mechanism sensitivity**: Figure 5 shows that naive sampling causes severe performance drops in Atari Boxing and Gopher but less so in other environments. Could you analyze why these specific environments are particularly sensitive to action instability? Is it related to the action space structure (e.g., boxing requiring precise timing), visual complexity, or reward sparsity? This analysis would clarify whether the stable sampling mechanism is universally necessary or only beneficial for certain environment classes."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "HORIZON IMAGINATION: EFFICIENT ON-POLICY ROLLOUT IN DIFFUSION WORLD MODELS",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 PRELIMINARIES",
+    "4 METHOD",
+    "4.1 WORLD MODEL TRAINING",
+    "4.2 HORIZON IMAGINATION (WORLD MODEL INFERENCE)",
+    "Proposition 1. The sampling scheme a ( · , · ) satisfies the following properties:",
+    "Algorithm 1 Horizon Imagination",
+    "4.3 ACTOR-CRITIC TRAINING",
+    "5 EXPERIMENTS",
+    "5.1 EMPIRICAL ANALYSIS OF ACTION CONSISTENCY",
+    "5.2 CONTROL PERFORMANCE",
+    "5.2.1 SETUP",
+    "5.2.2 RESULTS",
+    "5.2.3 ABLATION STUDY: STABLE ACTION SAMPLING",
+    "5.3 PARALLEL VS. SEQUENTIAL GENERATION QUALITY",
+    "6 LIMITATIONS",
+    "7 CONCLUSIONS",
+    "A EXPERIMENTAL SETUP",
+    "A.1 MODEL ARCHITECTURES",
+    "A.1.1 REPRESENTATION MODEL (TOKENIZER)",
+    "A.1.2 WORLD MODEL",
+    "A.1.3 ACTOR-CRITIC",
+    "A.2 HYPERPARAMETERS",
+    "A.3 IMPLEMENTATION DETAILS",
+    "B RUNTIME ANALYSIS",
+    "C ALGORITHM PSEUDOCODE",
+    "D ADDITIONAL RESULTS",
+    "E PROOF FOR PROPOSITION 1",
+    "E.1 PROOF TO PROPOSITION 1.1",
+    "E.2 PROOF TO PROPOSITION 1.2",
+    "F POTENTIAL EXTENSION TO CONTINUOUS ACTION SPACES",
+    "G DECOUPLED CLEAN AND NOISY ACTOR VARIANT",
+    "H USE OF LARGE LANGUAGE MODELS (LLMS)"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

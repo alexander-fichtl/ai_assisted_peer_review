@@ -1,0 +1,63 @@
+{
+  "pdfname": "Ba0RlUn0TR",
+  "content": {
+    "summary": {
+      "value": "This paper proposes Partition-Losses Fine-Tuning (PL), a novel defense method against poisoning-based backdoor attacks on deep neural networks. PL leverages both clean and potentially malicious samples during fine-tuning, minimizing benign loss while maximizing target-class loss. The method is architecture- and domain-agnostic, adding only minor overhead. Extensive experiments show PL achieves near-zero attack success rates and competitive clean accuracy against various attacks and contamination settings. PL uses fewer tuning samples than baselines and remains effective under realistic contamination. The work broadens the design space of practical backdoor defenses by leveraging quarantined malicious samples. The proposed method has potential benefits for safety-critical applications."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Novel Defense Method**: The paper proposes Partition-Losses Fine-Tuning (PL), a novel and architecture-agnostic defense method against poisoning-based backdoor attacks on deep neural networks. PL directly unlearns the backdoor association by leveraging both clean and potentially malicious samples during fine-tuning.\n\n2. **Comprehensive Experiments**: The paper presents comprehensive experiments across multiple datasets (CIFAR-10, GTSRB, Tiny-ImageNet) and five representative dirty-label backdoor attacks (BadNet, Blended Attack, SSBA, WaNet, and Adaptive Blend). These experiments showcase PL's effectiveness in achieving near-zero attack success rates and competitive clean accuracy.\n\n3. **Data Efficiency**: PL uses fewer tuning samples than existing baselines and remains effective under realistic contamination settings, highlighting its data efficiency.\n\n4. **Robustness to Contamination**: The paper demonstrates PL's robustness to contamination in both benign and malicious pools during fine-tuning. PL consistently achieves the lowest attack success rate with competitive clean accuracy across various contamination settings.\n\n5. **Practicality and Generalization**: PL is a plug-in loss modification that is domain- and architecture-agnostic, adding only minor per-iteration overhead. It generalizes well to unseen backdoor triggers and degrades gracefully as contamination increases.\n\n6. **Significance and Originality**: The paper broadens the design space of practical backdoor defenses by showing that quarantined malicious samples can be effectively leveraged rather than discarded. The proposed method has potential benefits for safety-critical applications such as healthcare, autonomous driving, and cybersecurity."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Assumption of Contaminated Samples**: The method assumes that some flagged samples might be malicious, which may not always be the case. This assumption could lead to potential misclassification of clean samples as malicious, affecting the model's performance.\n\n2. **Hyperparameter Sensitivity**: The choice of the trade-off parameter α may significantly impact PL's performance. A more detailed analysis of the sensitivity of PL to different α values and a guideline for choosing the optimal α would strengthen the paper.\n\n3. **Limited Evaluation on Diverse Architectures**: The paper primarily evaluates PL on ResNet-18 and Swin Transformer architectures. A more comprehensive evaluation on diverse architectures, including smaller models or models with different layers, would help establish PL's generalizability.\n\n4. **Lack of Comparison to State-of-the-Art Defense Methods**: Although PL is compared to several baseline methods, a comparison to more recent state-of-the-art defense methods, such as [reference to recent works], would provide a more comprehensive evaluation of PL's performance.\n\n5. **Unrealistic Contamination Settings**: While the paper considers contamination in both benign and malicious pools, the contamination rates might not reflect real-world scenarios. An evaluation under more realistic contamination settings, such as those derived from empirical studies, would increase the paper's practical relevance.\n\n6. **Theoretical Analysis of PL's Limitations**: A more in-depth theoretical analysis of PL's limitations, such as its vulnerability to certain types of attacks or its performance on specific datasets, would provide a more comprehensive understanding of the method's strengths and weaknesses.\n\n7. **Code and Model Availability**: Although the authors mention that they will release the code upon acceptance, making the code and models publicly available would facilitate reproducibility and comparison with other methods.\n\nBy addressing these weaknesses, the paper could provide a more comprehensive and robust evaluation of Partition-Losses Fine-Tuning (PL) as a defense method against poisoning-based backdoor attacks."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Hyperparameter α**: The authors mention that the choice of the trade-off parameter α significantly impacts PL's performance. Could the authors provide a more detailed analysis of the sensitivity of PL to different α values and a guideline for choosing the optimal α?\n\n2. **Evaluation on Diverse Architectures**: The paper primarily evaluates PL on ResNet-18 and Swin Transformer architectures. Could the authors evaluate PL on more diverse architectures, including smaller models or models with different layers, to establish PL's generalizability?\n\n3. **Comparison to State-of-the-Art Defense Methods**: Although PL is compared to several baseline methods, could the authors compare PL to more recent state-of-the-art defense methods to provide a more comprehensive evaluation of PL's performance?\n\n4. **Realistic Contamination Settings**: The paper considers contamination in both benign and malicious pools, but the contamination rates might not reflect real-world scenarios. Could the authors evaluate PL under more realistic contamination settings, such as those derived from empirical studies?\n\n5. **Theoretical Analysis of PL's Limitations**: Could the authors provide a more in-depth theoretical analysis of PL's limitations, such as its vulnerability to certain types of attacks or its performance on specific datasets?\n\n6. **Code and Model Availability**: Although the authors mention that they will release the code upon acceptance, could they confirm that they will make the code and models publicly available to facilitate reproducibility and comparison with other methods?\n\n7. **Impact of False Positives and False Negatives**: The method assumes that some flagged samples might be malicious, which may not always be the case. Could the authors analyze the impact of false positives and false negatives on PL's performance and provide strategies to mitigate these effects?\n\n8. **Applicability to Other Tasks**: The paper focuses on image classification, though the proposed defense strategy is agnostic to both input modality and model architecture. Could the authors evaluate PL on other tasks, such as natural language processing or audio classification, to demonstrate its broader applicability?\n\nBy addressing these questions and suggestions, the authors can provide a more comprehensive and robust evaluation of Partition-Losses Fine-Tuning (PL) as a defense method against poisoning-based backdoor attacks."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": "8"
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "000 001 002 PARTITION-LOSSES FINE-TUNING: CONTAMINATION-ROBUST BACKDOOR UNLEARNING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "3 PARTITION-LOSSES FINE-TUNING (PL)",
+    "Algorithm 1: Partition-Losses Fine-Tuning (PL)",
+    "for i = 1 to I do",
+    "return f θ ( I )",
+    "4 EXPERIMENTS",
+    "4.1 PL CAN EFFECTIVELY DEFEND AGAINST BACKDOOR ATTACKS",
+    "4.3.2 SENSITIVITY ANALYSIS ON TUNING DATASET SIZE",
+    "5 CONCLUSION",
+    "Under review as a conference paper at ICLR 2026",
+    "A PROOF FOR THEOREM 1",
+    "B EXPERIMENTAL SETUP",
+    "C PERFORMANCE UNDER CONTAMINATED PARTITION OF TUNING SETS.",
+    "D ADDITIONAL ABLATION: SENSITIVITY TO PARTITION CONTAMINATION",
+    "E ADDITIONAL ABLATION: GENERALIZATION TO UNKNOWN ATTACKS",
+    "F USE OF LLMS"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

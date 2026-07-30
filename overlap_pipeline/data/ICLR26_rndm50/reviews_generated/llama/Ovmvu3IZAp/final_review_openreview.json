@@ -1,0 +1,67 @@
+{
+  "pdfname": "Ovmvu3IZAp",
+  "content": {
+    "summary": {
+      "value": "The paper proposes a method, SupGRPO, for enhancing text spotting with matching-based online SFT for multimodal large language models (MLLMs). \n\nText spotting requires accurate text recognition and precise spatial localization. Current specialized text spotters excel at predicting tight bounding boxes in natural scenes but struggle with complex or artistic text. \n\nThe authors explore two MLLM-based fine-tuning methods: Supervised Fine-Tuning (SFT) and Group Relative Policy Optimisation (GRPO). SupGRPO combines GRPO and SFT, applying a matching-based online SFT to coordinate tokens. \n\nSupGRPO mitigates the reward sparsity problem of GRPO and avoids the instance order dependency problem of SFT. \n\nThe authors curate ATS, a dataset for artistic text spotting, and demonstrate that SupGRPO improves both text recognition and detection. \n\nThe main contributions include: \n1. Proposing SupGRPO, an end-to-end training strategy that integrates SFT and GRPO.\n2. Constructing a standardized dataset for artistic text spotting.\n3. Achieving a synergy where SFT enhances detection precision while GRPO boosts recognition reasoning."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "The paper has several strengths:\n\n1. **Novel Combination of SFT and GRPO**: The authors propose a creative combination of Supervised Fine-Tuning (SFT) and Group Relative Policy Optimisation (GRPO) to enhance text spotting with multimodal large language models (MLLMs). This approach effectively mitigates the limitations of both methods, including reward sparsity in GRPO and instance order dependency in SFT.\n\n2. **Dataset for Artistic Text Spotting**: The authors construct a standardized dataset for artistic text spotting, ATS, which provides a critical reference point for future research in this domain. The dataset includes 6500 training images and 2500 testing images, showcasing diverse artistic text scenarios.\n\n3. **Synergistic Collaboration**: SupGRPO achieves a synergy where SFT enhances detection precision while GRPO boosts recognition reasoning. This integration of SFT and GRPO leads to significant improvements in both text detection and end-to-end recognition.\n\n4. **State-of-the-Art Performance**: The experimental results demonstrate that SupGRPO outperforms existing specialized text spotting methods and MLLMs on several benchmarks, including the proposed ATS dataset. The approach shows particularly significant improvements in complex artistic text scenarios.\n\n5. **Ablation Studies**: The authors conduct thorough ablation studies to validate the effectiveness of different components of SupGRPO, including the impact of the ATS dataset, training strategies, and matching mechanisms. These studies provide valuable insights into the contributions of each design choice.\n\n6. **Clear Writing and Organization**: The paper is well-structured, and the writing style is clear and concise. The authors provide a thorough introduction to the problem of text spotting, a clear presentation of the proposed method, and well-organized experimental results."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Comparison to State-of-the-Art Specialized Text Spotting Methods**: While the paper compares SupGRPO to some specialized text spotting methods, the comparison could be more comprehensive. For instance, it would be beneficial to include comparisons with recent methods like ESTextSpotter (Huang et al., 2023) and Bridge (Huang et al., 2024), which have shown promising results in text spotting tasks.\n\n2. **Impact of the ATS Dataset**: Although the ATS dataset is a valuable contribution, the paper could provide more analysis on how the dataset specifically improves the performance of SupGRPO. It would be helpful to compare the performance of SupGRPO on the ATS dataset with its performance on other datasets, such as Total-Text (Ch'ng et al., 2020) and ICDAR 2015 (Karatzas et al., 2015), to understand the dataset's impact.\n\n3. **Ablation Study on Reward Functions**: The ablation study on reward functions could be more detailed. For example, the paper could provide more insights into how different combinations of reward functions (e.g., format, text, IoU precision, and IoU recall) affect the performance of SupGRPO.\n\n4. **Hyperparameter Tuning**: The paper mentions that the weighting hyperparameter λ for balancing SFT and GRPO objectives is set to 1e-4 by default. However, it would be beneficial to provide more details on the hyperparameter tuning process, such as the range of values considered and the sensitivity of the results to different λ values.\n\n5. **Computational Cost and Training Time**: The paper could provide more information on the computational cost and training time of SupGRPO. This would help readers understand the practical feasibility of the proposed method, especially when compared to specialized text spotting methods.\n\n6. **Generalization to Other Text Spotting Scenarios**: While the paper focuses on artistic text spotting, it would be interesting to see how SupGRPO generalizes to other text spotting scenarios, such as natural scene text spotting or document text spotting. This could provide insights into the method's versatility and applicability to different domains.\n\n7. **Qualitative Analysis of Failure Cases**: A qualitative analysis of failure cases would provide a more comprehensive understanding of SupGRPO's limitations. This could help identify areas for further improvement and provide insights into how the method can be refined.\n\nBy addressing these weaknesses, the paper could provide a more comprehensive evaluation of SupGRPO and its contributions to the field of text spotting."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Clarification on Comparison to State-of-the-Art Methods**: The paper compares SupGRPO to some specialized text spotting methods, but it would be beneficial to include comparisons with recent methods like ESTextSpotter and Bridge. Could the authors provide more comprehensive comparisons to state-of-the-art methods?\n\n2. **Impact of the ATS Dataset**: The ATS dataset is a valuable contribution, but more analysis on how the dataset specifically improves the performance of SupGRPO would be helpful. Could the authors compare the performance of SupGRPO on the ATS dataset with its performance on other datasets?\n\n3. **Detailed Ablation Study on Reward Functions**: The ablation study on reward functions could be more detailed. Could the authors provide more insights into how different combinations of reward functions affect the performance of SupGRPO?\n\n4. **Hyperparameter Tuning Process**: The paper mentions that the weighting hyperparameter λ is set to 1e-4 by default. Could the authors provide more details on the hyperparameter tuning process, such as the range of values considered and the sensitivity of the results to different λ values?\n\n5. **Computational Cost and Training Time**: Could the authors provide more information on the computational cost and training time of SupGRPO? This would help readers understand the practical feasibility of the proposed method.\n\n6. **Generalization to Other Text Spotting Scenarios**: The paper focuses on artistic text spotting, but it would be interesting to see how SupGRPO generalizes to other text spotting scenarios. Could the authors provide insights into the method's versatility and applicability to different domains?\n\n7. **Qualitative Analysis of Failure Cases**: A qualitative analysis of failure cases would provide a more comprehensive understanding of SupGRPO's limitations. Could the authors provide insights into the types of errors made by SupGRPO and potential areas for further improvement?\n\n8. **Addressing Catastrophic Forgetting**: The authors mention that fine-tuning on domain-specific text spotting data inevitably leads to a slight degradation in performance on general multimodal benchmarks. Could the authors provide more insights into how they mitigate this issue, and what techniques they use to preserve general world knowledge while adapting to the target task?\n\nBy addressing these questions and suggestions, the authors can provide further clarification, address limitations, and enhance the overall understanding and impact of their work."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "SUPGRPO: ENHANCING GRPO WITH MATCHINGBASED ONLINE SFT FOR TEXT SPOTTING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "2.1 TEXT SPOTTING METHODS",
+    "2.2 TEXT SPOTTING DATASETS",
+    "2.3 MULTIMODAL LARGE LANGUAGE MODELS FOR OCR",
+    "3 METHOD",
+    "3.1 PRELIMINARY",
+    "3.2 REWARD FUNCTIONS FOR TEXT SPOTTING",
+    "3.3 GRPO WITH MATCHING-BASED ONLINE SFT",
+    "4 EXPERIMENTS",
+    "4.1 ARTISTIC TEXT SPOTTING DATASET",
+    "4.2 IMPLEMENTATION DETAILS",
+    "4.3 RESULTS OF TEXT SPOTTING",
+    "4.4 ABLATION STUDY",
+    "5 CONCLUSION",
+    "A APPENDIX: DISTRIBUTION STATISTICS OF THE ATS DATASET",
+    "B APPENDIX: TRAINING CURVE COMPARISON",
+    "C APPENDIX: QUALITATIVE COMPARISON",
+    "D LIMITATION"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

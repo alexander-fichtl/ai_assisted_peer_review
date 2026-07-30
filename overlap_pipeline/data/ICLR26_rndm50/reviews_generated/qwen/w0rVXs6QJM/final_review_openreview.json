@@ -1,0 +1,72 @@
+{
+  "pdfname": "w0rVXs6QJM",
+  "content": {
+    "summary": {
+      "value": "This paper introduces EucliFold, a synthetic visual question-answering benchmark focused on cube net folding in Euclidean space to evaluate spatial reasoning capabilities in Vision-Language Models (VLMs). The authors propose a cognitively-stratified framework that decomposes spatial reasoning into three hierarchical levels: Perception (grounding sensory input), Operation (manipulating representations according to instructions), and Imagination (autonomous problem-solving under geometric constraints). To address evaluation biases, they employ Winograd-style accuracy using minimal-pair contrastive samples that measure the difference between true-belief and false-belief response patterns. The evaluation reveals that while state-of-the-art VLMs demonstrate reasonable perceptual capabilities, they fail significantly at operational and imagination-level spatial reasoning, suggesting reliance on statistical patterns rather than genuine geometric understanding. The authors identify that some models can solve specific cases through partial strategies but fail to develop generalizable spatial reasoning capabilities. The work contributes a systematic decomposition of spatial reasoning, a controlled synthetic dataset with programmatic generation, a bias-resistant evaluation methodology, and comprehensive analysis of VLM spatial reasoning gaps. EucliFold provides a rigorous testbed for probing emergent spatial priors in future models and demonstrates how cognitive decomposition can reveal nuanced capability gaps in VLMs."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths Assessment\n\n1. **Theoretically grounded cognitive decomposition framework**: The paper's most significant strength is its three-level cognitive stratification (Perception/Operation/Imagination) that transforms spatial reasoning evaluation from a monolithic assessment into a diagnostic tool. This framework isn't merely descriptive but empirically validated by the clear performance gaps across levels (e.g., InternVL-78B achieves 0.666 WinoAcc at Perception but only 0.020 at Operation), revealing precisely where VLMs fail to develop genuine spatial understanding. This represents a methodological advance beyond prior benchmarks that treated spatial reasoning as undifferentiated.\n\n2. **Winograd-Style Accuracy metric**: The paper addresses a critical flaw in VLM evaluation—response bias (Zheng et al., 2024)—through a novel adaptation of Winoground methodology. By measuring the difference between true-belief and false-belief responses across minimal-pair contrastive samples, it isolates genuine spatial reasoning from superficial pattern matching. This methodological innovation resolves a key limitation in prior spatial reasoning evaluations that couldn't distinguish between real capability and statistical artifacts.\n\n3. **Diagnostic case study revealing partial solution strategies**: The analysis in Appendix H demonstrates how InternVL-2.5 achieves above-chance performance only on specific \"L\"-shaped configurations (513 of 719 correct pairs), while performing at chance level otherwise. This concrete evidence proves models aren't developing generalizable spatial priors but exploiting limited patterns—a finding that would be impossible without the paper's stratified framework.\n\n4. **Synthetic dataset with controlled confounds**: EucliFold's programmatic generation (Figure 2) creates a clean testbed where variables are systematically manipulated while maintaining real-world complexity. Unlike previous benchmarks that struggled to eliminate spurious correlations, this design enables precise attribution of model performance to specific cognitive capabilities rather than dataset artifacts, as evidenced by the human-level performance (0.868 WinoAcc) on Perception tasks versus near-chance performance on Imagination tasks."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses Assessment\n\n1. **Narrow domain focus limits generalizability**: The exclusive focus on cube net folding, while methodologically rigorous, captures only a narrow slice of spatial reasoning. Humans employ diverse spatial reasoning strategies (navigation, perspective-taking, multi-object relationships) that aren't represented in this Euclidean-only framework. The paper would be strengthened by expanding to at least one additional spatial reasoning domain (e.g., mental rotation of multiple objects or spatial path planning) to demonstrate whether the three-level cognitive framework applies broadly. Without this, the claim that EucliFold \"provides a rigorous testbed for probing emergent spatial priors\" (p. 466) remains unvalidated for general spatial reasoning.\n\n2. **Superficial failure mode analysis**: While Section H presents a valuable case study showing InternVL-78B's reliance on L-shaped patterns for folding tasks, this analysis is limited to one model on one task type. A systematic failure analysis across all models and cognitive levels would reveal whether different architectures fail in distinct ways (e.g., whether smaller models struggle with perception while larger models fail at imagination due to different mechanisms). The authors should implement an error taxonomy with quantitative distribution across models to identify architectural patterns in spatial reasoning failures.\n\n3. **Lack of actionable guidance for improvement**: The paper effectively demonstrates VLMs' spatial reasoning limitations but provides no pathway for improvement. Given the stated goal of \"providing a rigorous testbed for probing emergent spatial priors in future models\" (p. 466), the authors should include at least preliminary experiments showing whether specific training approaches (e.g., geometric data augmentation, explicit spatial pretraining, or architectural modifications) improve performance on EucliFold tasks. This would transform the work from diagnostic tool to prescriptive framework.\n\n4. **Human performance methodology limitations**: The human Winograd-Style Accuracy is estimated rather than directly measured (p. 758: \"seeing paired questions simultaneously provides additional useful information, so we do not use paired questions to test humans\"). This introduces uncertainty in the human baseline against which models are compared. The authors should implement a controlled human study using the same paired question format as models to establish a directly comparable baseline, which would strengthen the validity of the human-model performance gap claims.\n\n5. **Questionable chance-level assumptions**: The paper defines chance level as 0.0 for Winograd-Style Accuracy (Table 2), assuming perfect negative correlation between true-belief and false-belief responses. However, VLMs exhibit systematic biases (e.g., preference for \"True\" responses) that may make certain error patterns more likely than chance. The authors should empirically determine the actual chance level by testing models with scrambled spatial relationships or using control tasks with known random performance, rather than assuming 0.0 as the baseline."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **Scaling limitations on Operation/Imagination tasks**: Your Figure 1 shows that model scaling doesn't consistently improve performance on Operation and Imagination tasks (e.g., InternVL-78B performs worse than InternVL-8B on Operation tasks). Could you elaborate on why scaling might not help with these specific spatial reasoning capabilities? This counterintuitive finding seems critical to understanding whether current VLM architectures fundamentally lack geometric reasoning or if there are specific bottlenecks that could be addressed with architectural changes. Understanding this could significantly strengthen your conclusion about \"architectural innovations\" being necessary.\n\n2. **Benchmark modifications to prevent partial solutions**: Appendix H demonstrates that InternVL-78B's above-chance folding performance stems from recognizing specific L-shaped patterns rather than general spatial reasoning. Could you propose concrete modifications to EucliFold that would prevent such partial solutions while maintaining the benchmark's methodological rigor? For instance, would eliminating L-shaped configurations entirely be feasible, or would this introduce new biases? This would address whether your framework can truly measure generalizable spatial priors.\n\n3. **Winograd-style accuracy validation**: While your Winograd-Style Accuracy metric effectively controls for response bias, how does it correlate with traditional accuracy metrics used in other spatial reasoning benchmarks (e.g., 3DSRBench or LEGOPuzzles)? Would your main conclusion—that VLMs fail at genuine spatial reasoning—hold if evaluated with standard accuracy metrics? This is important for situating your findings within the broader literature.\n\n4. **Orthogonality of cognitive levels**: Your three-level decomposition (Perception/Operation/Imagination) is a key contribution, but the performance correlations across levels (e.g., models with high Perception scores don't necessarily excel at Operation) suggest potential interdependencies. Could you provide additional evidence that these represent distinct cognitive capabilities rather than merely increasing difficulty? A confusion matrix analysis showing which errors at one level predict failures at higher levels would strengthen this framework.\n\n5. **Concrete pathways for improvement**: Your conclusion suggests \"architectural innovations or training paradigms that explicitly incorporate geometric inductive biases\" are needed, but doesn't specify what these might be. Given your detailed analysis of failure modes, could you propose 1-2 concrete architectural modifications (e.g., specific attention mechanisms or geometric loss functions) that might address the identified limitations? This would transform your diagnostic findings into actionable research directions."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "The paper conducts human evaluation with university student volunteers (Appendix G)",
+        "but lacks documentation of ethical procedures. Specifically",
+        "it reports \"selecting university student volunteers as subjects\" who \"randomly answered 16 questions\" without mentioning: (1) whether informed consent was obtained",
+        "(2) whether Institutional Review Board (IRB) approval was secured",
+        "or (3) how participant privacy was protected. According to the ICLR Code of Ethics",
+        "\"Where human subjects are involved in the research process... the need for ethical approvals from an appropriate ethical review board should be assessed and reported.\" The absence of such documentation for the human evaluation component constitutes a failure in responsible research practice. While the evaluation appears low-risk (answering questions about cube images)",
+        "proper ethical documentation is required for human subjects research.\n\nRating: Ethics review needed: Responsible Research Practice (e.g.",
+        "IRB",
+        "documentation",
+        "research ethics)"
+      ]
+    },
+    "rating": {
+      "value": 5
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "EUCLIFOLD: PROBING 3D EUCLIDEAN PRIOR IN VLMS VIA COGNITIVELY-STRATIFIED FOLDING TASKS",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "2.1 LARGE LANGUAGE MODEL-BASED VISUAL LANGUAGE MODELS",
+    "2.2 SPATIAL REASONING BENCHMARKS FOR VLMS",
+    "3 SPATIAL PRIORS OF THREE COGNITIVE LEVELS",
+    "4 EUCLIFOLD DATASET",
+    "4.1 SPATIAL REPRESENTATION DESIGN AND IMAGE GENERATION",
+    "5 EXPERIMENTS AND ANALYSIS",
+    "5.1 GENERAL PERFORMANCE AND THE EFFECT OF SCALING",
+    "5.1.2 IMAGINATION TASKS: FAILURE IN COMPLEX SPATIAL REASONING",
+    "E APPENDIX: EUCLIDEAN STYLE QUESTIONS",
+    "F APPENDIX: COMPLETE RESULTS",
+    "G APPENDIX: HUMAN PERFORMANCE",
+    "H APPENDIX: CASE STUDY ON THE PARTIAL SOLUTION OF FOLDING TASK",
+    "I APPENDIX: LLM USAGE"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

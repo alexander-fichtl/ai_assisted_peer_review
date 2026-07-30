@@ -1,0 +1,75 @@
+{
+  "pdfname": "6K08FPo2cf",
+  "content": {
+    "summary": {
+      "value": "The paper introduces Matting Anything 2 (MAM2), a versatile video matting model capable of handling diverse objects beyond human portraits using flexible user prompts like points, boxes, or masks. The authors propose two key innovations: a Promptable Dual-mode Decoder (PDD) that simultaneously predicts segmentation masks and trimaps to improve generalization, and a Memory-Separable Siamese (MSS) mechanism that isolates trimap prediction from mask memory to enhance temporal consistency for transparent objects. To address the lack of diverse evaluation benchmarks, they introduce the Natural Video Matting dataset containing 50 clips across 10 categories including animals, fire, water, and plants. The method achieves state-of-the-art results on both natural object matting (reducing MAD from 39.44 to 14.72) and human portrait matting (reducing MAD from 2.05 to 1.16), while requiring only first-frame interaction. MAM2 demonstrates strong performance across various prompt types and also functions effectively as an image matting model. The selective supervision scheme enables efficient training using heterogeneous data sources without requiring additional parameters. The authors provide extensive visualizations showing robust matting results for challenging transparent objects like smoke and bubbles. This work represents a significant advancement toward truly general-purpose video matting for diverse objects in real-world applications."
+    },
+    "soundness": {
+      "value": 4
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "# Strengths of the Paper\n\n1. **Novel problem formulation addressing critical real-world limitations**: The paper identifies two fundamental yet overlooked limitations in video matting: (1) extreme domain specificity (nearly all prior work targets only human portraits, as shown in Table 1 where existing benchmarks contain 25-32 clips of \"human\" vs. MAM2's diverse NOVM with 50 clips across 10 categories), and (2) impractical reliance on first-frame masks for transparent objects where pixel-level precision is difficult to obtain (e.g., fire/smoke in Figure 16). This reframing of the problem space is significant as it addresses barriers to real-world deployment.\n\n2. **Memory-Separable Siamese (MSS) mechanism as a targeted solution for transparent objects**: The paper identifies a subtle but critical issue where standard decoding causes temporal collapse for transparent objects (Figure 4 shows subsequent frames incorrectly classifying transparent regions as foreground). MSS elegantly resolves this by decoupling trimap prediction from mask memory interference through a second pass on memory-free features, with no added parameters (Section 3.5). The ablation (Table 5) shows this improves MAD from 18.55 to 14.72 on NOVM.\n\n3. **Natural Object Video Matting (NOVM) dataset as a benchmark breakthrough**: The authors introduce the first comprehensive benchmark for diverse natural objects (Table 9 shows 10 categories including fire, bubble, cloud), filling a critical gap in evaluation resources. Unlike existing datasets (VideoMatte240K, VideoMatting108), NOVM contains challenging transparent objects where previous methods fail, enabling proper assessment of generalization capabilities.\n\n4. **Promptable Dual-mode Decoder (PDD) for effective trimap guidance**: The paper demonstrates that simply adding a parallel trimap branch (as in SEMatte) produces noisy results (Figure 3), while PDD's mask-guided enhancement creates high-quality trimaps by fusing mask augment features with segmentation features. The 24% MAD improvement on NOVM (Table 5) validates this architectural insight for natural objects beyond portraits.\n\n5. **Practical prompt flexibility enabling real-world usability**: Unlike prior methods requiring precise first-frame masks (MatAnyone, FTP-VM), MAM2 works directly with boxes/points for transparent objects (Figure 1), eliminating the need for auxiliary segmentation models. This is crucial for objects like fire where users cannot practically provide accurate masks, as evidenced by the comparable performance between mask and box/point prompts in Table 2 (MAD 15.19 vs 14.72)."
+    },
+    "weaknesses": {
+      "value": "# Weaknesses of the Paper\n\n1. **Computational efficiency limitations for practical deployment**: While the paper emphasizes MAM2's superior accuracy, Table 10 shows it runs at only 11.24 FPS with 256.83M parameters, significantly slower than alternatives like MaGGIe (18.87 FPS) and MatAnyone (15.43 FPS). For real-time applications like video conferencing (a stated use case in Section 1), this latency could be prohibitive. The authors note other methods require auxiliary models, but the total system latency matters more to end-users. *Actionable insight*: The authors should explore model compression techniques specifically for the PDD and MSS components, or provide guidance on which components can be pruned for latency-constrained scenarios while maintaining acceptable quality for different transparency levels.\n\n2. **Insufficient analysis of failure modes for transparent objects**: Section E mentions limitations with highly transparent objects but provides only qualitative examples in Figure 16 without quantitative analysis. The paper lacks metrics showing performance degradation across different transparency levels or object types. *Actionable insight*: The authors should create a transparency-stratified evaluation subset of NOVM with metrics like MAD correlated with transparency percentage, which would help identify specific failure thresholds and guide future improvements for low-opacity regions.\n\n3. **Lack of comparison with recent SAM2-based methods**: While the paper compares with MatAnyone (2025), it doesn't include more recent approaches that might also build on SAM2 (e.g., methods published after the paper's submission cutoff). The authors note their work was developed alongside SAM2, but without comparing to the most current approaches, it's difficult to assess the true novelty. *Actionable insight*: The authors should conduct additional experiments against the latest SAM2-based video segmentation/matting methods to clearly establish what aspects of MAM2 (PDD vs. MSS vs. training scheme) provide the actual performance gains.\n\n4. **No user study validating the practical benefit of flexible prompts**: The paper emphasizes that points/boxes are more efficient than masks for transparent objects, but provides no empirical evidence that users actually find these interaction modes faster or more accurate. *Actionable insight*: A controlled user study comparing time-to-completion and success rates for different prompt types across object categories would strengthen the claim that flexible prompts provide real-world value, particularly for non-expert users working with transparent objects."
+    },
+    "questions": {
+      "value": "# Questions and Suggestions for Authors\n\n1. **Computational efficiency in real-world deployment**: While Table 10 shows MAM2's FPS (11.24) is lower than alternatives, the paper notes that methods like MatAnyone require auxiliary models (SAM-ViT-Huge) for mask generation. Could you provide end-to-end inference speed measurements that include the time for all necessary components in the complete pipeline? This would clarify whether the total system latency is actually prohibitive for real-time applications like video conferencing, which you mention as a key use case in Section 1.\n\n2. **High transparency limitations**: In Section E, you identify failure cases with highly transparent objects where low-opacity regions (like dissipating smoke) aren't properly captured. Is this primarily a data limitation (insufficient training examples of extreme transparency) or a fundamental model limitation? If the former, could you estimate how much additional training data with highly transparent objects would be needed to address this issue, and would this require architectural changes to the MSS mechanism?\n\n3. **Practical interaction requirements**: The paper demonstrates MAM2's ability to work with points and boxes, but doesn't quantify the practical interaction burden. For complex objects (e.g., fire, smoke, or intricate plants), what's the typical number of points or complexity of boxes needed to achieve high-quality results? A quantitative analysis of the trade-off between interaction complexity and output quality would help users understand the practical utility of the interface.\n\n4. **Data source importance**: Your ablation in Table 8 shows MAM2 outperforms even when using the same training data as FTP-VM, but could you provide more specific insights about which data types contribute most to performance on natural objects versus human portraits? Understanding whether video matting data, image matting data, or video segmentation data is most critical for different scenarios would help practitioners optimize training resources.\n\n5. **Generalization to unseen categories**: The NOVM dataset covers 10 categories (Table 9), but how does MAM2 perform on completely unseen object categories not represented in either training or NOVM? This would help assess whether the model has truly learned general matting principles rather than memorizing category-specific patterns. A brief analysis of performance on one or two completely novel categories would be illuminating."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "MATTING ANYTHING 2: TOWARDS VIDEO MATTING FOR ANYTHING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "3 METHODOLOGY",
+    "3.1 OVERALL FRAMEWORK",
+    "3.2 SELECTIVE SUPERVISION SCHEME",
+    "3.3 PRELIMINARY",
+    "3.4 PROMPTABLE DUAL-MODE DECODER",
+    "3.5 MEMORY-SEPARABLE SIAMESE MECHANISM",
+    "4 EXPERIMENTS",
+    "4.1 IMPLEMENTATION DETAILS",
+    "4.2 NATURAL OBJECT VIDEO MATTING DATASET",
+    "4.3 VIDEO MATTING",
+    "4.4 IMAGE MATTING",
+    "4.5 ABLATION STUDY",
+    "4.6 VISUALIZATION",
+    "5 CONCLUSION",
+    "A.3 TRAINING DATA",
+    "A.4 ABLATION OF TRAINING SETS",
+    "A.5 LOSS FUNCTION",
+    "B NATURAL VIDEO MATTING DATASET",
+    "C VISUALIZATION",
+    "C.1 VIDEO MATTING",
+    "C.2 IMAGE MATTING",
+    "C.3 VIDEO EDITING",
+    "D LATENCY",
+    "E LIMITATIONS",
+    "F LLM USAGE",
+    "Change Background"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

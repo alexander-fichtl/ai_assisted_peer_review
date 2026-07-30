@@ -1,0 +1,89 @@
+{
+  "pdfname": "dc90uPqxWF",
+  "content": {
+    "summary": {
+      "value": "The paper introduces World2Minecraft, a framework that converts real-world scenes into structured, editable Minecraft environments through 3D semantic occupancy prediction. It presents an automated pipeline for reconstructing real-world scenes in Minecraft, enabling downstream embodied tasks like Vision-Language Navigation (VLN) within these high-fidelity virtual environments. The authors identify limitations in current occupancy prediction models and propose MinecraftOcc, a large-scale synthetic dataset containing 100,165 images from 156 indoor scenes, created via a low-cost, automated data acquisition pipeline. They also construct MinecraftVLN, a dataset specifically designed for VLN tasks within the reconstructed environments, comprising 3,801 navigation samples across multiple scene types. Experiments demonstrate that MinecraftOcc serves dual purposes: as a challenging benchmark that exposes generalization limits of existing occupancy prediction methods and as an effective auxiliary training resource that improves performance on real-world benchmarks like NYUv2. The framework significantly reduces manual reconstruction effort, requiring only minimal refinement compared to building scenes from scratch, while maintaining high structural fidelity. This work provides a customizable platform for embodied AI research with practical applications in navigation and scene understanding."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths\n\n1. **Novel integration of semantic occupancy with Minecraft's structure**: The paper's most compelling strength is its creative application of 3D semantic occupancy prediction to Minecraft's voxel-based environment. Unlike prior approaches that struggle with either editability (Habitat) or reality gap (vanilla Minecraft), this work leverages Minecraft's discrete voxel structure as a natural alignment point for occupancy predictions, enabling direct translation of real-world scenes into editable environments without complex mesh-to-block conversions (Section 1). This represents a genuinely new problem formulation that bridges the gap between photorealistic reconstruction and physical interactability.\n\n2. **Automated data pipeline with quantifiable efficiency gains**: The paper introduces a low-cost, fully automated pipeline for semantic occupancy data generation that eliminates manual annotation. Most notably, Table 7 demonstrates concrete efficiency improvements—requiring only 70.38 seconds per scene with 24.5 operations versus 482 seconds and 340 operations for building from scratch—a 7.5× reduction in manual effort. This isn't just theoretical; the paper quantifies how minimal refinement (9.7 hole fillings, 7.6 noise deletions) suffices for functional environments.\n\n3. **MinecraftOcc as a challenging benchmark with dual utility**: The MinecraftOcc dataset (100,165 images, 156 scenes, 1,452 classes) isn't merely larger but demonstrably more challenging and useful than existing datasets. Table 3 shows it outperforms NYUv2 and OccScanNet in all quality metrics (NIQE 9.97 vs 14.96/17.63), while Table 5 proves its practical value as training data—improving Symphonies' performance on NYUv2 by +0.43 IoU when used as auxiliary data. This dual role as both benchmark and augmentation resource is a unique contribution.\n\n4. **Technical rigor in camera parameter acquisition**: The detailed derivation of camera parameters from Minecraft's virtual environment (Section D) addresses a subtle but critical challenge in simulation-to-reality transfer. The paper's precise handling of Euler angle conventions (with π offsets), YX rotation composition, and view frustum culling (Section E) demonstrates methodological depth often missing in similar works, ensuring geometric accuracy in the reconstruction process.\n\n5. **Practical VLN demonstration with LLM controllers**: Beyond reconstruction, the paper validates utility through embodied navigation experiments. Figure 5 shows a Gemini-2.5-Pro controlled agent successfully navigating to targets in reconstructed environments, while Table 2 quantifies how fine-tuned Qwen2.5-VL models achieve 0.80 accuracy on Next-Action tasks. This moves beyond proof-of-concept to demonstrate real-world applicability for embodied AI research."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses\n\n1. **Lack of quantitative reconstruction fidelity metrics**: While Figure 4 shows visual examples of reconstructed scenes, the paper provides no numerical metrics to quantify how accurately Minecraft environments match their real-world counterparts. Without metrics like Chamfer distance, IoU between real and reconstructed 3D structures, or semantic alignment scores, it's impossible to objectively assess the \"high fidelity\" claims. The authors should implement standard 3D reconstruction evaluation metrics and report failure rates per object category (e.g., furniture types that consistently reconstruct poorly).\n\n2. **Inadequate evaluation of the occupancy prediction component in the pipeline**: The paper states that \"reconstruction quality heavily depends on accurate occupancy prediction\" but fails to evaluate how well the specific model they use (EmbodiedOcc) performs on MinecraftOcc. Table 4 only shows results for other methods, not the one actually integrated into World2Minecraft. The authors should report EmbodiedOcc's performance on MinecraftOcc and conduct ablation studies showing how occupancy prediction errors propagate to reconstruction quality.\n\n3. **Marginal real-world utility of MinecraftOcc for improving occupancy models**: Table 5 shows only +0.43 IoU improvement when using MinecraftOcc as auxiliary data for NYUv2, raising questions about the practical value of this large dataset. The authors should investigate why the improvement is so modest—perhaps by analyzing which scenes or categories benefit most—and provide concrete guidance on how to better leverage synthetic data for real-world performance gains.\n\n4. **Insufficient comparison to alternative real-to-sim reconstruction methods**: The comparison in Section 4.5 only includes text-to-layout generators (LayoutGPT, etc.) rather than actual real-to-sim techniques like NeRF-based reconstruction or CAD model fitting. Without comparing to methods like NeuralRecon (Sun et al., 2021) or Scan2CAD (Avetisyan et al., 2019), the claimed advantages of occupancy-based reconstruction remain unverified. The authors should include these comparisons with standardized metrics to substantiate their approach's superiority.\n\n5. **VLN results lack meaningful benchmarks**: Table 2 reports accuracy scores without comparison to established VLN baselines (e.g., R2R's EnvDrop or REVERIE's RCM) in similar environments. The 0.80 accuracy for the best model appears modest, but without context of what's achievable in this specific setting, it's unclear if the results represent meaningful progress. The authors should compare against standard VLN methods and analyze how reconstruction artifacts specifically impact navigation success."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for Authors\n\n1. **Reconstruction fidelity metrics**: The paper claims \"high fidelity\" reconstructions but provides only qualitative visual examples (Figure 4). Could you provide quantitative metrics like Chamfer distance, 3D IoU between real and reconstructed structures, or semantic alignment scores? This would objectively validate the \"high fidelity\" claim and help readers understand the actual reconstruction accuracy, which is critical for assessing the framework's utility for embodied AI research.\n\n2. **Sensitivity to occupancy prediction quality**: The paper states that \"reconstruction quality heavily depends on accurate occupancy prediction\" but doesn't quantify this relationship. Could you provide a sensitivity analysis showing how reconstruction quality degrades as occupancy prediction quality decreases? For example, if IoU drops by 10%, how does this affect navigation success rate or structural fidelity? This would clarify the practical limitations of current occupancy models for your framework.\n\n3. **MinecraftOcc's unique challenges**: While Table 4 shows poor performance on MinecraftOcc, it's unclear what specific aspects make it challenging beyond being synthetic. Could you analyze whether the difficulty stems from fine-grained classes (1,452 vs. 13 in NYUv2), lighting variations, structural complexity, or other factors? This would help determine whether the dataset reveals fundamental limitations of current methods or simply presents a domain shift.\n\n4. **Manual refinement impact**: The paper mentions manual refinement was needed for 15 scenes but doesn't quantify its impact. Could you provide metrics comparing automatic reconstructions versus manually refined ones? For instance, what percentage improvement in navigation success rate or structural accuracy does manual refinement provide? This would clarify how much current occupancy prediction limits practical application.\n\n5. **Cross-dataset class mapping rationale**: Table 10 shows the mapping from 1,452 MinecraftOcc classes to 13 standard categories, but the paper doesn't explain how this mapping affects model performance. Could you provide evidence that this mapping preserves meaningful semantic distinctions? For example, do classes mapped to \"furniture\" actually share functional similarities that matter for navigation tasks?\n\n6. **Real-world applicability**: The framework converts real scenes to Minecraft, but doesn't address how this bridges to real-world deployment. Could you elaborate on how insights from Minecraft-based embodied AI research would transfer to physical robots? What specific aspects of your framework would need modification to work with real-world sensors and actuators?\n\n7. **Scalability limitations**: The paper reconstructs 15 scenes with manual refinement. Could you discuss inherent limitations for scaling to more complex environments (e.g., outdoor scenes, larger buildings)? Are there fundamental constraints in Minecraft's discrete structure that would prevent accurate reconstruction of certain real-world geometries?\n\n8. **Comparison with alternative reconstruction methods**: Table 6 compares with layout-based methods, but doesn't include other occupancy-based reconstruction approaches. Could you provide a comparison with state-of-the-art occupancy-to-mesh conversion techniques to better contextualize your method's advantages in editability versus traditional reconstruction pipelines?\n\nThese questions target specific areas where author responses could significantly clarify the paper's contributions, limitations, and practical utility. Addressing them would help readers better understand the framework's actual capabilities and how it advances the field beyond current approaches."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "WORLD2MINECRAFT: OCCUPANCY-DRIVEN SIMULATED SCENES CONSTRUCTION",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "2.1 DATA-DRIVEN 3D SCENE GENERATION",
+    "2.2 INDOOR 3D OCCUPANCY PREDICTION DATASET",
+    "2.3 EMBODIED INTELLIGENCE RESEARCH IN MINECRAFT",
+    "3 METHOD",
+    "3.1 PRELIMINARIES",
+    "3.2 WORLD2MINECRAFT: TRANSFER REALITY TO MINECRAFT",
+    "3.3 ENABLING VLN IN MINECRAFT",
+    "3.4 MINECRAFTOCC DATASET CONSTRUCTION",
+    "4 EXPERIMENTS",
+    "4.1 EXPERIMENTAL SETUP",
+    "4.2 THE RESULTS OF WORLD2MINECRAFT",
+    "4.3 THE RESULT OF VLN IN MINECRAFT",
+    "4.4 EXPERIMENTAL RESULTS ABOUT MINECRAFTOCC",
+    "4.5 COMPARISON WITH LAYOUT-BASED RECONSTRUCTION METHODS",
+    "4.6 EFFICIENCY ANALYSIS OF MANUAL REFINEMENT",
+    "5 CONCLUSION",
+    "ETHICS STATEMENT",
+    "REPRODUCIBILITY STATEMENT",
+    "ACKNOWLEDGMENTS",
+    "A THE USE OF LARGE LANGUAGE MODELS",
+    "B PRELIMINARIES",
+    "B.1 NAIVE MINECRAFT ENVIRONMENT",
+    "B.2 MOD ABOUT MINECRAFT",
+    "B.3 EXTENDED MINECRAFT ENVIRONMENT",
+    "Algorithm 1 World2Minecraft: Reality-to-Virtual Transfer",
+    "C ALGORITHM OF WORLD2MINECRAFT",
+    "D IMAGE AND CAMERA PARAMETER ACQUISITION",
+    "D.1 INTRINSIC CAMERA MATRIX",
+    "D.2 EXTRINSIC CAMERA MATRIX",
+    "E VIEWPOINT PROJECTION AND REDUNDANCY REMOVAL",
+    "F DATASET ANALYSIS",
+    "Instruction Length Distribution by MinecraftVLN",
+    "G SEMANTIC CLASS MAPPING FOR CROSS-DATASET EXPERIMENTS",
+    "H IMAGE QUALITY METRICS",
+    "I IMPLEMENTATION DETAILS",
+    "I.1 EXPERIMENT 1: REINFORCEMENT FINE-TUNING",
+    "I.2 EXPERIMENT 2: SUPERVISED FINE-TUNING (SFT)",
+    "J INTERACTIVE VISUALIZATION TOOL : SCENEFORGE",
+    "TOOL OVERVIEW",
+    "J.1 INTEGRATION WITH RESEARCH WORKFLOW",
+    "J.2 TECHNICAL IMPLEMENTATION"
+  ],
+  "images_used": 5,
+  "model": "Qwen/Qwen3-VL-235B-A22B-Thinking-FP8"
+}

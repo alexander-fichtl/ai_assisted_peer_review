@@ -1,0 +1,120 @@
+{
+  "pdfname": "EFOMez9cBW",
+  "content": {
+    "summary": {
+      "value": "This paper proposes GLaVE-Cap, a global–local aligned framework for detailed video captioning that integrates vision experts (Fig. 2). The TrackFusion module (Sec. 3.2) combines Grounding DINO and SAM2 to track objects and create visual prompts with IDs, and uses a dual-stream design to separately capture inter-frame dynamics (differential captions) and intra-frame static details (detailed captions), merging them into fine-grained local captions. The CaptionBridge module (Sec. 3.3) injects a globally generated overview caption to guide local captioning and performs adaptive, semantically coherent scene segmentation and summarization (supported by PySceneDetect) to form the final video caption. The authors introduce GLaVE-Bench (Sec. 4.1, Table 1), a multi-scene evaluation set with 55 videos and 6,491 QAs—about 5× more QAs per video than prior work—and “scene-hints” to reduce ambiguity, evaluated via a caption-as-proxy protocol. They also release GLaVE-1.2M (Sec. 4.2), comprising 15,814 videos, 16k fine-grained captions, and 1.176M QA pairs, and train a student model, GLaVE-7B, showing strong results (Table 3). Experiments demonstrate state-of-the-art performance of GLaVE-Cap on GLaVE-Bench, VidCapBench, Video-MME, and MVBench with both GPT-4o and Qwen2.5-VL-72B backbones, with ablations validating the contribution of each module (Tables 2, 4–5)."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 3
+    },
+    "strengths": {
+      "value": "1. Clear algorithmic advance over local-to-global pipelines: the two-module design explicitly targets three documented failure modes (Fig. 1) with (i) expert-guided object tracking and ID-tagged visual prompts plus a dual-stream local captioner to decouple dynamics from static details (TrackFusion, Sec. 3.2; Fig. 3), and (ii) bidirectional local–global interaction via overview-caption injection and adaptive, semantics-aware scene segmentation (CaptionBridge, Sec. 3.3; Eqs. 1–6; Fig. 2).  \n2. Technically concrete and reproducible design: inputs/outputs and formulae are specified for each substep, including the role of overview captions and scene splits (Eqs. 1–6). The tracking pipeline combines Grounding DINO and SAM2 with ID assignment and Set-of-Mark visualization (Sec. 3.2), a pragmatic, well-justified expert integration (Appendix B).  \n3. Strong, multi-backbone SOTA with broad coverage: consistent improvements on GLaVE-Bench, Video-MME(-S), VidCapBench, and MVBench using both GPT-4o and Qwen2.5‑VL‑72B (Table 2), demonstrating generality beyond a single proprietary model.  \n4. Fine-grained benchmark contribution with novel disambiguation: GLaVE-Bench offers ~5× more QAs/video than prior work and includes scene-hints to resolve multi-scene ambiguity (Sec. 4.1; Table 1; Appendix C.2). The evaluation protocol quantifies accuracy, hallucination, and coverage with an LLM judge and an explicit “Not mentioned” option (Sec. 4.1).  \n5. Large-scale data resource with demonstrated utility: GLaVE‑1.2M (15,814 videos, 1.176M QA pairs) is curated for fine-grained supervision (Sec. 4.2). The student model GLaVE‑7B trained on it outperforms strong baselines on GLaVE‑Bench (Table 3), evidencing dataset value.  \n6. Targeted ablations and diagnostics that go beyond accuracy:  \n   - Component removals produce sizable, interpretable drops (Tables 4–5; 15).  \n   - Counting-specific benefits from visual prompts are shown across datasets (Table 5).  \n   - Quantified gains in descriptive richness, contextual consistency, and detail retention during summarization (Appendix K.1–K.3; Tables 9–11) directly validate the paper’s core claims.  \n7. Careful evaluation design to mitigate confounds: baseline implementations documented (Appendix E), average frame counts reported (Table 7), repeated LLM-judge runs with stability analysis and error taxonomy (Table 8; Appendix H.2), and a hallucination accumulation check (Table 6).  \n8. Practicality for downstream generation: captions from GLaVE‑Cap guide video generation better than a strong baseline, with qualitative showcases and a user study (Appendix F; Fig. 8–9), indicating real utility beyond benchmark scores.  \n9. Extensive prompts, settings, and training details in appendices (P, Q, I, J) and an explicit plan to open-source code, weights, benchmark, and dataset, supporting community adoption (Ethics/Availability statement; end of Sec. 6).  \n10. Measured discussion of limitations and future directions (Appendix R), showing awareness of remaining bottlenecks (e.g., many-object scenes) and a plausible path (object-centric captioning)."
+    },
+    "weaknesses": {
+      "value": "1. Evaluation circularity and dependence on LLM judging\n   - The main claims rely on QA derived from captions produced by the authors’ own pipeline (Appendix C.1), and evaluation is performed by GPT‑4o reading generated captions (Sec. 4.1). Although captions are regenerated at test time and multiple runs are reported (Table 8), this still risks favoring styles/content emphasized by GLaVE‑Cap and inherits judge/model biases. Actionable: add a human study on factual alignment of captions to videos; evaluate on VQA sets whose QAs are authored directly from videos and independent of your captions; include a second, open-source judge and report agreement (e.g., Cohen’s κ) and confidence intervals.\n\n2. Small and potentially unrepresentative benchmark\n   - GLaVE‑Bench comprises only 55 videos, all selected from the Video‑MME short subset (Sec. 4.1; Table 1). Per‑video QA density is high, but the number of source videos is limited, which may inflate variance and limit ecological validity. Actionable: expand to hundreds of videos with stratified sampling across the six Video‑MME categories (Appendix C.5), and report per‑category results and confidence intervals.\n\n3. Possible train–test contamination and data provenance gaps\n   - GLaVE‑1.2M is built from LLaVA‑Video‑178K (Sec. 4.2), while GLaVE‑Bench samples videos from Video‑MME‑S (Sec. 4.1). The paper does not quantify overlap or near-duplicates between training sources (including any other datasets used in base models) and the 55 evaluation videos. Actionable: perform video‑level deduplication via perceptual hashing/fingerprints and release a leakage report; ensure no-caption/no-QA derived from any evaluation video/near-duplicate appears in GLaVE‑1.2M; add a “clean” split evaluation.\n\n4. Baseline fairness and comparability\n   - Several baselines are re‑implemented (Appendix E), and frame sampling is not unified; Table 7 shows large differences in average frame counts. Vript originally uses audio transcripts but the reproduction omits audio (Appendix E). These choices can understate baselines. Actionable: provide a matched‑budget comparison with equal keyframe counts, resolution, and token budgets; re‑run Vript with audio; add an experiment fixing identical scene boundaries across methods.\n\n5. Limited analysis of computational cost and scalability\n   - The pipeline integrates Grounding‑DINO + SAM2 tracking, dual‑stream captioning, and multiple LLM calls (Sec. 3; Fig. 2), but there is no report of runtime, GPU/CPU hours, token usage, or cost vs. video length. Actionable: include per‑minute video annotation wall‑clock time, FLOPs, and API token counts for each module; show scaling curves with video length and object count; add an ablation on expert frequency (e.g., tracking every k frames) vs. quality.\n\n6. Hallucination evidence is insufficient and mixed\n   - On the semantic-detail subset of VideoHallucer (Table 6), “Overall” is not best despite higher “Basic” accuracy; the claim that the pipeline “does not suffer from noticeable hallucination accumulation” (Appendix G) is not fully established. Actionable: evaluate full VideoHallucer with intrinsic/extrinsic breakdown, add human audits of contradictions, and provide step‑wise audits (local vs. scene vs. video summaries) to quantify propagation.\n\n7. Incremental novelty relative to prior ingredients\n   - Key elements are strong engineering but conceptually close to prior ideas: Set‑of‑Mark‑style visual prompts with IDs (Sec. 3.2), expert‑assisted tracking (Grounding DINO + SAM2), and local‑to‑global summarization with scene splitting (Sec. 3.3; PySceneDetect). Actionable: (a) compare against stronger alternative designs (e.g., learned motion/trajectory grouping, learned shot boundary detectors, or cross‑frame attention inside the VLM), (b) formalize and justify the bidirectional local–global interaction (Eqs. 1–6) with ablations that swap PySceneDetect for learned segmenters or remove overview alignment while keeping adaptive merging, and (c) quantify the unique contribution of tracking‑based ID prompts vs. simpler box overlays or saliency tags.\n\n8. Robustness to weaker/open models is poor\n   - Qwen2.5‑VL‑7B fails to complete the task; Qwen2.5‑VL‑32B markedly underperforms (Table 13). Replacing GPT‑4o with Qwen2.5‑VL‑32B in TrackFusion causes large drops (Table 14). Actionable: add schema‑constrained prompting and output validation to improve robustness; release a distilled open‑weight variant; show results with another open judge and another open backbone to strengthen reproducibility.\n\n9. Dataset quality trade‑offs in GLaVE‑1.2M\n   - The refinement step used for GLaVE‑Bench QA (Appendix C.1) is explicitly skipped when constructing GLaVE‑1.2M (Sec. 4.2), risking noisy supervision; no human spot‑check rate or noise estimate is provided. Actionable: report a random audit of QA noise (precision/recall of facts vs. videos), ablate training with/without a refined subset, and add filtering heuristics (e.g., QA self‑consistency).\n\n10. Statistical reporting\n   - Results lack uncertainty estimates or significance testing beyond three judge runs (Table 8). Actionable: report bootstrap confidence intervals across questions/videos and McNemar or stratified tests where appropriate; include per‑video variance on GLaVE‑Bench and Video‑MME‑S.\n\n11. Missing modality and ablations on audio/text overlays\n   - Several videos contain ASR/subtitles or informative audio; Vript leverages audio but the reproduction did not (Appendix E). Actionable: add an audio‑augmented variant to quantify gains and clarify the value of purely visual expert prompts vs. multimodal cues; report specific improvements on “Text” questions (Table 1 task coverage) with/without OCR cues.\n\n12. Prompt sensitivity and generalization\n   - Prompt design materially affects performance (Appendix L.1, Table 12), indicating sensitivity to prompt style, especially for global captions. Actionable: report robustness across prompt variants (temperature, style) on a held‑out set; release fixed prompt suites and seeds; consider instruction‑following regularizers or few‑shot exemplars to stabilize outputs.\n\n13. Privacy and licensing mitigations\n   - Ethics notes acknowledge potential PII and licensing issues (Sec. 6, Ethics; Sec. S) but propose no concrete mitigation. Actionable: implement automatic PII redaction (face/license blurring), provide provenance manifests for all videos, and add takedown mechanisms.\n\nCollectively, addressing 1–5 would strengthen the credibility and scalability of the empirical claims; 6–8 would clarify methodological novelty and robustness; 9–12 would improve data quality and reproducibility; and 13 would solidify ethical compliance for release."
+    },
+    "questions": {
+      "value": "1. Caption-as-proxy evaluation and LLM judge\n   - Please quantify agreement between two independent judges on GLaVE-Bench (e.g., GPT‑4o vs. an open-source judge such as Qwen2.5‑VL‑72B used elsewhere in the paper) and report inter-judge agreement and confidence intervals. Table 8 shows run-to-run stability for GPT‑4o; a cross‑judge result would reduce concerns about judge bias (Sec. 4.1; Appendix H.2).\n   - Can you add a small-scale human audit where annotators answer a stratified subset of GLaVE‑Bench questions using the generated captions? Reporting human–LLM agreement by type (Fig. 6C) would strengthen Sec. 4.1.\n\n2. Circularity risk in benchmark construction\n   - Appendix C.1 states GLaVE‑Bench QAs are derived from captions created by your pipeline, though later refined (C.3, C.5). Please provide evidence that your method is not advantaged by “style overlap,” e.g., evaluate all methods against an alternative QA subset authored directly from videos (not from captions), or show that your captions do not exhibit higher lexical overlap with QAs than baselines.\n   - In C.5 you note captions are regenerated at evaluation time. Could you quantify the gain from this choice by comparing performance with frozen earlier captions vs. regenerated ones?\n\n3. Train–test contamination checks\n   - GLaVE‑1.2M is built from LLaVA‑Video‑178K (Sec. 4.2), while GLaVE‑Bench videos come from Video‑MME‑S (Sec. 4.1). Please provide a leakage report: near-duplicate detection across GLaVE‑1.2M and GLaVE‑Bench (and other training sources listed in Appendix I) using perceptual video fingerprints; report overlap rates and release match lists.\n\n4. Baseline comparability and resource matching\n   - Appendix E reimplements several baselines and Table 7 shows heterogeneous frame counts. Could you add a matched‑budget comparison (same number of keyframes, resolution, and token limits) and report whether the ranking in Table 2 persists?\n   - Vript originally uses audio; your reproduction omits it (Appendix E). Can you supply results with audio to rule out underestimating that baseline?\n\n5. Computational cost, scalability, and throughput\n   - The pipeline uses Grounding DINO + SAM2, dual-stream captioning, and multiple LLM calls (Fig. 2; Sec. 3.2–3.3). Please report: tokens per video, wall‑clock time per minute of video, GPU/CPU hours, and API costs for both GPT‑4o and Qwen2.5‑VL‑72B. Also include scaling with video length and object count, and an ablation of expert frequency (e.g., tracking every k frames) vs. accuracy.\n\n6. Hallucination analysis depth\n   - Appendix G/Table 6 shows mixed “Overall” despite higher “Basic.” Could you (i) evaluate the full VideoHallucer with intrinsic vs. extrinsic breakdown, and (ii) provide a stage‑wise audit (local Clocal, scene Cscene, video Cvideo) to quantify hallucination propagation across Eqs. (1)–(6)?\n\n7. Clarifying what is unique vs. prior pipelines\n   - Please delineate what is novel beyond prior local‑to‑global systems and Set‑of‑Mark visual prompts: e.g., provide an ablation that replaces your ID‑based tracking prompts with simpler saliency/box overlays, and another that removes overview alignment but keeps PySceneDetect merging (Sec. 3.3). This would isolate the contributions of dual‑stream design and global‑context injection.\n\n8. Robustness to weaker/open annotation models\n   - Table 13 shows Qwen2.5‑VL‑7B fails; Table 14 indicates TrackFusion especially needs a strong model. Could you add schema‑constrained prompting or output validation (the prompts in Figs. 16–22 suggest structured outputs) and show whether Qwen2.5‑VL‑32B/7B can complete the pipeline with acceptable degradation? This would help reproducibility without GPT‑4o.\n\n9. Overview caption failure modes\n   - Sec. 3.3/Appendix K.2 argue overview captions improve temporal coherence. Please add a small study where you intentionally perturb Coverview (wrong frame ranges or mislabelled events) and quantify downstream inconsistency and recovery, to show robustness to global-context errors.\n\n10. Adaptive scene segmentation details and quality\n   - CaptionBridge merges PySceneDetect scenes using VLM semantics (Eq. 5). Please provide clearer criteria/prompts for merging and a small manual evaluation of boundary precision/recall vs. human scene splits on a subset, to substantiate “precise boundaries” claims (Sec. 3.3).\n\n11. Prompt sensitivity and generalization\n   - Appendix L.1 (Table 12) shows meaningful sensitivity of global captions to prompt style. Could you report robustness across temperature and few additional prompt variants, and release a fixed prompt suite and seeds to standardize replication?\n\n12. GLaVE‑Bench scale and per‑category analysis\n   - With only 55 videos (Table 1), can you provide per‑category (six Video‑MME groups; Appendix C.5) performance and bootstrap confidence intervals per video/category? This would contextualize the improvements in Table 2.\n\n13. Scene-hint influence\n   - Sec. 4.1 introduces scene-hints; Appendix C.2 motivates them. Please quantify their effect by evaluating with and without hints on the same captions, broken down by question types most affected by ambiguity (Fig. 6C).\n\n14. GLaVE‑1.2M QA quality\n   - The refinement step used for GLaVE‑Bench (C.1) was skipped for GLaVE‑1.2M (Sec. 4.2). Please provide a random human audit of QA correctness (precision/recall of facts vs. videos) and an ablation training with a refined subset to quantify the noise impact on Table 3.\n\n15. Counting gains and visual prompts\n   - Table 5 shows consistent benefits of visual prompts on counting tasks. Could you disaggregate by motion vs. static counting (e.g., NExT‑QA “Moving count” vs. MVBench “Number count”) and by category (people vs. objects), and compare set‑of‑mark with ID‑free overlays?\n\n16. Fairness of token budgets in summarization\n   - Scene-level summarization (Eq. 6) may compress details differently per method. Please report token budgets and maximum lengths allowed for intermediate/local/scene/video captions across methods to ensure Table 2 is not confounded by unequal truncation.\n\n17. Failure analysis\n   - Please add a brief qualitative section with a few failure cases (e.g., over‑/under‑segmentation, object ID drift, wrong causal linkage) and note which module is the root cause, to guide future work (Sec. 3; Fig. 2).\n\n18. Ethics and licensing mitigations\n   - In the Ethics/License notes (Sec. 6; Appendix S) you acknowledge possible PII. For release, can you commit to face/license‑plate blurring and a takedown protocol, and provide provenance manifests for all videos used in GLaVE‑Bench and GLaVE‑1.2M?\n\n19. Reproducibility specifics\n   - Please specify key hyperparameters for Grounding DINO/SAM2 (thresholds, NMS, max objects per frame) and the CLIP keyframe sampling policy used in Fig. 12, and confirm random seeds and versioned prompts (Figs. 16–23) will be released.\n\n20. Additional external validation\n   - Beyond Video‑MME/MVBench/VidCapBench, could you add a small human factuality check on 10–20 long multi‑scene public videos not sourced from Video‑MME or LLaVA‑Video, to validate generalization beyond your data sources (Sec. 5.1, 5.2)?"
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "Ethics review needed: Privacy and Security (e.g.",
+        "consent",
+        "surveillance",
+        "data storage concern)\n\nReason: The Ethics statement explicitly acknowledges that faces/PII may be present in GLaVE-Bench and GLaVE-1.2M without concrete mitigation beyond urging users to check licenses (“we cannot entirely rule out the inadvertent presence of PII… Users are therefore urged to consult the licensing terms",
+        "” Sec. 6",
+        "Appendix S). The planned open release of benchmark/dataset (Sec. 6",
+        "“will be open-sourced”) warrants review for privacy safeguards (e.g.",
+        "consent",
+        "blurring/takedown)."
+      ]
+    },
+    "rating": {
+      "value": 7
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "GLAVE-CAP: GLOBAL-LOCAL ALIGNED VIDEO CAPTIONING WITH VISION EXPERT INTEGRATION",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "ShareGPT4Video",
+    "ShareGPT4Video: 16 words",
+    "3 METHOD",
+    "3.1 PIPELINE OVERVIEW",
+    "3.2 TRACKFUSION",
+    "3.3 CAPTIONBRIDGE",
+    "4 BENCHMARK &amp; DATASET",
+    "4.1 GLAVE-BENCH",
+    "4.2 GLAVE-1.2M",
+    "5 EXPERIMENTS",
+    "5.1 VIDEO-CAPTIONING STRATEGY COMPARISON",
+    "5.2 STUDENT MODEL",
+    "5.3 ABLATION STUDIES",
+    "6 CONCLUSION",
+    "702 A APPENDIX OVERVIEW",
+    "B SELECTION OF VIDEO SEGMENTATION MODELS IN TRACKFUSION",
+    "C MORE INFORMATION OF GLAVE-BENCH",
+    "753 C.1 QUESTION-OPTION PAIRS GENERATION",
+    "C.2 EXAMPLES OF SCENE-HINTS IN GLAVE-BENCH",
+    "C.3 HUMAN REVIEW",
+    "C.4 SHOWCASE &amp; VISUALIZATION OF DATA DISTRIBUTIONS",
+    "C.5 FAIRNESS, FIDELITY AND DIVERSITY OF GLAVE-BENCH",
+    "D VISUALIZATION OF DATA DISTRIBUTIONS IN GLAVE-1.2M",
+    "E IMPLEMENTATION DETAILS OF BASELINE CAPTIONING METHODS",
+    "Caption of GLaVE-Cap:",
+    "F EFFECTIVENESS OF GLAVE-CAP IN VIDEO GENERATION",
+    "G HALLUCINATION ACCUMULATION ANALYSIS",
+    "H ADDITIONAL EVALUATION ANALYSIS",
+    "H.1 SAMPLE FRAME COUNT COMPARISON",
+    "H.2 EVALUATION STABILITY",
+    "I TRAINING DETAILS",
+    "J ABLATION SETTINGS",
+    "K DIRECT EVALUATION OF MODULE EFFECTS",
+    "K.2 OVERVIEW CAPTION ADDRESSES POOR CONTEXTUAL CONSISTENCY.",
+    "K.3 ADAPTIVE SCENE-SPLIT ADDRESSES INFORMATION LOSS DURING SUMMARIZATION.",
+    "L IMPACT OF PROMPT DESIGN AND BASE MODEL CAPABILITY",
+    "L.1 ANALYSIS OF HOW DIFFERENT TYPES OF PROMPTS AFFECT MODEL PERFORMANCE",
+    "1293 L.2 ANALYSIS OF HOW THE CAPABILITIES OF (M)LLMS AFFECT VIDEO CAPTIONING",
+    "M MORE ABLATION STUDIES",
+    "N SHOWCASE CAPTION",
+    "O SHOWCASE KEYFRAME SAMPLING FOR FAST-CHANGING VS. SLOW VIDEOS",
+    "1455 1456 P GLAVE-CAP FRAMEWORK PROMPT TEMPLATE",
+    "Q BENCHMARK EVALUATION PROMPT TEMPLATE",
+    "1463 1464 R LIMITATION",
+    "S LICENSE",
+    "· Code: Apache 2.0",
+    "· Training dataset: Apache 2.0",
+    "· Pretrained Model: Apache 2.0",
+    "1501 T USE OF LARGE LANGUAGE MODELS",
+    "ShareGPT4Video",
+    "Ours",
+    "1786",
+    "# Task Description",
+    "# Guidelines For Description",
+    "1793 Important Notes:",
+    "1801 # Character",
+    "# Task",
+    "# Constraints",
+    "# Output Format",
+    "1816 {",
+    "1829",
+    "# Notes",
+    "# Structured Input"
+  ],
+  "images_used": 5,
+  "model": "gpt-5"
+}

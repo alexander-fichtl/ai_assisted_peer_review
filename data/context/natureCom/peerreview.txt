@@ -1,0 +1,37 @@
+Criteria for publication
+In general, to be acceptable, a paper should represent an advance in understanding likely to influence thinking in the field, with strong evidence for their conclusions. There should be a discernible reason why the work deserves the visibility of publication in a Nature Portfolio journal rather than the best of the specialist journals.
+
+The review process
+All submitted manuscripts are read by the editorial staff. To save time for authors and peer-reviewers, only those papers that seem most likely to meet our editorial criteria are sent for formal review. Those papers judged by the editors to be of insufficient general interest or otherwise inappropriate are rejected promptly without external review (although these decisions may be based on informal advice from specialists in the field).
+Manuscripts judged to be of potential interest to our readership are sent for formal review, typically to two or three reviewers, but sometimes more if special advice is needed (for example on statistics or a particular technique). The editors then make a decision based on the reviewers' advice, from among several possibilities:
+- Accept, with or without editorial revisions
+- Invite the authors to revise their manuscript to address specific concerns before a final decision is reached
+- Reject, but indicate to the authors that further work might justify a resubmission
+- Reject outright, typically on grounds of specialist interest, lack of novelty, insufficient conceptual advance or major technical and/or interpretational problems
+Reviewers are welcome to recommend a particular course of action, but they should bear in mind that the other reviewers of a particular paper may have different technical expertise and/or views, and the editors may have to make a decision based on conflicting advice. The most useful reports, therefore, provide the editors with the information on which a decision should be based. Setting out the arguments for and against publication is often more helpful to the editors than a direct recommendation one way or the other.
+Editorial decisions are not a matter of counting votes or numerical rank assessments, and we do not always follow the majority recommendation. We try to evaluate the strength of the arguments raised by each reviewer and by the authors, and we may also consider other information not available to either party. Our primary responsibilities are to our readers and to the scientific community at large, and in deciding how best to serve them, we must weigh the claims of each paper against the many others also under consideration.
+
+
+
+Writing the review
+The primary purpose of the review is to provide the editors with the information needed to reach a decision but the review should also instruct the authors on how they can strengthen their paper to the point where it may be acceptable. As far as possible, a negative review should explain to the authors the major weaknesses of their manuscript, so that rejected authors can understand the basis for the decision and see in broad terms what needs to be done to improve the manuscript for publication elsewhere.
+We ask reviewers the following questions, to provide an assessment of the various aspects of a manuscript:
+- Key results: Please summarise what you consider to be the outstanding features of the work.
+- Validity: Does the manuscript have flaws which should prohibit its publication? If so, please provide details.
+- Originality and significance: If the conclusions are not original, please provide relevant references. On a more subjective note, do you feel that the results presented are of immediate interest to many people in your own discipline, and/or to people from several disciplines?
+- Data & methodology: Please comment on the validity of the approach, quality of the data and quality of presentation. Please note that we expect our reviewers to review all data, including any extended data and supplementary information. Is the reporting of data and methodology sufficiently detailed and transparent to enable reproducing the results?
+- Appropriate use of statistics and treatment of uncertainties: All error bars should be defined in the corresponding figure legends; please comment if that’s not the case. Please include in your report a specific comment on the appropriateness of any statistical tests, and the accuracy of the description of any error bars and probability values.
+- Conclusions: Do you find that the conclusions and data interpretation are robust, valid and reliable?
+- Suggested improvements: Please list additional experiments or data that could help strengthening the work in a revision.
+- References: Does this manuscript reference previous literature appropriately? If not, what references should be included or excluded?
+- Clarity and context: Is the abstract clear, accessible? Are abstract, introduction and conclusions appropriate?
+- Inflammatory material: Does the manuscript contain any language that is inappropriate or potentially libelous?
+Springer Nature is committed to diversity, equity and inclusion; please raise any concerns that may in your view have an impact on this commitment.
+Please indicate any particular part of the manuscript, data, or analyses that you feel is outside the scope of your expertise, or that you were unable to assess fully.
+
+Reports do not necessarily need to follow this specific order but should document the referees' thought process. All statements should be justified and argued in detail, naming facts and citing supporting references, commenting on all aspects that are relevant to the manuscript and that the referees feel qualified commenting on. Not all of the above aspects will necessarily apply to every paper, due to discipline-specific standards. When in doubt about discipline-specific refereeing standards, reviewer can contact the editor for guidance.
+It is our policy to remain neutral with respect to jurisdictional claims in published maps and institutional affiliations, and the naming conventions used in maps and affiliation are left to the discretion of authors. Referees should not, therefore, request authors to make any changes to such unless it is critical to the clarity of the scientific content of a manuscript.
+
+
+We ask reviewers to avoid statements that may cause needless offence; conversely, we strongly encourage reviewers to state plainly their opinion of a paper. Authors should recognize that criticisms are not necessarily unfair simply because they are expressed in robust language.
+

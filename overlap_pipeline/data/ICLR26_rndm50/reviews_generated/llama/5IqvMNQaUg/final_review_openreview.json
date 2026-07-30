@@ -1,0 +1,75 @@
+{
+  "pdfname": "5IqvMNQaUg",
+  "content": {
+    "summary": {
+      "value": "This paper proposes Sparse tOpology Pairwise Scoring (SOPS), a scalable communication mechanism for cooperative multi-agent reinforcement learning (MARL). SOPS combines a small-diameter exponential topology with a lightweight pairwise scoring module to enable efficient and adaptive communication among agents. The method uses Gumbel-Sigmoid reparameterization to allow for gradient-based optimization of the communication structure. SOPS is designed to be efficient, scalable, and adaptable to various scales, and it demonstrates state-of-the-art performance in various large-scale cooperative MARL scenarios. The paper presents extensive experiments on MAgent and IMP benchmarks, showcasing SOPS's ability to achieve higher returns, faster convergence, and robust zero-shot transfer to larger agent populations. The method is plug-and-play compatible with common value-based learners and can be easily integrated with existing MARL algorithms. Overall, SOPS provides a practical solution for large-scale MARL problems, enabling efficient and effective communication among agents in complex environments."
+    },
+    "soundness": {
+      "value": "The paper presents a well-structured and well-written approach to addressing the challenges of large-scale multi-agent reinforcement learning (MARL) with a focus on communication efficiency and adaptability. The authors propose Sparse tOpology Pairwise Scoring (SOPS), a method that leverages an exponential graph as a backbone topology and learns a probabilistic subgraph distribution for task-adaptive communication.\n\nThe technical claims made in the paper are sound and well-supported by evidence from extensive experiments conducted on various cooperative MARL scenarios of different scales. \n\nThe experimental and research methodology is robust, comparing SOPS against state-of-the-art methods across multiple benchmarks (MAgent and IMP), and the results demonstrate that SOPS consistently achieves higher returns and faster convergence.\n\nThe central claims of the paper are adequately supported with evidence. \n\nTherefore, I would rate the soundness of the technical claims, experimental and research methodology, and the support for the central claims as: Rating: <4>"
+    },
+    "presentation": {
+      "value": 3
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Scalable Communication Mechanism**: The paper proposes Sparse tOpology Pairwise Scoring (SOPS), a novel and scalable communication mechanism for cooperative multi-agent reinforcement learning (MARL). SOPS efficiently addresses the challenges of communication efficiency and adaptability in large-scale MARL settings.\n\n2. **Original Methodology**: The method combines a small-diameter exponential topology with a lightweight pairwise scoring module, enabling efficient and adaptive communication among agents. The use of Gumbel-Sigmoid reparameterization allows for gradient-based optimization of the communication structure, which is a significant methodological contribution.\n\n3. **Extensive Experimental Evaluation**: The paper presents an extensive experimental evaluation of SOPS on various cooperative MARL scenarios of different scales using MAgent and IMP benchmarks. The results demonstrate that SOPS consistently achieves higher returns and faster convergence compared to state-of-the-art methods.\n\n4. **Robust Zero-Shot Transfer**: SOPS exhibits robust zero-shot transfer capabilities, enabling a model trained on a smaller scale to effectively apply to larger-scale scenarios. This is a significant advantage in practical applications where agent populations may vary.\n\n5. **Plug-and-Play Compatibility**: The method is plug-and-play compatible with common value-based learners (e.g., IQL, QMIX) and can be easily integrated with existing MARL algorithms. This compatibility enhances the practical utility of SOPS in diverse MARL applications.\n\n6. **Clear Writing and Presentation**: The paper is well-written, with clear and concise presentation of the proposed method and its contributions to scalable communication in MARL. The writing style is clear, and the paper is easy to follow.\n\n7. **Significance and Impact**: The proposed SOPS method addresses a critical challenge in large-scale MARL, which is communication efficiency and adaptability. The method's ability to achieve higher returns, faster convergence, and robust zero-shot transfer makes it a significant contribution to the research area. \n\n8. **Effective Use of Visualizations**: The paper includes informative visualizations and tables that effectively illustrate the key findings, making it easier for readers to understand the performance and benefits of SOPS.\n\n## Conclusion\nThe strengths of the paper lie in its original methodology, extensive experimental evaluation, robust zero-shot transfer capabilities, plug-and-play compatibility, clear writing, and significant impact on the research area of MARL. These contributions make SOPS a valuable addition to the field of multi-agent reinforcement learning."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Analysis of Hyperparameter Sensitivity**: The paper provides a comprehensive evaluation of SOPS on various benchmarks, but it lacks a detailed analysis of hyperparameter sensitivity. The authors mention that they use the default settings provided in the official implementations of MAgent and IMP, but they do not investigate how sensitive SOPS is to changes in hyperparameters such as the loss coefficient α, loss temperature κ, and the number of negatives M. A more thorough analysis of hyperparameter sensitivity would strengthen the paper.\n\n2. **Comparison to Mean-Field and Attention-Based Approximations**: The paper compares SOPS to traditional value decomposition methods (VDN, GACG) and ExpoComm, but it does not provide a comparison to mean-field and attention-based approximations, such as GAT-MF or mix-attention approximations. These methods have been shown to be effective in large-scale MARL, and a comparison would provide a more comprehensive evaluation of SOPS.\n\n3. **Scalability to Large Agent Populations**: While SOPS demonstrates robust zero-shot transfer capabilities, the paper primarily focuses on scenarios with up to 121 agents. A more extensive evaluation of SOPS's scalability to even larger agent populations (e.g., thousands of agents) would be beneficial, particularly in scenarios with complex communication needs.\n\n4. **Lack of Theoretical Analysis**: The paper provides a thorough empirical evaluation of SOPS, but it lacks a theoretical analysis of the method's properties, such as its convergence guarantees or sample complexity. A more theoretical analysis would provide a deeper understanding of SOPS's strengths and limitations.\n\n5. **Visualization of Communication Graphs**: While the paper provides visualizations of the dynamic communication subgraphs induced by SOPS, it would be beneficial to include more detailed visualizations of the communication graphs, such as the edge weights and node centrality measures. This would provide a better understanding of how SOPS adapts to different scenarios and agent populations.\n\n## Conclusion\nThe weaknesses of the paper lie in its limited analysis of hyperparameter sensitivity, lack of comparison to mean-field and attention-based approximations, scalability to large agent populations, lack of theoretical analysis, and limited visualization of communication graphs. Addressing these weaknesses would provide a more comprehensive evaluation of SOPS and strengthen its contributions to the field of multi-agent reinforcement learning."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Hyperparameter Sensitivity Analysis**: The authors mention using default hyperparameter settings from the official implementations of MAgent and IMP. Could they provide a more detailed analysis of hyperparameter sensitivity, specifically investigating how changes in hyperparameters such as the loss coefficient α, loss temperature κ, and the number of negatives M affect the performance of SOPS?\n\n2. **Comparison to Mean-Field and Attention-Based Approximations**: The paper compares SOPS to traditional value decomposition methods and ExpoComm. Would it be possible to include a comparison to mean-field and attention-based approximations, such as GAT-MF or mix-attention approximations, to provide a more comprehensive evaluation of SOPS?\n\n3. **Scalability to Larger Agent Populations**: While SOPS demonstrates robust zero-shot transfer capabilities up to 121 agents, could the authors evaluate its scalability to even larger agent populations (e.g., thousands of agents) in scenarios with complex communication needs?\n\n4. **Theoretical Analysis**: The paper provides a thorough empirical evaluation of SOPS. Would it be possible to include a theoretical analysis of the method's properties, such as its convergence guarantees or sample complexity, to provide a deeper understanding of SOPS's strengths and limitations?\n\n5. **Visualization of Communication Graphs**: The authors provide visualizations of the dynamic communication subgraphs induced by SOPS. Could they include more detailed visualizations of the communication graphs, such as edge weights and node centrality measures, to better understand how SOPS adapts to different scenarios and agent populations?\n\n6. **Robustness to Agent Failures and Topology Disruptions**: The paper mentions that exponential graphs provide multi-scale, redundant connectivity, which can preserve fast information mixing under random disruptions. Could the authors investigate the robustness of SOPS to agent failures and topology disruptions, such as removal of contiguous segments on the ring or hard communication outages at scale?\n\n7. **Type-Aware Edge Features and Heterogeneous Environments**: The authors mention that SOPS can be extended with explicit type-aware edge features and assessed in large-scale heterogeneous scenarios. Could they provide a systematic evaluation of SOPS in strongly heterogeneous, role-rich environments where highly targeted, type-aware communication may be especially beneficial?\n\nBy addressing these questions and suggestions, the authors can provide further clarification, address limitations, and strengthen the contributions of their paper."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "SPARSE TOPOLOGY PAIRWISE SCORING FOR LARGESCALE MULTI-AGENT REINFORCEMENT LEARNING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "2 RELATED WORK",
+    "3 PRELIMINARIES",
+    "3.1 COOPERATIVE MARL PROBLEMS FORMULATION",
+    "3.2 EXPONENTIAL TOPOLOGIES FOR SCALABLE COMMUNICATION",
+    "4 METHODOLOGY",
+    "4.1 SPARSE TOPOLOGY CONSTRAINED DIFFERENTIABLE PAIRWISE SELECTION",
+    "4.2 MESSAGE AGGREGATION AND DECISION MAKING.",
+    "4.3 TRAINING OBJECTIVE AND AUXILIARY TASK",
+    "5 EXPERIMENTS",
+    "5.1 SETUP",
+    "5.2 MAIN RESULTS",
+    "5.3 ANALYSIS",
+    "5.4 ABLATIONS",
+    "6 CONCLUSION",
+    "Under review as a conference paper at ICLR 2026",
+    "A SOURCE CODE",
+    "B THE USE OF LARGE LANGUAGE MODELS (LLMS)",
+    "C ADDITIONAL DETAILS OF EXPERIMENTS",
+    "C.1 HYPERPARAMETERS",
+    "C.2 BENCHMARKS AND SCENARIOS",
+    "C.3 ADDITIONAL RESULTS AND DISCUSSION",
+    "C.3.1 FOR MAGENT BENCHMARK",
+    "C.3.2 ROBUSTNESS TO AGENT FAILURES AND TOPOLOGY DISRUPTIONS",
+    "C.3.3 LIMITATIONS AND FUTURE EXTENSIONS",
+    "C.3.4 LEARNED-GRAPH DIAGNOSTICS",
+    "C.3.5 SYSTEM-LEVEL PROFILING"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

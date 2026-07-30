@@ -1,0 +1,72 @@
+{
+  "pdfname": "ifC1qxP5rS",
+  "content": {
+    "summary": {
+      "value": "The paper proposes a novel SEquential SAmpling (SESA) framework for reinforcement learning (RL) with large language models (LLMs). SESA addresses the limitations of traditional parallel sampling methods, which often suffer from limited exploration and entropy collapse. The proposed framework generates diverse solution sketches sequentially and then expands them into full solutions in parallel, promoting greater exploration and diversity in the generated paths. The authors demonstrate the effectiveness of SESA on a synthetic task, showing that it uncovers more strategies and retains a larger proportion of correct outputs compared to traditional RL approaches. Additionally, SESA is evaluated on five different tasks, including agent, reasoning, and math tasks, and consistently outperforms strong baselines. The paper introduces a structured approach to exploration, paving the way for more effective and diverse reasoning in RL-trained LLMs. The code for SESA is made available at https://anonymous.4open.science/r/SESA-5E63."
+    },
+    "soundness": {
+      "value": 3
+    },
+    "presentation": {
+      "value": 4
+    },
+    "contribution": {
+      "value": 4
+    },
+    "strengths": {
+      "value": "## Strengths of the Paper\n\n1. **Novel Methodology**: The paper proposes a novel SEquential SAmpling (SESA) framework that addresses the limitations of traditional parallel sampling methods in reinforcement learning with large language models. SESA generates diverse solution sketches sequentially and then expands them into full solutions in parallel, promoting greater exploration and diversity in the generated paths.\n\n2. **Clear Problem Statement**: The paper clearly articulates the challenges of limited exploration and entropy collapse in traditional RL methods, providing a thorough understanding of the problem and its significance.\n\n3. **Thorough Experiments**: The authors conduct experiments on both synthetic and real-world tasks, providing a comprehensive evaluation of SESA. The experiments demonstrate the effectiveness of SESA in uncovering more strategies and retaining a larger proportion of correct outputs compared to traditional RL approaches.\n\n4. **Significant Originality of Ideas**: SESA brings a significant originality of ideas by sequentially generating diverse solution sketches, which enhances exploration and diversity in the generated paths. This approach has the potential to improve the reasoning capabilities of LLMs.\n\n5. **Well-Written and Clear Presentation**: The paper is exceptionally well-written, with clear and concise explanations of the proposed SESA framework and its applications. The writing style is engaging, and the organization of the paper is logical and easy to follow.\n\n6. **Effective Use of Figures and Tables**: The paper includes well-designed figures and tables that effectively illustrate the key findings and comparisons, making it easy for readers to understand and appreciate the contributions of the paper.\n\n7. **Structured Approach to Exploration**: The paper introduces a structured approach to exploration, which is crucial for improving the reasoning capabilities of LLMs. This approach has the potential to impact the research area significantly.\n\n8. **Valuable Results**: The results are valuable to share with the broader research community, as they demonstrate the effectiveness of SESA across various tasks, including synthetic, agent, reasoning, and math tasks. The findings have the potential to improve the performance of LLMs in complex tasks."
+    },
+    "weaknesses": {
+      "value": "## Weaknesses of the Paper\n\n1. **Limited Theoretical Analysis**: While the paper provides empirical evidence of the effectiveness of the SEquential SAmpling (SESA) framework, it lacks a deeper theoretical analysis of the framework and its implications on exploration and entropy. A more rigorous theoretical analysis would strengthen the claims and provide a better understanding of the underlying mechanisms.\n\n2. **Comparison to Recent Methods**: Although SESA is compared to strong baselines, such as DAPO and RAGEN, additional comparisons to other recent methods could further validate its effectiveness. This would help to ensure that SESA is indeed a significant improvement over existing methods.\n\n3. **Generalizability Across Tasks and Models**: The paper evaluates SESA on a variety of tasks, including synthetic, agent, reasoning, and math tasks. However, more discussion on the generalizability of SESA across different types of tasks and models would enhance the paper's impact. For example, how does SESA perform on tasks with different levels of complexity or on models with different architectures?\n\n4. **Potential for Entropy Collapse**: While SESA is designed to promote exploration and diversity, there is still a risk of entropy collapse, particularly if the model converges to a single solution. The paper could provide more analysis on how SESA mitigates this risk and whether there are any conditions under which entropy collapse could occur.\n\n5. **Computational Efficiency**: The paper mentions that SESA generates diverse solution sketches sequentially and then expands them into full solutions in parallel. However, it would be beneficial to discuss the computational efficiency of this approach and whether it is feasible for large-scale applications.\n\n6. **Hyperparameter Tuning**: The paper provides a table with hyperparameters and training setup, but it would be helpful to discuss the sensitivity of SESA to hyperparameter tuning. For example, how does the performance of SESA change with different values of the batch size, number of solutions, or reward coefficient?\n\n7. **Real-World Applications**: While the paper evaluates SESA on a variety of tasks, it would be beneficial to discuss potential real-world applications of the framework. For example, how could SESA be used in practice to improve the reasoning capabilities of large language models?\n\nBy addressing these weaknesses, the paper could provide a more comprehensive evaluation of SESA and its potential impact on the research area."
+    },
+    "questions": {
+      "value": "## Questions and Suggestions for the Authors\n\n1. **Theoretical Analysis of SESA**: The paper provides empirical evidence of the effectiveness of SESA, but it lacks a deeper theoretical analysis of the framework and its implications on exploration and entropy. Could the authors provide a more rigorous theoretical analysis to strengthen their claims and provide a better understanding of the underlying mechanisms?\n\n2. **Comparison to Recent Methods**: Although SESA is compared to strong baselines, additional comparisons to other recent methods could further validate its effectiveness. Could the authors consider comparing SESA to other state-of-the-art methods, such as tree-search or MCTS-based approaches?\n\n3. **Generalizability Across Tasks and Models**: The paper evaluates SESA on a variety of tasks, but more discussion on the generalizability of SESA across different types of tasks and models would enhance the paper's impact. How does SESA perform on tasks with different levels of complexity or on models with different architectures?\n\n4. **Entropy Collapse Mitigation**: While SESA is designed to promote exploration and diversity, there is still a risk of entropy collapse. Could the authors provide more analysis on how SESA mitigates this risk and whether there are any conditions under which entropy collapse could occur?\n\n5. **Computational Efficiency**: The paper mentions that SESA generates diverse solution sketches sequentially and then expands them into full solutions in parallel. Could the authors discuss the computational efficiency of this approach and whether it is feasible for large-scale applications?\n\n6. **Hyperparameter Tuning Sensitivity**: The paper provides a table with hyperparameters and training setup, but it would be helpful to discuss the sensitivity of SESA to hyperparameter tuning. How does the performance of SESA change with different values of the batch size, number of solutions, or reward coefficient?\n\n7. **Real-World Applications**: While the paper evaluates SESA on a variety of tasks, could the authors discuss potential real-world applications of the framework? For example, how could SESA be used in practice to improve the reasoning capabilities of large language models?\n\n8. **Addressing Policy Collapse**: The paper mentions that SESA can revive collapsed policies, but could the authors provide more details on how SESA addresses policy collapse and whether there are any specific conditions under which it is more effective?\n\n9. **SESA vs. Parallel Sampling**: The paper compares SESA to parallel sampling methods, but could the authors provide more insights into the specific advantages of SESA over parallel sampling, particularly in terms of exploration and diversity?\n\n10. **Future Directions**: Finally, could the authors discuss potential future directions for SESA, such as extending it to multi-task learning or incorporating it with other RL methods? This would help to further highlight the potential impact of SESA on the research area."
+    },
+    "flag_for_ethics_review": {
+      "value": [
+        "No ethics review needed."
+      ]
+    },
+    "rating": {
+      "value": 8
+    },
+    "confidence": {
+      "value": 4
+    },
+    "code_of_conduct": {
+      "value": "NO"
+    }
+  },
+  "sections_used": [
+    "Document",
+    "THE ROAD LESS TRAVELED: ENHANCING EXPLORATION IN LLMS VIA SEQUENTIAL SAMPLING",
+    "Anonymous authors",
+    "ABSTRACT",
+    "1 INTRODUCTION",
+    "Synthetic Path Exploration",
+    "3 METHOD",
+    "3.1 TRAINING STAGE",
+    "3.2 EVALUATION STAGE",
+    "4 SEQUENTIAL SAMPLING BENEFITS RL TRAINING",
+    "4.1 AGENT RESULTS",
+    "4.2 GENERAL TASK",
+    "5 HOW SAMPLING DIVERSITY BENEFITS RL TRAINING",
+    "5.1 SEQUENTIAL SAMPLING CAN SAVE DEAD POLICY",
+    "6 RELATED WORK",
+    "7 CONCLUSION",
+    "A TASK DESCRIPTION",
+    "Model Prompt",
+    "A.2 AGENTIC TASKS",
+    "B TRAINING DETAILS",
+    "B.1 TRAINING CURVES",
+    "B.1.1 POLICY ENTROPY",
+    "B.1.2 IN-GROUP STD",
+    "B.1.3 PASS@16 METRIC",
+    "C CASE STUDY: SOKOBAN STRATEGIES DISCOVERED BY SESA",
+    "###P##",
+    "810",
+    "D THE USE OF LARGE LANGUAGE MODELS"
+  ],
+  "images_used": 5,
+  "model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"
+}

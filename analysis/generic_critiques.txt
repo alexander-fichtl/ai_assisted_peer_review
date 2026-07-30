@@ -1,0 +1,38 @@
+ICLR generic critique boilerplate counts in Weaknesses + Suggestions/Questions fields
+
+  gpt (n=50 papers):
+      0  more <x> analysis/discussion/comparison
+      2  hyperparameter sensitivity/analysis/study
+      0  comparison with more/very recent / SOTA work
+      0  real-world application/instances/datasets
+      0  more/additional details on
+      8  computational cost/complexity/resources
+      0  minor revisions
+
+  qwen (n=50 papers):
+     12  more <x> analysis/discussion/comparison
+      3  hyperparameter sensitivity/analysis/study
+      2  comparison with more/very recent / SOTA work
+     19  real-world application/instances/datasets
+      2  more/additional details on
+     24  computational cost/complexity/resources
+      0  minor revisions
+
+  llama (n=50 papers):
+     37  more <x> analysis/discussion/comparison
+     11  hyperparameter sensitivity/analysis/study
+      9  comparison with more/very recent / SOTA work
+     25  real-world application/instances/datasets
+     26  more/additional details on
+     20  computational cost/complexity/resources
+      0  minor revisions
+
+  human (n=192 reviews):
+      2  more <x> analysis/discussion/comparison
+      1  hyperparameter sensitivity/analysis/study
+      0  comparison with more/very recent / SOTA work
+      4  real-world application/instances/datasets
+      2  more/additional details on
+     14  computational cost/complexity/resources
+      0  minor revisions
+

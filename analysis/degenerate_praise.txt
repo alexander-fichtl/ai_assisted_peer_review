@@ -1,0 +1,21 @@
+Degenerate-praise detector  (run length >= 4, 3-15 words per sentence, no hedge/critique words)
+
+=== ICLR ===
+  gpt: 0/50 reviews flagged, longest run observed = 2
+  qwen: 0/50 reviews flagged, longest run observed = 3
+  llama: 0/50 reviews flagged, longest run observed = 3
+  human: 2/192 reviews flagged, longest run observed = 5
+    - CWpQsAubxy  (longest run = 5)
+    - xmsbFPmsOz  (longest run = 5)
+
+=== natureCom ===
+  gpt: 0/31 reviews flagged, longest run observed = 2
+  qwen: 0/31 reviews flagged, longest run observed = 2
+  llama: 5/31 reviews flagged, longest run observed = 64
+    - s41467-025-66620-z  (longest run = 64)
+    - s41467-024-53768-3  (longest run = 7)
+    - s41467-025-61754-6  (longest run = 6)
+    - s41467-025-64227-y  (longest run = 6)
+    - s41467-025-61599-z  (longest run = 4)
+  human: 0/97 reviews flagged, longest run observed = 2
+
