@@ -153,12 +153,6 @@ A [Streamlit](https://streamlit.io/) web app for human blind pairwise preference
 ---
 
 ## Data
-
-While the data is stored in `data/` within this repository, most of it is excluded from this git (too large or regenerable); see the table below for what is tracked. 
-
-For usage: The relevant data is uploaded to https://gitlab.lrz.de/00000000014AD1CD/sc_datasets
-
-```
 data/
 ├── context/                      # Static reference text fed to LLM reviewers: Reviewer guide, code of conduct, statistics, etc.
 ├── final_datasets/               # Curated experiment datasets 
