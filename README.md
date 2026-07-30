@@ -153,6 +153,7 @@ A [Streamlit](https://streamlit.io/) web app for human blind pairwise preference
 ---
 
 ## Data
+```
 data/
 ├── context/                      # Static reference text fed to LLM reviewers: Reviewer guide, code of conduct, statistics, etc.
 ├── final_datasets/               # Curated experiment datasets 
