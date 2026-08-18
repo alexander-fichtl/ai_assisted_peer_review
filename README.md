@@ -153,6 +153,9 @@ A [Streamlit](https://streamlit.io/) web app for human blind pairwise preference
 ---
 
 ## Data
+
+Sturture of the data folder is as follows:
+
 ```
 data/
 ├── context/                      # Static reference text fed to LLM reviewers: Reviewer guide, code of conduct, statistics, etc.
@@ -181,6 +184,7 @@ data/
 ├── processed_reviews/            # Intermediate review processing — natureCom only
 └── reviews_generated/            # LLM-generated reviews 
 ```
+Some large files that include the pdfs and images of all papers/reviews had to be excluded for file size reasons. You can generate them yourself with the data_generation scripts. You can also message us and we can provide them for you upon request.
 
 ### Different layouts of ICLR and natureCom explained:
 
