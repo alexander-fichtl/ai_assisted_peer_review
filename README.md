@@ -1,18 +1,20 @@
 # lm-based-academic-review-support-sc
 
-Code for LLM-based academic peer review generation and evaluation. Covers two venues: **ICLR** and **Nature Communications**.
+Code and supplementary material for LLM-based academic peer review generation and evaluation. Covers two venues: **ICLR** and **Nature Communications**.
 
 ---
 
 ## Repository Structure
 
 ```
-sc_code/
+ai_assisted_peer_review/
+├── data/                     # Data folder, see below for details
 ├── data_generation/          # Fetching papers and peer reviews
 │   ├── ICLR/                 # ICLR pipeline via OpenReview API
 │   ├── natureCom/            # Nature Communications pipeline via Research Square
 │   ├── pdf_fetcher_docling.py
 │   └── extract_formulas_for_md.py
+├── overlap_pipeline/         # Code for the overlap_pipeline and evaluation
 ├── review_generation/        # LLM review generation
 │   ├── deepseek_llava/       # DeepSeek-R1-Distill-Qwen-32B on LRZ
 │   ├── llama/                # Llama-4-Scout-17B on RunPod
@@ -24,6 +26,7 @@ sc_code/
     ├── llm-as-a-judge/       # GPT-based quality scoring
     ├── score-comparison/     # Given-score visualizations
     └── pairwise-manual/      # Streamlit human preference app
+└── paper_supplementary_material/        # Supplementary material mentioned in the paper
 ```
 
 **Data** is stored in `data/` (see the [Data](#data) section for what is tracked in git).
