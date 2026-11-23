@@ -8,7 +8,7 @@ Code and supplementary material for LLM-based academic peer review generation an
 
 ```
 ai_assisted_peer_review/
-├── data/                     # Data folder, see below for details
+├── data/                     # Data folder
 ├── data_generation/          # Fetching papers and peer reviews
 │   ├── ICLR/                 # ICLR pipeline via OpenReview API
 │   ├── natureCom/            # Nature Communications pipeline via Research Square
@@ -28,9 +28,6 @@ ai_assisted_peer_review/
     └── pairwise-manual/      # Streamlit human preference app
 └── paper_supplementary_material/        # Supplementary material mentioned in the paper
 ```
-
-**Data** is stored in `data/` (see the [Data](#data) section for what is tracked in git).
-
 ---
 
 ## data_generation
@@ -152,76 +149,6 @@ A [Streamlit](https://streamlit.io/) web app for human blind pairwise preference
   ```
 
   Configure `ID_user`, `VAR_reviewers`, and `DATASET_NAME` at the top of the file before running.
-
----
-
-## Data
-
-Sturture of the data folder is as follows:
-
-```
-data/
-├── context/                      # Static reference text fed to LLM reviewers: Reviewer guide, code of conduct, statistics, etc.
-├── final_datasets/               # Curated experiment datasets 
-│   ├── ICLR26_rndm50/
-│   │   ├── dataset.csv           # 50 sampled ICLR 2026 papers + metadata + human reviews
-│   │   └── index.json
-│   └── natureCom_nlpterms_31/
-│       └── dataset.csv           # 31 Nature Communications NLP papers + metadata
-├── papersets_ids/                # Paper selection indices — natureCom only 
-│   └── natureCom/
-│       ├── pool_nlpterms.json    # Full pool from Research Square API
-│       ├── sample_nlpterms_31.json
-│       └── index.json            # Maps paper IDs to PDF/review links (includes manual entries)
-├── reviews_human/                # Scraped human reviews — natureCom only 
-├── llmjudge_evals/               # LLM-as-a-judge outputs: CSV and per-paper judgement JSONs for each review source
-├── openreview_basesets/          # Raw OpenReview API dump
-├── processed_pdfs/               # Docling output 
-│   ├── ICLR/
-│   └── natureCom/
-│       └── <paper_id>/
-│           ├── <paper_id>.json
-│           ├── <paper_id>.md
-│           ├── <paper_id>.txt
-│           └── <paper_id>_artifacts/   # Extracted images (PNG)
-├── processed_reviews/            # Intermediate review processing — natureCom only
-└── reviews_generated/            # LLM-generated reviews 
-```
-Some large files that include the pdfs and images of all papers/reviews had to be excluded for file size reasons. You can generate them yourself with the data_generation scripts. You can also message us and we can provide them for you upon request.
-
-### Different layouts of ICLR and natureCom explained:
-
-- **ICLR**: Human reviews come from OpenReview and are fetched together with all other paper metadata. They live directly inside `final_datasets/ICLR26_rndm50/dataset.csv`. There is no separate `reviews_human/ICLR/` folder. `papersets_ids/ICLR/` also does not exist — paper selection is handled inside `dataset_generator_ICLR.py`.
-
-- **natureCom**: While the paper PDFs are from Research Square, the human reviews had to be scraped separately from Nature Communications and are stored as individual JSONs in `reviews_human/natureCom/`. Paper selection IDs and PDF/review links are tracked separately in `papersets_ids/natureCom/`.
-
-### reviews_generated file structure
-
-Each paper folder under `gpt/`, `llama/`, or `qwen/` contains:
-```
-<paper_id>/
-├── final_review.json             # Review per question (HTML-renderable)
-├── final_review_openreview.json  # OpenReview-style content block
-├── final_review.html             # Human-readable HTML
-├── final_review.txt              # Plain text
-├── audit.log                     # Token counts per question
-└── per_question/
-    └── q01.json ... q11.json     # Full prompt + answer per question (ICLR only)
-```
-
-### reviews_human — review format
-
-`reviews_<paper_id>.json` (natureCom only) contains the first round of peer reviews:
-```json
-{
-    "first_remarks": [
-        {"reviewer_id": "...", "remarks_to_the_author": "..."},
-        {"reviewer_id": "...", "remarks_to_the_author": "...", "invalid": "yes"},
-        ...
-    ]
-}
-```
-Reviews marked `"invalid": "yes"` are duplicates or co-authored reviews — exclude them when loading.
 
 ---
 
