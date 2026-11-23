@@ -16,7 +16,7 @@ data/
 │       ├── pool_nlpterms.json    # Full pool from Research Square API
 │       ├── sample_nlpterms_31.json
 │       └── index.json            # Maps paper IDs to PDF/review links (includes manual entries)
-├── reviews_human/                # Scraped human reviews — natureCom only; ICLR reviews can be generated with the respective script in the review_generation/ folder
+├── reviews_human.zip             # Scraped human reviews — natureCom only; ICLR reviews can be generated with the respective script in the review_generation/ folder
 ├── llmjudge_evals.zip            # LLM-as-a-judge outputs: CSV and per-paper judgment JSONs for each review source
 ├── processed_pdfs/               # Docling output 
 │   ├── ICLR/
